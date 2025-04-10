@@ -1,13 +1,18 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
+// See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
 	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
+	  // interface Error {}
+	  // interface Locals {}
+	  // interface PageData {}
+	  // interface Platform {}
 	}
-}
-
-export {};
+	
+	interface Window {
+	  fs: {
+		readFile: (path: string, options?: { encoding?: string }) => Promise<Uint8Array | string>;
+	  };
+	}
+  }
+  
+  export {};
