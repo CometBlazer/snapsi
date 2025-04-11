@@ -1,10 +1,6 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { Button } from '$lib/components/ui/button';
-    import { Input } from '$lib/components/ui/input';
-    import { Label } from '$lib/components/ui/label';
-    import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '$lib/components/ui/card';
-    import { FolderPlus } from 'lucide-svelte';
+    import Icon from '@iconify/svelte';
     
     let name = '';
     let password = '';
@@ -45,41 +41,65 @@
   </script>
   
   <div class="container mx-auto max-w-md py-10">
-    <Card>
-      <CardHeader>
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
         <div class="flex items-center gap-2">
-          <FolderPlus class="h-6 w-6" />
-          <CardTitle>Create New Folder</CardTitle>
+          <Icon icon="lucide:folder-plus" class="h-6 w-6" />
+          <h2 class="card-title">Create New Folder</h2>
         </div>
-        <CardDescription>Create a folder where others can upload images</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form on:submit|preventDefault={handleCreateFolder} class="space-y-4">
-          <div class="space-y-2">
-            <Label for="name">Folder Name</Label>
-            <Input id="name" bind:value={name} placeholder="My Awesome Folder" required />
+        <p class="text-base-content/70">Create a folder where others can upload images</p>
+        
+        <form on:submit|preventDefault={handleCreateFolder} class="space-y-4 mt-4">
+          <div class="form-control w-full">
+            <label for="name" class="label">
+              <span class="label-text">Folder Name</span>
+            </label>
+            <input 
+              id="name" 
+              type="text" 
+              bind:value={name} 
+              placeholder="My Awesome Folder" 
+              required 
+              class="input input-bordered w-full" 
+            />
           </div>
           
-          <div class="space-y-2">
-            <Label for="password">Password</Label>
-            <Input id="password" type="password" bind:value={password} placeholder="••••••••" required />
-            <p class="text-xs text-muted-foreground">
-              This password will be needed to upload images to this folder
-            </p>
+          <div class="form-control w-full">
+            <label for="password" class="label">
+              <span class="label-text">Password</span>
+            </label>
+            <input 
+              id="password" 
+              type="password" 
+              bind:value={password} 
+              placeholder="••••••••" 
+              required 
+              class="input input-bordered w-full" 
+            />
+            <label class="label">
+              <span class="label-text-alt text-base-content/70">
+                This password will be needed to upload images to this folder
+              </span>
+            </label>
           </div>
           
           {#if error}
-            <div class="text-destructive text-sm">{error}</div>
+            <div class="text-error text-sm">{error}</div>
           {/if}
           
-          <Button type="submit" class="w-full" disabled={isCreating}>
+          <button 
+            type="submit" 
+            class="btn btn-primary w-full" 
+            disabled={isCreating}
+          >
             {#if isCreating}
+              <span class="loading loading-spinner"></span>
               Creating...
             {:else}
               Create Folder
             {/if}
-          </Button>
+          </button>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   </div>

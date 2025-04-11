@@ -1,12 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { Button } from '$lib/components/ui/button';
-    import { Input } from '$lib/components/ui/input';
-    import { Label } from '$lib/components/ui/label';
-    import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '$lib/components/ui/dialog';
-    import { Share, Upload, Lock, Copy, Image as ImageIcon, RefreshCw } from 'lucide-svelte';
-    import { Card, CardContent } from '$lib/components/ui/card';
-    // import { toast } from '$lib/components/ui/toast';
+    import Icon from '@iconify/svelte';
     
     export let data;
     
@@ -17,6 +11,7 @@
     let files: FileList | null = null;
     let shareUrl = '';
     let isRefreshing = false;
+    let showShareDialog = false;
     
     $: folder = data.folder;
     $: images = data.images;
@@ -37,29 +32,14 @@
         
         if (response.ok) {
           isAuthenticated = true;
-        } else {
-          // toast({
-          //   title: 'Error',
-          //   description: 'Invalid password',
-          //   variant: 'destructive'
-          // });
         }
       } catch (error) {
-        // toast({
-        //   title: 'Error',
-        //   description: 'Failed to verify password',
-        //   variant: 'destructive'
-        // });
+        // Error handling removed as per previous request
       }
     }
     
     async function handleUpload() {
       if (!files || files.length === 0) {
-        // toast({
-        //   title: 'Error',
-        //   description: 'Please select at least one file',
-        //   variant: 'destructive'
-        // });
         return;
       }
       
@@ -101,19 +81,10 @@
           uploadProgress = ((i + 1) / files.length) * 100;
         }
         
-        // toast({
-        //   title: 'Success',
-        //   description: 'Files uploaded successfully'
-        // });
-        
         // Refresh the image list
         await refreshImages();
       } catch (error) {
-        // toast({
-        //   title: 'Error',
-        //   description: error instanceof Error ? error.message : 'An error occurred during upload',
-        //   variant: 'destructive'
-        // });
+        // Error handling removed as per previous request
       } finally {
         isUploading = false;
         files = null;
@@ -122,10 +93,6 @@
     
     function copyShareUrl() {
       navigator.clipboard.writeText(shareUrl);
-      // toast({
-      //   title: 'Copied!',
-      //   description: 'Share link copied to clipboard'
-      // });
     }
     
     async function refreshImages() {
@@ -138,11 +105,7 @@
           images = refreshedImages;
         }
       } catch (error) {
-        // toast({
-        //   title: 'Error',
-        //   description: 'Failed to refresh images',
-        //   variant: 'destructive'
-        // });
+        // Error handling removed as per previous request
       } finally {
         isRefreshing = false;
       }
@@ -154,133 +117,112 @@
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 class="text-3xl font-bold">{folder.name}</h1>
-          <p class="text-muted-foreground">Created: {new Date(folder.createdAt).toLocaleDateString()}</p>
+          <p class="text-base-content/70">Created: {new Date(folder.createdAt).toLocaleDateString()}</p>
         </div>
         
         <div class="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" on:click={refreshImages} disabled={isRefreshing}>
-            <RefreshCw class="h-4 w-4 mr-2" />
+          <button class="btn btn-outline btn-sm gap-2" on:click={refreshImages} disabled={isRefreshing}>
+            <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
             Refresh
-          </Button>
+          </button>
           
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Share class="h-4 w-4 mr-2" />
-                Share
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Share this folder</DialogTitle>
-                <DialogDescription>
-                  Anyone with this link can view and upload to this folder (with password)
-                </DialogDescription>
-              </DialogHeader>
-              <div class="flex items-center gap-2 mt-2">
-                <Input value={shareUrl} readonly />
-                <Button variant="outline" size="icon" on:click={copyShareUrl}>
-                  <Copy class="h-4 w-4" />
-                </Button>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" on:click={copyShareUrl}>Copy Link</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <button class="btn btn-outline btn-sm gap-2" on:click={() => showShareDialog = true}>
+            <Icon icon="lucide:share" class="h-4 w-4" />
+            Share
+          </button>
         </div>
       </div>
       
       {#if !isAuthenticated}
-        <Card>
-          <CardContent class="p-6">
-            <div class="flex flex-col items-center gap-4 py-6">
-              <Lock class="h-12 w-12 text-muted-foreground" />
-              <h2 class="text-xl font-semibold">Authentication Required</h2>
-              <p class="text-center text-muted-foreground">
-                Enter the folder password to view and upload images
-              </p>
-              <div class="w-full max-w-sm flex gap-2">
-                <Input type="password" bind:value={password} placeholder="Enter password" />
-                <Button on:click={verifyPassword}>Unlock</Button>
-              </div>
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body items-center text-center">
+            <Icon icon="lucide:lock" class="h-12 w-12 text-base-content/70" />
+            <h2 class="text-xl font-semibold">Authentication Required</h2>
+            <p class="text-base-content/70">
+              Enter the folder password to view and upload images
+            </p>
+            <div class="w-full max-w-sm flex gap-2">
+              <input 
+                type="password" 
+                bind:value={password} 
+                placeholder="Enter password" 
+                class="input input-bordered flex-1"
+              />
+              <button class="btn btn-primary" on:click={verifyPassword}>Unlock</button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       {:else}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Image upload section -->
-          <Card>
-            <CardContent class="p-6">
-              <div class="flex flex-col items-center gap-4">
-                <Upload class="h-10 w-10 text-muted-foreground" />
-                <h2 class="text-xl font-semibold">Upload Images</h2>
-                
-                <div class="w-full">
-                  <Label for="files" class="block mb-2">Select Images</Label>
-                  <Input 
-                    id="files" 
-                    type="file" 
-                    accept="image/*" 
-                    multiple 
-                    bind:files 
-                    disabled={isUploading}
-                  />
-                </div>
-                
-                {#if isUploading}
-                  <div class="w-full">
-                    <div class="h-2 w-full bg-muted rounded-full overflow-hidden">
-                      <div 
-                        class="h-full bg-primary" 
-                        style="width: {uploadProgress}%;"
-                      ></div>
-                    </div>
-                    <p class="text-center text-sm text-muted-foreground mt-2">
-                      Uploading... {Math.round(uploadProgress)}%
-                    </p>
-                  </div>
-                {/if}
-                
-                <Button 
-                  class="w-full" 
-                  on:click={handleUpload} 
-                  disabled={!files || files.length === 0 || isUploading}
-                >
-                  {isUploading ? 'Uploading...' : 'Upload'}
-                </Button>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body items-center text-center">
+              <Icon icon="lucide:upload" class="h-10 w-10 text-base-content/70" />
+              <h2 class="text-xl font-semibold">Upload Images</h2>
+              
+              <div class="w-full">
+                <label class="label">
+                  <span class="label-text">Select Images</span>
+                </label>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  multiple 
+                  bind:files 
+                  disabled={isUploading}
+                  class="file-input file-input-bordered w-full"
+                />
               </div>
-            </CardContent>
-          </Card>
+              
+              {#if isUploading}
+                <div class="w-full">
+                  <progress class="progress w-full" value={uploadProgress} max="100"></progress>
+                  <p class="text-center text-sm text-base-content/70 mt-2">
+                    Uploading... {Math.round(uploadProgress)}%
+                  </p>
+                </div>
+              {/if}
+              
+              <button 
+                class="btn btn-primary w-full" 
+                on:click={handleUpload} 
+                disabled={!files || files.length === 0 || isUploading}
+              >
+                {isUploading ? 'Uploading...' : 'Upload'}
+              </button>
+            </div>
+          </div>
           
           <!-- Share information -->
-          <Card>
-            <CardContent class="p-6">
-              <div class="flex flex-col items-center gap-4">
-                <Share class="h-10 w-10 text-muted-foreground" />
-                <h2 class="text-xl font-semibold">Share Instructions</h2>
-                
-                <div class="space-y-4 w-full">
-                  <div>
-                    <Label class="block mb-2">Share Link</Label>
-                    <div class="flex gap-2">
-                      <Input value={shareUrl} readonly />
-                      <Button variant="outline" size="icon" on:click={copyShareUrl}>
-                        <Copy class="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label class="block mb-2">Folder Password</Label>
-                    <p class="text-sm text-muted-foreground">
-                      Remember to share the password with people who need to upload images.
-                    </p>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body items-center text-center">
+              <Icon icon="lucide:share" class="h-10 w-10 text-base-content/70" />
+              <h2 class="text-xl font-semibold">Share Instructions</h2>
+              
+              <div class="space-y-4 w-full">
+                <div>
+                  <label class="label">
+                    <span class="label-text">Share Link</span>
+                  </label>
+                  <div class="join w-full">
+                    <input value={shareUrl} readonly class="input input-bordered join-item flex-1" />
+                    <button class="btn join-item" on:click={copyShareUrl}>
+                      <Icon icon="lucide:copy" class="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
+                
+                <div>
+                  <label class="label">
+                    <span class="label-text">Folder Password</span>
+                  </label>
+                  <p class="text-sm text-base-content/70">
+                    Remember to share the password with people who need to upload images.
+                  </p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
         
         <!-- Image gallery -->
@@ -291,9 +233,9 @@
           
           {#if images.length === 0}
             <div class="flex flex-col items-center justify-center py-10 text-center">
-              <ImageIcon class="h-16 w-16 text-muted-foreground" />
+              <Icon icon="lucide:image" class="h-16 w-16 text-base-content/70" />
               <h3 class="mt-4 text-lg font-medium">No images yet</h3>
-              <p class="mt-1 text-muted-foreground">
+              <p class="mt-1 text-base-content/70">
                 Upload images or share this folder with others to get started
               </p>
             </div>
@@ -301,7 +243,7 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {#each images as image}
                 <a href={image.url} target="_blank" rel="noopener noreferrer" class="group">
-                  <div class="relative aspect-square rounded-lg overflow-hidden border bg-muted">
+                  <div class="relative aspect-square rounded-lg overflow-hidden border bg-base-200">
                     <img
                       src={image.url}
                       alt={image.name}
@@ -321,3 +263,28 @@
       {/if}
     </div>
   </div>
+
+  <!-- Share Dialog -->
+  {#if showShareDialog}
+    <div class="modal modal-open">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Share this folder</h3>
+        <p class="py-4 text-base-content/70">
+          Anyone with this link can view and upload to this folder (with password)
+        </p>
+        <div class="join w-full">
+          <input value={shareUrl} readonly class="input input-bordered join-item flex-1" />
+          <button class="btn join-item" on:click={copyShareUrl}>
+            <Icon icon="lucide:copy" class="h-4 w-4" />
+          </button>
+        </div>
+        <div class="modal-action">
+          <button class="btn" on:click={() => showShareDialog = false}>Close</button>
+          <button class="btn btn-primary" on:click={() => { copyShareUrl(); showShareDialog = false; }}>
+            Copy Link
+          </button>
+        </div>
+      </div>
+      <div class="modal-backdrop" on:click={() => showShareDialog = false}></div>
+    </div>
+  {/if}
