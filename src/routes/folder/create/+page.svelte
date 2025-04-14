@@ -70,7 +70,7 @@
             </label>
             <input 
               id="password" 
-              type="password" 
+              type="text" 
               bind:value={password} 
               placeholder="••••••••" 
               required 
@@ -89,7 +89,7 @@
           
           <button 
             type="submit" 
-            class="btn btn-primary w-full" 
+            class="btn btn-primary w-full rounded-full" 
             disabled={isCreating}
           >
             {#if isCreating}
