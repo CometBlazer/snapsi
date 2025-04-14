@@ -22,7 +22,7 @@
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"autoprefixer": "^10.4.21",
 		"clsx": "^2.1.1",
-		"daisyui": "^5.0.18",
+		"daisyui": "^5.0.19",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
@@ -43,6 +43,7 @@
 		"@google-cloud/storage": "^7.16.0",
 		"@lucide/svelte": "^0.487.0",
 		"@supabase/supabase-js": "^2.49.4",
+		"@tailwindcss/vite": "^3.4.1",
 		"svelte-sonner": "^0.3.28"
 	}
 }
