@@ -1,3 +1,4 @@
+//src/routes/folder/[id]/+page.server.ts
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getFolderById } from '$lib/server/supabase';

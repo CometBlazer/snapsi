@@ -1,4 +1,5 @@
 <script lang="ts">
+    //src/routes/folder/[id]/+page.svelte
     import { onMount } from 'svelte';
     import Icon from '@iconify/svelte';
     
