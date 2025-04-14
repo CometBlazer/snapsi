@@ -5,7 +5,7 @@
 
 <div class="container mx-auto py-16 px-4">
   <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
-    <h1 class="text-4xl md:text-5xl font-bold">Secure Image Sharing</h1>
+    <h1 class="text-4xl md:text-5xl font-bold">Sharing Images Made Simple</h1>
     <p class="mt-4 text-xl text-base-content/70">
       Create secure folders to upload and share images with anyone, protected by passwords.
     </p>
@@ -51,7 +51,7 @@
     <div class="mt-12">
       <button class="btn btn-primary btn-lg gap-2" on:click={() => goto('/folder/create')}>
         <Icon icon="lucide:folder-plus" class="h-5 w-5" />
-        Create New Folder
+        Create An Event
       </button>
     </div>
   </div>
