@@ -1,3 +1,4 @@
+//src/routes/api/folders/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { createFolder } from '$lib/server/supabase';

@@ -1,3 +1,4 @@
+//src/routes/api/folders/[id]/verify/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { verifyFolderPassword } from '$lib/server/supabase';

@@ -1,3 +1,4 @@
+//src/routes/api/folders/[id]/images/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getFolderById } from '$lib/server/supabase';
