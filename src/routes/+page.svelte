@@ -2,6 +2,52 @@
   //src/routes/+page.svelte
   import { goto } from '$app/navigation';
   import Icon from '@iconify/svelte';
+  import { onMount } from 'svelte';
+
+  let showDialog = false;
+  let folderId = '';
+  let dialogError = '';
+
+  function openFolderDialog() {
+    showDialog = true;
+    folderId = '';
+    dialogError = '';
+  }
+
+  function closeDialog() {
+    showDialog = false;
+  }
+
+  function handleSubmit() {
+    // UUID v4 validation regex
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    
+    if (!folderId.trim()) {
+      dialogError = 'Please enter a folder ID';
+      return;
+    }
+
+    if (!uuidRegex.test(folderId.trim())) {
+      dialogError = 'Invalid folder ID format';
+      return;
+    }
+
+    // Navigate to folder page
+    goto(`/folder/${folderId.trim()}`);
+    closeDialog();
+  }
+
+  // Close dialog when Escape key is pressed
+  function handleKeydown(event) {
+    if (event.key === 'Escape' && showDialog) {
+      closeDialog();
+    }
+  }
+
+  onMount(() => {
+    document.addEventListener('keydown', handleKeydown);
+    return () => document.removeEventListener('keydown', handleKeydown);
+  });
 </script>
 
 <div class="container mx-auto py-16 px-4">
@@ -12,7 +58,7 @@
     </p>
 
     <div class="my-12 flex flex-col sm:flex-row gap-4">
-      <button class="btn btn-primary btn-lg rounded-full gap-2 text-primary-content" on:click={() => alert("Enter the code")}>
+      <button class="btn btn-primary btn-lg rounded-full gap-2 text-primary-content" on:click={openFolderDialog}>
         <Icon icon="lucide:upload" class="h-5 w-5" />
         Upload Photos
       </button>
@@ -60,6 +106,61 @@
         </div>
       </div>
     </div>
-  
   </div>
 </div>
+
+<!-- Folder ID Dialog -->
+{#if showDialog}
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-base-100 rounded-lg shadow-xl max-w-md w-full p-6 relative">
+      <button 
+        class="absolute top-3 right-3 text-base-content/70 hover:text-base-content" 
+        on:click={closeDialog}
+      >
+        <Icon icon="lucide:x" class="h-5 w-5" />
+      </button>
+      
+      <h3 class="text-xl font-bold mb-4 text-base-content">Enter Folder ID</h3>
+      
+      <p class="text-base-content/70 mb-4">
+        Enter a unique folder ID to access or upload photos to that folder
+      </p>
+      
+      <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-4">
+        <div>
+          <label for="folderId" class="block text-sm font-medium text-base-content/70 mb-1">
+            Folder ID
+          </label>
+          <input 
+            type="text" 
+            id="folderId"
+            bind:value={folderId}
+            class="input input-bordered w-full"
+            placeholder="e.g. c337f810-5ea7-44a7-a0db-d4b2f32e7d91"
+            autocomplete="off"
+          />
+          {#if dialogError}
+            <p class="text-error text-sm mt-1">{dialogError}</p>
+          {/if}
+        </div>
+        
+        <!-- <p class="text-xs text-base-content/60">
+          Example format: c337f810-5ea7-44a7-a0db-d4b2f32e7d91
+        </p> -->
+        
+        <div class="flex justify-end gap-2 mt-2">
+          <button 
+            type="button" 
+            class="btn btn-ghost" 
+            on:click={closeDialog}
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Go to Folder
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{/if}
