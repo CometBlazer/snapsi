@@ -19,6 +19,7 @@
     let isDeleting = false;
     let selectAllChecked = false;
     let isDownloading = false;
+    let showPassword = false;
     
     $: folder = data.folder;
     $: images = data.images;
@@ -307,23 +308,27 @@
         isDownloading = false;
       }
     }
+
+    function togglePasswordVisibility() {
+      showPassword = !showPassword;
+    }
   </script>
-  
+
   <div class="container mx-auto py-8 px-4">
     <div class="flex flex-col gap-6">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 class="text-3xl font-bold">{folder.name}</h1>
+          <h1 class="text-3xl font-bold mb-1">{folder.name}</h1>
           <p class="text-base-content/70">Created: {new Date(folder.createdAt).toLocaleDateString()}</p>
         </div>
         
         <div class="flex flex-wrap gap-2">
-          <button class="btn btn-outline btn-sm gap-2" on:click={refreshImages} disabled={isRefreshing}>
+          <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={refreshImages} disabled={isRefreshing}>
             <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
             Refresh
           </button>
           
-          <button class="btn btn-outline btn-sm gap-2" on:click={() => showShareDialog = true}>
+          <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={() => showShareDialog = true}>
             <Icon icon="lucide:share" class="h-4 w-4" />
             Share
           </button>
@@ -332,34 +337,48 @@
       
       {#if !isAuthenticated}
         <div class="card bg-base-100 shadow-xl">
-          <div class="card-body items-center text-center">
-            <Icon icon="lucide:lock" class="h-12 w-12 text-base-content/70" />
-            <h2 class="text-xl font-semibold">Authentication Required</h2>
-            <p class="text-base-content/70">
-              Enter the folder password to view and upload images
+          <div class="card-body items-center text-center py-20">
+            <div class="rounded-full bg-primary/10 p-6 mb-6">
+              <Icon icon="lucide:lock" class="h-16 w-16 text-primary" />
+            </div>
+            <h2 class="text-2xl font-semibold mb-2">Authentication Required</h2>
+            <p class="text-base-content/70 mb-6 max-w-md">
+              This folder is password protected. Enter the password to view and upload images.
             </p>
-            <div class="w-full max-w-sm flex gap-2">
-              <input 
-                type="password" 
-                bind:value={password} 
-                placeholder="Enter password" 
-                class="input input-bordered flex-1"
-              />
-              <button class="btn btn-primary" on:click={verifyPassword}>Unlock</button>
+            <div class="w-full max-w-sm">
+              <div class="relative w-full mb-4">
+                <input 
+                  type={showPassword ? "text" : "password"}
+                  bind:value={password} 
+                  placeholder="Enter password" 
+                  class="input input-bordered w-full rounded-xl pr-10"
+                />
+                <button 
+                  type="button" 
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-base-content/70 hover:text-base-content"
+                  on:click={togglePasswordVisibility}
+                >
+                  <Icon icon={showPassword ? "lucide:eye-off" : "lucide:eye"} class="h-5 w-5" />
+                </button>
+              </div>
+              <button class="btn btn-primary w-full rounded-xl" on:click={verifyPassword}>Unlock Folder</button>
             </div>
           </div>
         </div>
       {:else}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Image upload section -->
-          <div class="card bg-base-100 shadow-xl">
+          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4">
             <div class="card-body items-center text-center">
-              <Icon icon="lucide:upload" class="h-10 w-10 text-base-content/70" />
+              <div class="rounded-full bg-primary/10 p-4 mb-2">
+                <Icon icon="lucide:upload" class="h-10 w-10 text-primary" />
+              </div>
               <h2 class="text-xl font-semibold">Upload Images</h2>
               
-              <div class="w-full">
-                <label class="label">
-                  <span class="label-text">Select Images ({remainingImagesCount} remaining)</span>
+              <div class="w-full mt-4">
+                <label class="label mb-2">
+                  <span class="label-text font-medium">Select Images</span>
+                  <span class="label-text-alt">{remainingImagesCount} of 20 remaining</span>
                 </label>
                 <input 
                   type="file" 
@@ -367,16 +386,16 @@
                   multiple 
                   bind:files 
                   disabled={isUploading || remainingImagesCount <= 0}
-                  class="file-input file-input-bordered w-full"
+                  class="file-input file-input-bordered w-full rounded-lg"
                 />
-                <p class="text-xs text-base-content/70 mt-1">
-                  Max 10MB per file, JPEG, PNG, GIF, WebP formats only. Maximum 20 images per folder.
+                <p class="text-xs text-base-content/70 mt-2">
+                  Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
                 </p>
               </div>
               
               {#if isUploading}
-                <div class="w-full">
-                  <progress class="progress w-full" value={uploadProgress} max="100"></progress>
+                <div class="w-full mt-4">
+                  <progress class="progress progress-primary w-full" value={uploadProgress} max="100"></progress>
                   <p class="text-center text-sm text-base-content/70 mt-2">
                     Uploading... {Math.round(uploadProgress)}%
                   </p>
@@ -384,58 +403,66 @@
               {/if}
               
               {#if uploadError}
-                <div class="alert alert-error mt-2">
+                <div class="alert alert-error mt-4 rounded-lg">
                   <Icon icon="lucide:alert-circle" class="h-4 w-4" />
                   <span>{uploadError}</span>
                 </div>
               {/if}
               
               <button 
-                class="btn btn-primary w-full" 
+                class="btn btn-primary w-full mt-4 rounded-xl" 
                 on:click={handleUpload} 
                 disabled={!files || files.length === 0 || isUploading || remainingImagesCount <= 0}
               >
-                {isUploading ? 'Uploading...' : 'Upload'}
+                {isUploading ? 'Uploading...' : 'Upload Photos'}
               </button>
               
               {#if remainingImagesCount <= 0}
-                <p class="text-error text-sm mt-2">
-                  Maximum number of images reached (20). Delete some images to upload more.
-                </p>
+                <div class="alert alert-warning mt-4 rounded-lg">
+                  <Icon icon="lucide:alert-triangle" class="h-4 w-4" />
+                  <span>Maximum number of images reached (20). Delete some images to upload more.</span>
+                </div>
               {/if}
             </div>
           </div>
           
           <!-- Share information -->
-          <div class="card bg-base-100 shadow-xl">
+          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4">
             <div class="card-body items-center text-center">
-              <Icon icon="lucide:share" class="h-10 w-10 text-base-content/70" />
+              <div class="rounded-full bg-primary/10 p-4 mb-2">
+                <Icon icon="lucide:share" class="h-10 w-10 text-primary" />
+              </div>
               <h2 class="text-xl font-semibold">Share Instructions</h2>
               
-              <div class="space-y-4 w-full">
+              <div class="space-y-4 w-full mt-4">
                 <div>
-                  <label class="label">
-                    <span class="label-text">Share Link</span>
+                  <label class="label mb-2">
+                    <span class="label-text font-medium">Share Link</span>
                   </label>
                   <div class="join w-full">
-                    <input value={shareUrl} readonly class="input input-bordered join-item flex-1" />
-                    <button class="btn join-item" on:click={copyShareUrl}>
+                    <input value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+                    <button class="btn join-item rounded-r-lg" on:click={copyShareUrl}>
                       <Icon icon="lucide:copy" class="h-4 w-4" />
                     </button>
                   </div>
                 </div>
                 
                 {#if folder.hasPassword}
-                <div>
-                  <label class="label">
-                    <span class="label-text">Folder Password</span>
-                  </label>
+                <div class="p-4 bg-base-200 rounded-xl">
+                  <div class="flex items-center gap-2 mb-2">
+                    <Icon icon="lucide:shield" class="h-5 w-5 text-primary" />
+                    <span class="font-medium">Password Protected</span>
+                  </div>
                   <p class="text-sm text-base-content/70">
                     Remember to share the password with people who need to view or upload images.
                   </p>
                 </div>
                 {:else}
-                <div>
+                <div class="p-4 bg-base-200 rounded-xl">
+                  <div class="flex items-center gap-2 mb-2">
+                    <Icon icon="lucide:alert-triangle" class="h-5 w-5 text-warning" />
+                    <span class="font-medium">Public Folder</span>
+                  </div>
                   <p class="text-sm text-base-content/70">
                     This folder is not password protected. Anyone with the link can view and upload images.
                   </p>
@@ -448,23 +475,32 @@
         
         <!-- Image gallery -->
         <div>
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-semibold">Images ({images.length}/20)</h2>
+          <div class="flex items-center justify-between mt-3 mb-6">
+            <h2 class="text-xl font-semibold flex-row items-center gap-4">
+              <span>{images.length} Image(s)</span>
+              {#if images.length > 0}
+                <span class="text-xs bg-base-200 ml-2 px-2 py-1 rounded-full text-base-content/70">
+                  Max 20 allowed
+                </span>
+              {/if}
+            </h2>
             
             {#if images.length > 0}
-              <div class="flex items-center gap-2">
-                <div class="flex items-center gap-1">
-                  <input 
-                    type="checkbox" 
-                    class="checkbox checkbox-sm" 
-                    bind:checked={selectAllChecked} 
-                    on:change={toggleSelectAll}
-                  />
-                  <span class="text-sm">Select All</span>
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <label class="cursor-pointer flex items-center gap-2">
+                    <input 
+                      type="checkbox" 
+                      class="checkbox checkbox-sm checkbox-secondary rounded-md" 
+                      bind:checked={selectAllChecked} 
+                      on:change={toggleSelectAll}
+                    />
+                    <span class="text-sm">Select All</span>
+                  </label>
                 </div>
                 
                 <div class="dropdown dropdown-end">
-                  <button class="btn btn-sm" disabled={!hasSelectedImages}>
+                  <button class="btn btn-sm rounded-full" disabled={!hasSelectedImages}>
                     <Icon icon="lucide:more-horizontal" class="h-4 w-4" />
                     Selected ({selectedImages.length})
                   </button>
@@ -494,10 +530,12 @@
           </div>
           
           {#if images.length === 0}
-            <div class="flex flex-col items-center justify-center py-10 text-center">
-              <Icon icon="lucide:image" class="h-16 w-16 text-base-content/70" />
-              <h3 class="mt-4 text-lg font-medium">No images yet</h3>
-              <p class="mt-1 text-base-content/70">
+            <div class="flex flex-col items-center justify-center py-16 text-center bg-base-200 rounded-xl">
+              <div class="rounded-full bg-base-100 p-6 mb-4">
+                <Icon icon="lucide:image" class="h-16 w-16 text-base-content/50" />
+              </div>
+              <h3 class="text-xl font-medium">No images yet</h3>
+              <p class="mt-2 text-base-content/70 max-w-md">
                 Upload images or share this folder with others to get started
               </p>
             </div>
@@ -506,17 +544,17 @@
               {#each images as image}
                 <div class="relative group">
                   <!-- Checkbox for selection -->
-                  <div class="absolute top-2 left-2 z-10">
+                  <div class="absolute top-4 left-4 z-10">
                     <input 
                       type="checkbox" 
-                      class="checkbox checkbox-sm bg-white/80" 
+                      class="checkbox checkbox-secondary checkbox-md rounded-md border-1 bg-base-100" 
                       checked={selectedImages.includes(image.name)} 
                       on:change={() => toggleImageSelection(image.name)}
                     />
                   </div>
                   
                   <!-- Image card -->
-                  <div class="relative aspect-square rounded-lg overflow-hidden border bg-base-200">
+                  <div class="relative aspect-square rounded-xl overflow-hidden border bg-base-200">
                     <img
                       src={image.url}
                       alt={image.name}
@@ -524,27 +562,27 @@
                     />
                     
                     <!-- Image info overlay -->
-                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4">
                       <div class="flex justify-end">
                         <div class="flex gap-1">
                           <button 
-                            class="btn btn-circle btn-xs bg-white/80 hover:bg-white"
+                            class="btn btn-circle btn-sm bg-white/80 hover:bg-white"
                             on:click={() => downloadImage(image.url, image.name)}
                             title="Download image"
                           >
-                            <Icon icon="lucide:download" class="h-3 w-3" />
+                            <Icon icon="lucide:download" class="h-4 w-4" />
                           </button>
                           
                           <button 
-                            class="btn btn-circle btn-xs bg-white/80 hover:bg-white"
+                            class="btn btn-circle btn-sm bg-white/80 hover:bg-white"
                             on:click={() => window.open(image.url, '_blank')}
                             title="View full size"
                           >
-                            <Icon icon="lucide:external-link" class="h-3 w-3" />
+                            <Icon icon="lucide:external-link" class="h-4 w-4" />
                           </button>
                           
                           <button 
-                            class="btn btn-circle btn-xs bg-white/80 hover:bg-white text-error"
+                            class="btn btn-circle btn-sm bg-white/80 hover:bg-white text-error"
                             on:click={async () => {
                               if (confirm(`Delete ${image.name}?`)) {
                                 await deleteImage(image.name);
@@ -553,12 +591,12 @@
                             }}
                             title="Delete image"
                           >
-                            <Icon icon="lucide:trash-2" class="h-3 w-3" />
+                            <Icon icon="lucide:trash-2" class="h-4 w-4" />
                           </button>
                         </div>
                       </div>
                       
-                      <div class="w-full truncate text-white text-sm">
+                      <div class="w-full truncate text-white text-sm font-medium px-1">
                         {image.name}
                       </div>
                     </div>
@@ -575,7 +613,7 @@
   <!-- Share Dialog -->
   {#if showShareDialog}
     <div class="modal modal-open">
-      <div class="modal-box">
+      <div class="modal-box rounded-xl">
         <h3 class="font-bold text-lg">Share this folder</h3>
         <p class="py-4 text-base-content/70">
           Anyone with this link can view and upload to this folder
@@ -586,14 +624,14 @@
           {/if}
         </p>
         <div class="join w-full">
-          <input value={shareUrl} readonly class="input input-bordered join-item flex-1" />
-          <button class="btn join-item" on:click={copyShareUrl}>
+          <input value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+          <button class="btn join-item rounded-r-lg" on:click={copyShareUrl}>
             <Icon icon="lucide:copy" class="h-4 w-4" />
           </button>
         </div>
         <div class="modal-action">
-          <button class="btn" on:click={() => showShareDialog = false}>Close</button>
-          <button class="btn btn-primary" on:click={() => { copyShareUrl(); showShareDialog = false; }}>
+          <button class="btn rounded-full" on:click={() => showShareDialog = false}>Close</button>
+          <button class="btn btn-primary rounded-full" on:click={() => { copyShareUrl(); showShareDialog = false; }}>
             Copy Link
           </button>
         </div>
@@ -601,11 +639,11 @@
       <div class="modal-backdrop" on:click={() => showShareDialog = false}></div>
     </div>
   {/if}
-  
+
   <!-- Delete Confirmation Dialog -->
   {#if showDeleteDialog}
     <div class="modal modal-open">
-      <div class="modal-box">
+      <div class="modal-box rounded-xl">
         <h3 class="font-bold text-lg text-error">Delete Selected Images</h3>
         <p class="py-4 text-base-content/70">
           Are you sure you want to delete {selectedImages.length} selected {selectedImages.length === 1 ? 'image' : 'images'}? 
@@ -613,9 +651,9 @@
         </p>
         
         <div class="modal-action">
-          <button class="btn" on:click={() => showDeleteDialog = false}>Cancel</button>
+          <button class="btn rounded-full" on:click={() => showDeleteDialog = false}>Cancel</button>
           <button 
-            class="btn btn-error" 
+            class="btn btn-error rounded-full" 
             on:click={deleteSelectedImages}
             disabled={isDeleting}
           >
@@ -631,7 +669,7 @@
       <div class="modal-backdrop" on:click={() => showDeleteDialog = false}></div>
     </div>
   {/if}
-  
+
   <!-- Loading Overlay for Download Operations -->
   {#if isDownloading}
     <div class="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
