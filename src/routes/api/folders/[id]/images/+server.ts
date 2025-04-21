@@ -2,7 +2,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getFolderById } from '$lib/server/supabase';
-import { listFolderImages } from '$lib/server/gcloud';
+import { listFolderImages, generateSignedUrls } from '$lib/server/gcloud';
 
 export const GET: RequestHandler = async ({ params }) => {
   try {
@@ -18,7 +18,10 @@ export const GET: RequestHandler = async ({ params }) => {
     // Get images in the folder
     const images = await listFolderImages(folderId);
     
-    return json(images);
+    // Generate signed URLs for the images
+    const imagesWithSignedUrls = await generateSignedUrls(images);
+    
+    return json(imagesWithSignedUrls);
   } catch (error) {
     console.error('Error listing folder images:', error);
     return json(

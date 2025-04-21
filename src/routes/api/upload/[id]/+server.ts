@@ -119,12 +119,13 @@ export const POST: RequestHandler = async ({ request, params, getClientAddress }
     const extension = fileNameParts.pop() || '';
     const baseName = fileNameParts.join('.');
     const finalFileName = `${baseName}_${timestamp}.${extension}`;
+    const filePath = `${folderId}/${finalFileName}`;
     
     // Upload file to Google Cloud Storage
     const fileBuffer = await file.arrayBuffer();
     const contentType = file.type;
     
-    const gcsFile = bucket.file(`${folderId}/${finalFileName}`);
+    const gcsFile = bucket.file(filePath);
     await gcsFile.save(Buffer.from(fileBuffer), {
       contentType: contentType,
       metadata: {
@@ -133,18 +134,27 @@ export const POST: RequestHandler = async ({ request, params, getClientAddress }
       }
     });
     
-    // Update last upload timestamp
-    await updateFolderLastUpload(folderId);
+    try {
+      // Update last upload timestamp and increment image count
+      await updateFolderLastUpload(folderId);
+    } catch (error) {
+      console.error('Error updating folder metadata:', error);
+      // Continue anyway since the file was uploaded successfully
+    }
     
-    // Generate public URL
-    const publicUrl = `https://storage.googleapis.com/${GOOGLE_CLOUD_BUCKET_NAME}/${folderId}/${finalFileName}`;
+    // Generate a signed URL for this specific file for immediate use
+    const [signedUrl] = await gcsFile.getSignedUrl({
+      version: 'v4',
+      action: 'read',
+      expires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    });
     
     // Increment rate limiter
     uploadRateLimiter.increment(rateLimitKey);
     
     return json({ 
       success: true, 
-      url: publicUrl,
+      url: signedUrl,
       name: finalFileName,
       originalName: originalFileName,
       contentType: contentType

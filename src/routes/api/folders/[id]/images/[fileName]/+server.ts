@@ -42,16 +42,23 @@ export const DELETE: RequestHandler = async ({ request, params, getClientAddress
       }
     }
     
-    // Delete the file from Google Cloud Storage
-    await deleteImage(folderId, fileName);
-    
-    // Update the folder image count
-    await decrementFolderImageCount(folderId);
-    
-    // Increment rate limiter
-    deleteRateLimiter.increment(rateLimitKey);
-    
-    return json({ success: true });
+    try {
+      // Delete the file from Google Cloud Storage
+      await deleteImage(folderId, fileName);
+      
+      // Update the folder image count
+      await decrementFolderImageCount(folderId);
+      
+      // Increment rate limiter
+      deleteRateLimiter.increment(rateLimitKey);
+      
+      return json({ success: true });
+    } catch (error) {
+      console.error(`Error in delete process: ${error}`);
+      return json({ 
+        message: error instanceof Error ? error.message : 'An error occurred deleting the image'
+      }, { status: 500 });
+    }
   } catch (error) {
     console.error('Error deleting image:', error);
     return json(

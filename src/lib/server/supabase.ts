@@ -67,35 +67,69 @@ export async function verifyFolderPassword(id: string, password: string | null =
 
 // Function to update the last upload timestamp
 export async function updateFolderLastUpload(id: string) {
-  const { error } = await supabase
-    .from('folders')
-    .update({ 
-      last_upload_at: new Date().toISOString(),
-      image_count: supabase.rpc('increment_image_count', { folder_id: id })
-    })
-    .eq('id', id);
+  try {
+    // First, update the last upload timestamp
+    const { error: timestampError } = await supabase
+      .from('folders')
+      .update({ 
+        last_upload_at: new Date().toISOString()
+      })
+      .eq('id', id);
 
-  if (error) {
-    throw new Error(`Error updating folder last upload: ${error.message}`);
+    if (timestampError) {
+      throw new Error(`Error updating folder timestamp: ${timestampError.message}`);
+    }
+    
+    // Then, manually increment the image count instead of using RPC
+    const folder = await getFolderById(id);
+    if (!folder) {
+      throw new Error('Folder not found when updating image count');
+    }
+    
+    const currentCount = folder.image_count || 0;
+    const newCount = currentCount + 1;
+    
+    const { error: countError } = await supabase
+      .from('folders')
+      .update({ image_count: newCount })
+      .eq('id', id);
+
+    if (countError) {
+      throw new Error(`Error incrementing image count: ${countError.message}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error in updateFolderLastUpload:', error);
+    throw error;
   }
-
-  return true;
 }
 
 // Function to decrement image count after deletion
 export async function decrementFolderImageCount(id: string) {
-  const { error } = await supabase
-    .from('folders')
-    .update({ 
-      image_count: supabase.rpc('decrement_image_count', { folder_id: id })
-    })
-    .eq('id', id);
+  try {
+    const folder = await getFolderById(id);
+    if (!folder) {
+      throw new Error('Folder not found');
+    }
+    
+    const currentCount = folder.image_count || 0;
+    const newCount = Math.max(0, currentCount - 1); // Ensure we don't go below 0
+    
+    const { error } = await supabase
+      .from('folders')
+      .update({ image_count: newCount })
+      .eq('id', id);
 
-  if (error) {
-    throw new Error(`Error updating folder image count: ${error.message}`);
+    if (error) {
+      throw new Error(`Error updating folder image count: ${error.message}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error in decrementFolderImageCount:', error);
+    throw error;
   }
-
-  return true;
 }
 
 // Function to get folder image count

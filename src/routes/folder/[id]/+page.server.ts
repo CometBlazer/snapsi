@@ -2,7 +2,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getFolderById } from '$lib/server/supabase';
-import { listFolderImages } from '$lib/server/gcloud';
+import { listFolderImages, generateSignedUrls } from '$lib/server/gcloud';
 
 export const load: PageServerLoad = async ({ params }) => {
   const folderId = params.id;
@@ -17,6 +17,9 @@ export const load: PageServerLoad = async ({ params }) => {
   // Get images in this folder
   const images = await listFolderImages(folderId);
   
+  // Generate signed URLs for all images
+  const imagesWithSignedUrls = await generateSignedUrls(images);
+  
   return {
     folder: {
       id: folder.id,
@@ -24,6 +27,6 @@ export const load: PageServerLoad = async ({ params }) => {
       createdAt: folder.created_at,
       hasPassword: folder.password !== null && folder.password !== ''
     },
-    images
+    images: imagesWithSignedUrls
   };
 };
