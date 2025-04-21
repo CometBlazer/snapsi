@@ -9,11 +9,11 @@
 	const navItems = [
 	  // { href: "/blog", label: "Blog" },
 	  { href: "/pricing", label: "Pricing" },
-	  { href: "/contact_us", label: "Contact Us" },
+	  { href: "/", label: "Contact Us" },
 	  // { href: "/search", label: "Search" },
 	  {
-		href: "/account",
-		label: "Dashboard",
+		href: "/folder/create",
+		label: "Create Folder",
 		className: "border border-primary rounded-full ml-4",
 	  },
 	]
@@ -109,7 +109,7 @@
 		  <ul class="space-y-2">
 			<li><a href="/" class="text-sm hover:underline">About</a></li>
 			<li>
-			  <a href="/contact_us" class="text-sm hover:underline">Contact</a>
+			  <a href="/" class="text-sm hover:underline">Contact</a>
 			</li>
 			<li>
 			  <a href="/" class="text-sm hover:underline">Careers</a>
@@ -141,7 +141,7 @@
 		</p>
 
 		<div class="flex items-center space-x-4">
-		  <a href="https://instagram.com/unibooth_ai" target="_blank" class="p-2 rounded-full hover:bg-base-200 transition-colors duration-200" aria-label="Instagram">
+		  <a href="https://instagram.com/" target="_blank" class="p-2 rounded-full hover:bg-base-200 transition-colors duration-200" aria-label="Instagram">
 			<!-- Instagram SVG -->
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 			  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -149,7 +149,7 @@
 			  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
 			</svg>
 		  </a>
-		  <a href="https://linkedin.com/company/your-company" target="_blank" class="p-2 rounded-full hover:bg-base-200 transition-colors duration-200" aria-label="LinkedIn">
+		  <a href="https://linkedin.com/" target="_blank" class="p-2 rounded-full hover:bg-base-200 transition-colors duration-200" aria-label="LinkedIn">
 			<!-- LinkedIn SVG -->
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 			  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>

@@ -38,7 +38,7 @@
   }
 
   // Close dialog when Escape key is pressed
-  function handleKeydown(event) {
+  function handleKeydown(event: { key: string; }) {
     if (event.key === 'Escape' && showDialog) {
       closeDialog();
     }
@@ -101,7 +101,7 @@
           </div>
           <h2 class="card-title text-base-content">Share Securely</h2>
           <p class="text-base-content/70">
-            Share your folder link with password protection
+            Share your folder link with optional password protection
           </p>
         </div>
       </div>
