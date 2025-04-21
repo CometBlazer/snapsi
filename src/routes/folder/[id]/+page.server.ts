@@ -21,7 +21,8 @@ export const load: PageServerLoad = async ({ params }) => {
     folder: {
       id: folder.id,
       name: folder.name,
-      createdAt: folder.created_at
+      createdAt: folder.created_at,
+      hasPassword: folder.password !== null && folder.password !== ''
     },
     images
   };

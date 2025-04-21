@@ -16,9 +16,14 @@
     
     $: folder = data.folder;
     $: images = data.images;
-    
+
     onMount(() => {
       shareUrl = window.location.href;
+      
+      // If the folder doesn't have a password, auto-authenticate
+      if (!folder.hasPassword) {
+        isAuthenticated = true;
+      }
     });
     
     async function verifyPassword() {
@@ -33,9 +38,12 @@
         
         if (response.ok) {
           isAuthenticated = true;
+        } else {
+          const data = await response.json();
+          alert(data.message || 'Invalid password');
         }
       } catch (error) {
-        // Error handling removed as per previous request
+        console.error('Error verifying password:', error);
       }
     }
     
@@ -65,7 +73,8 @@
           });
           
           if (!response.ok) {
-            throw new Error('Failed to get upload URL');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to get upload URL');
           }
           
           const { url } = await response.json();
@@ -85,7 +94,8 @@
         // Refresh the image list
         await refreshImages();
       } catch (error) {
-        // Error handling removed as per previous request
+        console.error('Error uploading files:', error);
+        alert(error instanceof Error ? error.message : 'An error occurred during upload');
       } finally {
         isUploading = false;
         files = null;
@@ -104,15 +114,18 @@
         if (response.ok) {
           const refreshedImages = await response.json();
           images = refreshedImages;
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to refresh images');
         }
       } catch (error) {
-        // Error handling removed as per previous request
+        console.error('Error refreshing images:', error);
       } finally {
         isRefreshing = false;
       }
     }
   </script>
-  
+
   <div class="container mx-auto py-8 px-4">
     <div class="flex flex-col gap-6">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -213,14 +226,22 @@
                   </div>
                 </div>
                 
+                {#if folder.hasPassword}
                 <div>
                   <label class="label">
                     <span class="label-text">Folder Password</span>
                   </label>
                   <p class="text-sm text-base-content/70">
-                    Remember to share the password with people who need to upload images.
+                    Remember to share the password with people who need to view or upload images.
                   </p>
                 </div>
+                {:else}
+                <div>
+                  <p class="text-sm text-base-content/70">
+                    This folder is not password protected. Anyone with the link can view and upload images.
+                  </p>
+                </div>
+                {/if}
               </div>
             </div>
           </div>
@@ -271,7 +292,12 @@
       <div class="modal-box">
         <h3 class="font-bold text-lg">Share this folder</h3>
         <p class="py-4 text-base-content/70">
-          Anyone with this link can view and upload to this folder (with password)
+          Anyone with this link can view and upload to this folder
+          {#if folder.hasPassword}
+          (with password)
+          {:else}
+          (no password required)
+          {/if}
         </p>
         <div class="join w-full">
           <input value={shareUrl} readonly class="input input-bordered join-item flex-1" />

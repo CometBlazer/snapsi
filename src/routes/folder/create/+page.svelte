@@ -9,8 +9,8 @@
     let error = '';
     
     async function handleCreateFolder() {
-      if (!name || !password) {
-        error = 'Please fill in all fields';
+      if (!name) {
+        error = 'Folder name is required';
         return;
       }
       
@@ -23,7 +23,10 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ name, password })
+          body: JSON.stringify({ 
+            name, 
+            password: password.trim() === '' ? null : password 
+          })
         });
         
         if (!response.ok) {
@@ -40,7 +43,7 @@
       }
     }
   </script>
-  
+
   <div class="container mx-auto max-w-md py-10">
     <div class="card bg-base-100 shadow-xl">
       <div class="card-body">
@@ -67,19 +70,18 @@
           
           <div class="form-control w-full">
             <label for="password" class="label">
-              <span class="label-text">Password</span>
+              <span class="label-text">Password (Optional)</span>
             </label>
             <input 
               id="password" 
               type="text" 
               bind:value={password} 
-              placeholder="••••••••" 
-              required 
+              placeholder="Leave blank for no password protection" 
               class="input input-bordered w-full" 
             />
             <label class="label">
               <span class="label-text-alt text-base-content/70">
-                This password will be needed to upload images to this folder
+                If provided, this password will be needed to view and upload images
               </span>
             </label>
           </div>
