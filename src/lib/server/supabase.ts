@@ -1,3 +1,4 @@
+// src/lib/server/supabase.ts
 import { createClient } from '@supabase/supabase-js';   
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '$env/static/private';
 
@@ -8,12 +9,12 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 export type Folder = {
   id: string;
   name: string;
-  password: string;
+  password: string | null;
   created_at: string;
 };
 
 // Function to create a new folder
-export async function createFolder(name: string, password: string) {
+export async function createFolder(name: string, password: string | null = null) {
   const { data, error } = await supabase
     .from('folders')
     .insert([{ name, password }])
@@ -42,12 +43,18 @@ export async function getFolderById(id: string) {
 }
 
 // Function to verify folder password
-export async function verifyFolderPassword(id: string, password: string) {
+export async function verifyFolderPassword(id: string, password: string | null = null) {
   const folder = await getFolderById(id);
   
   if (!folder) {
     return false;
   }
   
+  // If folder has no password, always return true
+  if (!folder.password) {
+    return true;
+  }
+  
+  // Otherwise, check if provided password matches
   return folder.password === password;
 }
