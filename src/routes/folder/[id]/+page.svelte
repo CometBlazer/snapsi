@@ -18,6 +18,7 @@
     let selectedImages: string[] = [];
     let isDeleting = false;
     let selectAllChecked = false;
+    let isDownloading = false;
     
     $: folder = data.folder;
     $: images = data.images;
@@ -207,27 +208,103 @@
       }
     }
     
-    function downloadImage(imageUrl: string, imageName: string) {
-      const link = document.createElement('a');
-      link.href = imageUrl;
-      link.download = imageName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    // Updated download function that actually downloads the file
+    async function downloadImage(imageUrl: string, imageName: string) {
+      try {
+        // Fetch the image from the signed URL
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+          throw new Error('Failed to download image');
+        }
+        
+        // Get the file as a blob
+        const blob = await response.blob();
+        
+        // Create a URL for the blob
+        const blobUrl = URL.createObjectURL(blob);
+        
+        // Create a link and trigger the download
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = imageName;
+        document.body.appendChild(link);
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error(`Error downloading image ${imageName}:`, error);
+        alert(`Failed to download ${imageName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
     }
     
+    // Download multiple selected images
     async function downloadSelectedImages() {
       if (selectedImages.length === 0) return;
       
-      // For multiple files, we'll use a library in production
-      // This is a simple implementation for demo purposes
-      for (const imageName of selectedImages) {
-        const image = images.find(img => img.name === imageName);
-        if (image) {
-          downloadImage(image.url, image.name);
-          // Small delay to prevent browser issues with multiple downloads
-          await new Promise(resolve => setTimeout(resolve, 100));
+      isDownloading = true;
+      
+      try {
+        for (const imageName of selectedImages) {
+          const image = images.find(img => img.name === imageName);
+          if (image) {
+            await downloadImage(image.url, image.name);
+            // Small delay to prevent browser issues with multiple downloads
+            await new Promise(resolve => setTimeout(resolve, 300));
+          }
         }
+      } catch (error) {
+        console.error('Error downloading selected images:', error);
+      } finally {
+        isDownloading = false;
+      }
+    }
+    
+    // Create a zip file with selected images (if JSZip is available)
+    async function downloadAsZip() {
+      if (selectedImages.length === 0) return;
+      
+      try {
+        // Import JSZip dynamically
+        const JSZip = (await import('jszip')).default;
+        const zip = new JSZip();
+        
+        isDownloading = true;
+        
+        // Add each selected image to the zip
+        for (const imageName of selectedImages) {
+          const image = images.find(img => img.name === imageName);
+          if (image) {
+            const response = await fetch(image.url);
+            if (response.ok) {
+              const blob = await response.blob();
+              zip.file(image.name, blob);
+            }
+          }
+        }
+        
+        // Generate the zip file
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        
+        // Create a download link for the zip
+        const zipUrl = URL.createObjectURL(zipBlob);
+        const link = document.createElement('a');
+        link.href = zipUrl;
+        link.download = `${folder.name}_images.zip`;
+        document.body.appendChild(link);
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+        URL.revokeObjectURL(zipUrl);
+      } catch (error) {
+        console.error('Error creating zip file:', error);
+        alert('Failed to create zip file. Downloading images individually instead.');
+        // Fall back to downloading images one by one
+        await downloadSelectedImages();
+      } finally {
+        isDownloading = false;
       }
     }
   </script>
@@ -393,9 +470,15 @@
                   </button>
                   <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                     <li>
-                      <button on:click={downloadSelectedImages} disabled={!hasSelectedImages}>
+                      <button on:click={downloadSelectedImages} disabled={!hasSelectedImages || isDownloading}>
                         <Icon icon="lucide:download" class="h-4 w-4" />
-                        Download Selected
+                        Download Files
+                      </button>
+                    </li>
+                    <li>
+                      <button on:click={downloadAsZip} disabled={!hasSelectedImages || isDownloading}>
+                        <Icon icon="lucide:archive" class="h-4 w-4" />
+                        Download as ZIP
                       </button>
                     </li>
                     <li>
@@ -546,5 +629,15 @@
         </div>
       </div>
       <div class="modal-backdrop" on:click={() => showDeleteDialog = false}></div>
+    </div>
+  {/if}
+  
+  <!-- Loading Overlay for Download Operations -->
+  {#if isDownloading}
+    <div class="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+      <div class="bg-base-100 p-6 rounded-xl shadow-xl flex flex-col items-center">
+        <span class="loading loading-spinner loading-lg"></span>
+        <p class="mt-4">Preparing your download...</p>
+      </div>
     </div>
   {/if}
