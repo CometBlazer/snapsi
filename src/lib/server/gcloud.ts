@@ -14,6 +14,7 @@ const storage = new Storage({
 const bucket = storage.bucket(GOOGLE_CLOUD_BUCKET_NAME);
 
 // Set up CORS for the bucket (optional - we're now using server-side uploads)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function setupBucketCors() {
   try {
     await bucket.setCorsConfiguration([
@@ -86,7 +87,11 @@ export async function listFolderImages(folderId: string) {
 }
 
 // Function to generate signed URLs for each image
-export async function generateSignedUrls(images) {
+export async function generateSignedUrls(images: {
+    name: string;
+    // This is a placeholder URL, will be replaced with signed URL
+    url: string; contentType: string; size: number; createdAt: string; path: string;
+  }[]) {
   const result = [];
   
   for (const image of images) {

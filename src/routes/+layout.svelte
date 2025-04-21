@@ -19,7 +19,7 @@
 	]
 </script>
 
-<div data-theme="snappitheme" class="min-h-screen bg-base-100">
+<div data-theme="snappitheme" class="min-h-screen bg-primary/3">
   <div class="fixed top-0 left-0 right-0 z-50 flex justify-center w-full px-4 py-3">
 	<nav class="navbar bg-base-100 backdrop-blur-lg shadow-lg w-full rounded-full px-6 max-w-5xl transition-all duration-200 hover:shadow-xl">
 	  <div class="flex-1">
@@ -80,7 +80,7 @@
   <!-- Spacer grows so the footer can be at bottom on short pages -->
   <div class="flex-grow"></div>
 
-  <div class="border-t w-full mt-20">
+  <div class="border-t border-accent w-full mt-20 bg-base-100">
 	<footer class="px-6 py-8 md:py-12 max-w-6xl mx-auto">
 	  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
 		<!-- Brand Section - full width on small mobile, half on larger mobile -->
