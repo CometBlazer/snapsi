@@ -9,13 +9,20 @@
     let isAuthenticated = false;
     let isUploading = false;
     let uploadProgress = 0;
+    let uploadError = '';
     let files: FileList | null = null;
     let shareUrl = '';
     let isRefreshing = false;
     let showShareDialog = false;
+    let showDeleteDialog = false;
+    let selectedImages: string[] = [];
+    let isDeleting = false;
+    let selectAllChecked = false;
     
     $: folder = data.folder;
     $: images = data.images;
+    $: remainingImagesCount = 20 - images.length;
+    $: hasSelectedImages = selectedImages.length > 0;
 
     onMount(() => {
       shareUrl = window.location.href;
@@ -54,51 +61,57 @@
       
       isUploading = true;
       uploadProgress = 0;
+      uploadError = '';
+      
+      const totalFiles = files.length;
+      let successCount = 0;
       
       try {
-        for (let i = 0; i < files.length; i++) {
+        for (let i = 0; i < totalFiles; i++) {
           const file = files[i];
           
-          // Get a signed URL for upload
+          // Check file size client-side as well
+          if (file.size > 10 * 1024 * 1024) {
+            uploadError = `File ${file.name} is too large. Maximum size is 10MB`;
+            continue;
+          }
+          
+          // Check file type client-side
+          if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
+            uploadError = `File ${file.name} has an invalid type. Only JPEG, PNG, GIF, and WebP are allowed`;
+            continue;
+          }
+          
+          // Create a FormData object
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('password', password);
+          
+          // Upload directly to our server endpoint
           const response = await fetch(`/api/upload/${folder.id}`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-              fileName: file.name,
-              contentType: file.type,
-              password
-            })
+            body: formData
           });
           
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to get upload URL');
+            throw new Error(errorData.message || 'Failed to upload file');
           }
           
-          const { url } = await response.json();
-          
-          // Upload file directly to Google Cloud Storage
-          await fetch(url, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': file.type
-            },
-            body: file
-          });
-          
-          uploadProgress = ((i + 1) / files.length) * 100;
+          successCount++;
+          uploadProgress = (successCount / totalFiles) * 100;
         }
         
         // Refresh the image list
         await refreshImages();
       } catch (error) {
         console.error('Error uploading files:', error);
-        alert(error instanceof Error ? error.message : 'An error occurred during upload');
+        uploadError = error instanceof Error ? error.message : 'An error occurred during upload';
       } finally {
         isUploading = false;
-        files = null;
+        if (successCount > 0) {
+          files = null; // Only clear the file input if at least one file was uploaded successfully
+        }
       }
     }
     
@@ -114,6 +127,9 @@
         if (response.ok) {
           const refreshedImages = await response.json();
           images = refreshedImages;
+          // Clear selections when refreshing
+          selectedImages = [];
+          selectAllChecked = false;
         } else {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to refresh images');
@@ -124,8 +140,98 @@
         isRefreshing = false;
       }
     }
+    
+    function toggleSelectAll() {
+      if (selectAllChecked) {
+        // Select all images
+        selectedImages = images.map(image => image.name);
+      } else {
+        // Deselect all
+        selectedImages = [];
+      }
+    }
+    
+    function toggleImageSelection(imageName: string) {
+      if (selectedImages.includes(imageName)) {
+        // Remove from selection
+        selectedImages = selectedImages.filter(name => name !== imageName);
+      } else {
+        // Add to selection
+        selectedImages = [...selectedImages, imageName];
+      }
+      
+      // Update "select all" checkbox state
+      selectAllChecked = selectedImages.length === images.length;
+    }
+    
+    async function deleteSelectedImages() {
+      if (selectedImages.length === 0) return;
+      
+      isDeleting = true;
+      
+      try {
+        for (const fileName of selectedImages) {
+          await deleteImage(fileName);
+        }
+        
+        // Refresh the image list
+        await refreshImages();
+      } catch (error) {
+        console.error('Error deleting images:', error);
+        alert(error instanceof Error ? error.message : 'An error occurred deleting images');
+      } finally {
+        isDeleting = false;
+        showDeleteDialog = false;
+      }
+    }
+    
+    async function deleteImage(fileName: string) {
+      try {
+        const response = await fetch(`/api/folders/${folder.id}/images/${fileName}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ password })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to delete image');
+        }
+        
+        return true;
+      } catch (error) {
+        console.error(`Error deleting image ${fileName}:`, error);
+        throw error;
+      }
+    }
+    
+    function downloadImage(imageUrl: string, imageName: string) {
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = imageName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    async function downloadSelectedImages() {
+      if (selectedImages.length === 0) return;
+      
+      // For multiple files, we'll use a library in production
+      // This is a simple implementation for demo purposes
+      for (const imageName of selectedImages) {
+        const image = images.find(img => img.name === imageName);
+        if (image) {
+          downloadImage(image.url, image.name);
+          // Small delay to prevent browser issues with multiple downloads
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      }
+    }
   </script>
-
+  
   <div class="container mx-auto py-8 px-4">
     <div class="flex flex-col gap-6">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -176,16 +282,19 @@
               
               <div class="w-full">
                 <label class="label">
-                  <span class="label-text">Select Images</span>
+                  <span class="label-text">Select Images ({remainingImagesCount} remaining)</span>
                 </label>
                 <input 
                   type="file" 
-                  accept="image/*" 
+                  accept="image/jpeg,image/png,image/gif,image/webp" 
                   multiple 
                   bind:files 
-                  disabled={isUploading}
+                  disabled={isUploading || remainingImagesCount <= 0}
                   class="file-input file-input-bordered w-full"
                 />
+                <p class="text-xs text-base-content/70 mt-1">
+                  Max 10MB per file, JPEG, PNG, GIF, WebP formats only. Maximum 20 images per folder.
+                </p>
               </div>
               
               {#if isUploading}
@@ -197,13 +306,26 @@
                 </div>
               {/if}
               
+              {#if uploadError}
+                <div class="alert alert-error mt-2">
+                  <Icon icon="lucide:alert-circle" class="h-4 w-4" />
+                  <span>{uploadError}</span>
+                </div>
+              {/if}
+              
               <button 
                 class="btn btn-primary w-full" 
                 on:click={handleUpload} 
-                disabled={!files || files.length === 0 || isUploading}
+                disabled={!files || files.length === 0 || isUploading || remainingImagesCount <= 0}
               >
                 {isUploading ? 'Uploading...' : 'Upload'}
               </button>
+              
+              {#if remainingImagesCount <= 0}
+                <p class="text-error text-sm mt-2">
+                  Maximum number of images reached (20). Delete some images to upload more.
+                </p>
+              {/if}
             </div>
           </div>
           
@@ -250,7 +372,42 @@
         <!-- Image gallery -->
         <div>
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-semibold">Images ({images.length})</h2>
+            <h2 class="text-xl font-semibold">Images ({images.length}/20)</h2>
+            
+            {#if images.length > 0}
+              <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1">
+                  <input 
+                    type="checkbox" 
+                    class="checkbox checkbox-sm" 
+                    bind:checked={selectAllChecked} 
+                    on:change={toggleSelectAll}
+                  />
+                  <span class="text-sm">Select All</span>
+                </div>
+                
+                <div class="dropdown dropdown-end">
+                  <button class="btn btn-sm" disabled={!hasSelectedImages}>
+                    <Icon icon="lucide:more-horizontal" class="h-4 w-4" />
+                    Selected ({selectedImages.length})
+                  </button>
+                  <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                    <li>
+                      <button on:click={downloadSelectedImages} disabled={!hasSelectedImages}>
+                        <Icon icon="lucide:download" class="h-4 w-4" />
+                        Download Selected
+                      </button>
+                    </li>
+                    <li>
+                      <button on:click={() => showDeleteDialog = true} disabled={!hasSelectedImages} class="text-error">
+                        <Icon icon="lucide:trash-2" class="h-4 w-4" />
+                        Delete Selected
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            {/if}
           </div>
           
           {#if images.length === 0}
@@ -264,20 +421,66 @@
           {:else}
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {#each images as image}
-                <a href={image.url} target="_blank" rel="noopener noreferrer" class="group">
+                <div class="relative group">
+                  <!-- Checkbox for selection -->
+                  <div class="absolute top-2 left-2 z-10">
+                    <input 
+                      type="checkbox" 
+                      class="checkbox checkbox-sm bg-white/80" 
+                      checked={selectedImages.includes(image.name)} 
+                      on:change={() => toggleImageSelection(image.name)}
+                    />
+                  </div>
+                  
+                  <!-- Image card -->
                   <div class="relative aspect-square rounded-lg overflow-hidden border bg-base-200">
                     <img
                       src={image.url}
                       alt={image.name}
                       class="h-full w-full object-cover transition-all group-hover:scale-105"
                     />
-                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                      <div class="p-2 w-full truncate text-white text-sm">
+                    
+                    <!-- Image info overlay -->
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                      <div class="flex justify-end">
+                        <div class="flex gap-1">
+                          <button 
+                            class="btn btn-circle btn-xs bg-white/80 hover:bg-white"
+                            on:click={() => downloadImage(image.url, image.name)}
+                            title="Download image"
+                          >
+                            <Icon icon="lucide:download" class="h-3 w-3" />
+                          </button>
+                          
+                          <button 
+                            class="btn btn-circle btn-xs bg-white/80 hover:bg-white"
+                            on:click={() => window.open(image.url, '_blank')}
+                            title="View full size"
+                          >
+                            <Icon icon="lucide:external-link" class="h-3 w-3" />
+                          </button>
+                          
+                          <button 
+                            class="btn btn-circle btn-xs bg-white/80 hover:bg-white text-error"
+                            on:click={async () => {
+                              if (confirm(`Delete ${image.name}?`)) {
+                                await deleteImage(image.name);
+                                refreshImages();
+                              }
+                            }}
+                            title="Delete image"
+                          >
+                            <Icon icon="lucide:trash-2" class="h-3 w-3" />
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div class="w-full truncate text-white text-sm">
                         {image.name}
                       </div>
                     </div>
                   </div>
-                </a>
+                </div>
               {/each}
             </div>
           {/if}
@@ -313,5 +516,35 @@
         </div>
       </div>
       <div class="modal-backdrop" on:click={() => showShareDialog = false}></div>
+    </div>
+  {/if}
+  
+  <!-- Delete Confirmation Dialog -->
+  {#if showDeleteDialog}
+    <div class="modal modal-open">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg text-error">Delete Selected Images</h3>
+        <p class="py-4 text-base-content/70">
+          Are you sure you want to delete {selectedImages.length} selected {selectedImages.length === 1 ? 'image' : 'images'}? 
+          This action cannot be undone.
+        </p>
+        
+        <div class="modal-action">
+          <button class="btn" on:click={() => showDeleteDialog = false}>Cancel</button>
+          <button 
+            class="btn btn-error" 
+            on:click={deleteSelectedImages}
+            disabled={isDeleting}
+          >
+            {#if isDeleting}
+              <span class="loading loading-spinner"></span>
+              Deleting...
+            {:else}
+              Delete {selectedImages.length} {selectedImages.length === 1 ? 'Image' : 'Images'}
+            {/if}
+          </button>
+        </div>
+      </div>
+      <div class="modal-backdrop" on:click={() => showDeleteDialog = false}></div>
     </div>
   {/if}

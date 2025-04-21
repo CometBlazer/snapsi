@@ -11,13 +11,19 @@ export type Folder = {
   name: string;
   password: string | null;
   created_at: string;
+  last_upload_at?: string | null;
+  image_count?: number;
 };
 
 // Function to create a new folder
 export async function createFolder(name: string, password: string | null = null) {
   const { data, error } = await supabase
     .from('folders')
-    .insert([{ name, password }])
+    .insert([{ 
+      name, 
+      password,
+      image_count: 0 
+    }])
     .select();
 
   if (error) {
@@ -57,4 +63,48 @@ export async function verifyFolderPassword(id: string, password: string | null =
   
   // Otherwise, check if provided password matches
   return folder.password === password;
+}
+
+// Function to update the last upload timestamp
+export async function updateFolderLastUpload(id: string) {
+  const { error } = await supabase
+    .from('folders')
+    .update({ 
+      last_upload_at: new Date().toISOString(),
+      image_count: supabase.rpc('increment_image_count', { folder_id: id })
+    })
+    .eq('id', id);
+
+  if (error) {
+    throw new Error(`Error updating folder last upload: ${error.message}`);
+  }
+
+  return true;
+}
+
+// Function to decrement image count after deletion
+export async function decrementFolderImageCount(id: string) {
+  const { error } = await supabase
+    .from('folders')
+    .update({ 
+      image_count: supabase.rpc('decrement_image_count', { folder_id: id })
+    })
+    .eq('id', id);
+
+  if (error) {
+    throw new Error(`Error updating folder image count: ${error.message}`);
+  }
+
+  return true;
+}
+
+// Function to get folder image count
+export async function getFolderImageCount(id: string): Promise<number> {
+  const folder = await getFolderById(id);
+  
+  if (!folder) {
+    return 0;
+  }
+  
+  return folder.image_count || 0;
 }
