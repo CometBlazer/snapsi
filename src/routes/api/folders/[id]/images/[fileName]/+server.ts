@@ -5,8 +5,8 @@ import { verifyFolderPassword, getFolderById, decrementFolderImageCount } from '
 import { deleteImage } from '$lib/server/gcloud';
 import { createRateLimiter } from '$lib/server/rateLimiter';
 
-// Create a rate limiter - 10 deletes per minute per folder
-const deleteRateLimiter = createRateLimiter(10, 60 * 1000);
+// Create a rate limiter - 100 deletes per minute per folder
+const deleteRateLimiter = createRateLimiter(100, 60 * 1000);
 
 export const DELETE: RequestHandler = async ({ request, params, getClientAddress }) => {
   try {

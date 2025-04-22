@@ -619,7 +619,7 @@
                 Upload images or share this folder with others to get started!
               </p>
               <button 
-                class="btn btn-primary mt-4 md:hidden rounded-xl" 
+                class="btn btn-primary mt-4 rounded-full" 
                 on:click={() => showUploadDialog = true}
               >
                 <Icon icon="lucide:upload" class="h-4 w-4 mr-2" />

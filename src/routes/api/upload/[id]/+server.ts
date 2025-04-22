@@ -18,8 +18,8 @@ const storage = new Storage({
 
 const bucket = storage.bucket(GOOGLE_CLOUD_BUCKET_NAME);
 
-// Create a rate limiter - 5 uploads per minute per folder
-const uploadRateLimiter = createRateLimiter(5, 60 * 1000); // 5 requests per minute
+// Create a rate limiter - 100 uploads per minute per folder
+const uploadRateLimiter = createRateLimiter(100, 60 * 1000); // 5 requests per minute
 
 // Maximum file size (10MB)
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
