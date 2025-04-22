@@ -112,9 +112,9 @@
 <!-- Folder ID Dialog -->
 {#if showDialog}
   <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-    <div class="bg-base-100 rounded-lg shadow-xl max-w-md w-full p-6 relative">
+    <div class="bg-base-100 rounded-xl shadow-xl max-w-md w-full p-8 relative">
       <button 
-        class="absolute top-3 right-3 text-base-content/70 hover:text-base-content" 
+        class="absolute top-4 right-4 text-base-content/70 hover:text-base-content" 
         on:click={closeDialog}
       >
         <Icon icon="lucide:x" class="h-5 w-5" />
@@ -128,14 +128,14 @@
       
       <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-4">
         <div>
-          <label for="folderId" class="block text-sm font-medium text-base-content/70 mb-1">
+          <label for="folderId" class="block text-sm font-medium text-base-content/70 mb-2">
             Folder ID
           </label>
           <input 
             type="text" 
             id="folderId"
             bind:value={folderId}
-            class="input input-bordered w-full"
+            class="input input-bordered w-full rounded-xl"
             placeholder="e.g. c337f810-5ea7-44a7-a0db-d4b2f32e7d91"
             autocomplete="off"
           />
@@ -151,12 +151,12 @@
         <div class="flex justify-end gap-2 mt-2">
           <button 
             type="button" 
-            class="btn btn-ghost" 
+            class="btn btn-ghost rounded-full" 
             on:click={closeDialog}
           >
             Cancel
           </button>
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary rounded-full">
             Go to Folder
           </button>
         </div>

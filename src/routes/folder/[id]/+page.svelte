@@ -379,7 +379,7 @@
 
   <div class="container mx-auto py-8 px-4">
     <div class="flex flex-col gap-6">
-      <div>
+      <div class="text-center sm:text-left">
         <h1 class="text-3xl font-bold mb-1">{folder.name}</h1>
         <p class="text-base-content/70">Created: {new Date(folder.createdAt).toLocaleDateString()}</p>
       </div>
@@ -414,7 +414,7 @@
           </div>
         </div>
       {:else}
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">          
+        <div class="flex flex-col md:flex-row justify-between items-center sm:items-start md:items-center gap-4">          
           <div class="flex flex-wrap gap-2">
             <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={refreshImages} disabled={isRefreshing}>
               <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
@@ -555,7 +555,7 @@
         
         <!-- Image gallery -->
         <div>
-          <div class="flex items-center justify-between mt-3 mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 justify-between mt-3 mb-6">
             <h2 class="text-xl font-semibold flex-row items-center gap-4">
               <span>{images.length} Image(s)</span>
               {#if images.length > 0}
