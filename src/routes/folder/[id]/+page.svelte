@@ -445,7 +445,7 @@
               <div class="w-full mt-4">
                 <label class="label mb-2">
                   <span class="label-text font-medium">Select Images</span>
-                  <!-- <span class="label-text-alt">{remainingImagesCount} of 20 remaining</span> -->
+                  <span class="label-text-alt">{remainingImagesCount} of {MAX_IMAGE_COUNT} remaining</span>
                 </label>
                 <input 
                   type="file" 
@@ -499,9 +499,9 @@
               <div class="rounded-full bg-primary/10 p-4 mb-2">
                 <Icon icon="lucide:share" class="h-10 w-10 text-primary" />
               </div>
-              <h2 class="text-xl font-semibold">Share Instructions</h2>
-              
-              <div class="space-y-4 w-full mt-4">
+              <h2 class="text-xl font-semibold">Share This Folder</h2>
+        
+              <div class="space-y-4 mt-4">
                 <div>
                   <label class="label mb-2">
                     <span class="label-text font-medium">Share Link</span>
@@ -515,26 +515,39 @@
                 </div>
                 
                 {#if folder.hasPassword}
-                <div class="p-4 bg-base-200 rounded-xl">
-                  <div class="flex items-center gap-2 mb-2">
-                    <Icon icon="lucide:shield" class="h-5 w-5 text-primary" />
-                    <span class="font-medium">Password Protected</span>
+                  <div>
+                    <label class="label mb-2">
+                      <span class="label-text font-medium">Password</span>
+                    </label>
+                    <div class="join w-full">
+                      <input value={displayedPassword} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+                      <button class="btn join-item rounded-r-lg" on:click={copyPassword}>
+                        <Icon icon="lucide:copy" class="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
-                  <p class="text-sm text-base-content/70">
-                    Remember to share the password with people who need to view or upload images.
-                  </p>
-                </div>
+                  
+                  <div class="p-4 bg-base-200 rounded-xl mt-4">
+                    <div class="flex items-center gap-2 mb-2">
+                      <Icon icon="lucide:shield" class="h-5 w-5 text-primary" />
+                      <span class="font-medium">Password Protected</span>
+                    </div>
+                    <p class="text-sm text-base-content/70">
+                      Remember to share the password with people who need to view or upload images.
+                    </p>
+                  </div>
                 {:else}
-                <div class="p-4 bg-base-200 rounded-xl">
-                  <div class="flex items-center gap-2 mb-2">
-                    <Icon icon="lucide:alert-triangle" class="h-5 w-5 text-warning" />
-                    <span class="font-medium">Public Folder</span>
+                  <div class="p-4 bg-base-200 rounded-xl mt-4">
+                    <div class="flex items-center gap-2 mb-2">
+                      <Icon icon="lucide:alert-triangle" class="h-5 w-5 text-warning" />
+                      <span class="font-medium">Public Folder</span>
+                    </div>
+                    <p class="text-sm text-base-content/70">
+                      This folder is not password protected. Anyone with the link can view and upload images.
+                    </p>
                   </div>
-                  <p class="text-sm text-base-content/70">
-                    This folder is not password protected. Anyone with the link can view and upload images.
-                  </p>
-                </div>
                 {/if}
+              
               </div>
             </div>
           </div>
@@ -603,7 +616,7 @@
               </div>
               <h3 class="text-xl font-medium">No images yet</h3>
               <p class="mt-2 text-base-content/70 max-w-md">
-                Upload images or share this folder with others to get started
+                Upload images or share this folder with others to get started!
               </p>
               <button 
                 class="btn btn-primary mt-4 md:hidden rounded-xl" 
@@ -769,7 +782,7 @@
             class="file-input file-input-bordered w-full rounded-lg"
           />
           <p class="text-xs text-base-content/70 mt-2">
-            Supported formats: JPEG, PNG, GIF, WebP.
+            Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
           </p>
 
           {#if exceededLimit}
