@@ -50,7 +50,7 @@
   </script>
 
   <div class="container mx-auto max-w-2xl py-12 px-4">
-    <div class="card bg-base-100 shadow-xl rounded-3xl p-8">
+    <div class="card bg-base-100 border-base-300 border-1 shadow-xl rounded-3xl p-8">
       <div class="card-body py-10">
         <div class="flex flex-col items-center text-center mb-6">
           <div class="rounded-full bg-primary/10 p-6 mb-4">

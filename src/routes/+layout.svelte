@@ -21,7 +21,7 @@
 
 <div data-theme="snappitheme" class="min-h-screen bg-primary/3">
   <div class="fixed top-0 left-0 right-0 z-50 flex justify-center w-full px-4 py-3">
-	<nav class="navbar bg-base-100 backdrop-blur-lg shadow-lg w-full rounded-full px-6 max-w-5xl transition-all duration-200 hover:shadow-xl">
+	<nav class="navbar border-base-300 border-1 bg-base-100 backdrop-blur-lg shadow-lg w-full rounded-full px-6 max-w-5xl transition-all duration-200 hover:shadow-xl">
 	  <div class="flex-1">
 		<a href="/" class="btn btn-ghost normal-case font-bold text-xl gap-2 rounded-full hover:bg-base-200 transition-colors duration-200">
 		  <img src="/favicon.png" alt="Logo" class="w-8 h-8" />

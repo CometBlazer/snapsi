@@ -336,7 +336,7 @@
       </div>
       
       {#if !isAuthenticated}
-        <div class="card bg-base-100 shadow-xl">
+        <div class="card bg-base-100 shadow-xl border-base-300 border-1">
           <div class="card-body items-center text-center py-20">
             <div class="rounded-full bg-primary/10 p-6 mb-6">
               <Icon icon="lucide:lock" class="h-16 w-16 text-primary" />
@@ -368,7 +368,7 @@
       {:else}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Image upload section -->
-          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4">
+          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4 border-base-300 border-1">
             <div class="card-body items-center text-center">
               <div class="rounded-full bg-primary/10 p-4 mb-2">
                 <Icon icon="lucide:upload" class="h-10 w-10 text-primary" />
@@ -427,7 +427,7 @@
           </div>
           
           <!-- Share information -->
-          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4">
+          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4 border-base-300 border-1">
             <div class="card-body items-center text-center">
               <div class="rounded-full bg-primary/10 p-4 mb-2">
                 <Icon icon="lucide:share" class="h-10 w-10 text-primary" />

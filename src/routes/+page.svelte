@@ -70,7 +70,7 @@
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full">
-      <div class="card bg-base-100 shadow-xl">
+      <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
         <div class="card-body items-center text-center">
           <div class="rounded-full bg-primary/10 p-3 mb-4">
             <Icon icon="lucide:folder-plus" class="h-8 w-8 text-primary" />
@@ -82,7 +82,7 @@
         </div>
       </div>
       
-      <div class="card bg-base-100 shadow-xl">
+      <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
         <div class="card-body items-center text-center">
           <div class="rounded-full bg-primary/10 p-3 mb-4">
             <Icon icon="lucide:upload" class="h-8 w-8 text-primary" />
@@ -94,7 +94,7 @@
         </div>
       </div>
       
-      <div class="card bg-base-100 shadow-xl">
+      <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
         <div class="card-body items-center text-center">
           <div class="rounded-full bg-primary/10 p-3 mb-4">
             <Icon icon="lucide:image" class="h-8 w-8 text-primary" />
