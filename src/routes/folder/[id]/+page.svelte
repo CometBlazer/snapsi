@@ -14,17 +14,23 @@
     let shareUrl = '';
     let isRefreshing = false;
     let showShareDialog = false;
+    let showUploadDialog = false;
     let showDeleteDialog = false;
     let selectedImages: string[] = [];
     let isDeleting = false;
     let selectAllChecked = false;
     let isDownloading = false;
     let showPassword = false;
+    let displayedPassword = '';
     
     $: folder = data.folder;
     $: images = data.images;
-    $: remainingImagesCount = 20 - images.length;
+    $: maxImageCount = 20;
+    $: currentImageCount = images.length;
+    $: remainingImagesCount = maxImageCount - currentImageCount;
     $: hasSelectedImages = selectedImages.length > 0;
+    $: pendingImageCount = files ? files.length : 0;
+    $: exceededLimit = currentImageCount + pendingImageCount > maxImageCount;
 
     onMount(() => {
       shareUrl = window.location.href;
@@ -32,6 +38,11 @@
       // If the folder doesn't have a password, auto-authenticate
       if (!folder.hasPassword) {
         isAuthenticated = true;
+      }
+
+      // Retrieve stored password for display if folder has password
+      if (folder.hasPassword) {
+        getStoredPassword();
       }
     });
     
@@ -55,10 +66,41 @@
         console.error('Error verifying password:', error);
       }
     }
+
+    async function getStoredPassword() {
+      try {
+        const response = await fetch(`/api/folders/${folder.id}/password`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          displayedPassword = data.password;
+        }
+      } catch (error) {
+        console.error('Error retrieving password:', error);
+      }
+    }
     
     async function handleUpload() {
       if (!files || files.length === 0) {
         return;
+      }
+      
+      // Check if total would exceed max count
+      if (currentImageCount + files.length > maxImageCount) {
+        const allowedCount = maxImageCount - currentImageCount;
+        
+        if (allowedCount <= 0) {
+          uploadError = `Maximum number of images (${maxImageCount}) reached. Delete some images to upload more.`;
+          return;
+        }
+        
+        // Alert user that only some files will be uploaded
+        alert(`Only ${allowedCount} of ${files.length} files will be uploaded to stay within the limit of ${maxImageCount} images.`);
       }
       
       isUploading = true;
@@ -70,13 +112,12 @@
       
       try {
         for (let i = 0; i < totalFiles; i++) {
-          const file = files[i];
-          
-          // Check file size client-side as well
-          if (file.size > 10 * 1024 * 1024) {
-            uploadError = `File ${file.name} is too large. Maximum size is 10MB`;
-            continue;
+          // Stop uploading if we hit the max limit
+          if (currentImageCount + successCount >= maxImageCount) {
+            break;
           }
+          
+          const file = files[i];
           
           // Check file type client-side
           if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
@@ -101,11 +142,16 @@
           }
           
           successCount++;
-          uploadProgress = (successCount / totalFiles) * 100;
+          uploadProgress = (successCount / Math.min(totalFiles, maxImageCount - currentImageCount)) * 100;
         }
+        
+        // Update the current image count based on successful uploads
+        currentImageCount += successCount;
         
         // Refresh the image list
         await refreshImages();
+        // Close upload dialog after successful upload
+        showUploadDialog = false;
       } catch (error) {
         console.error('Error uploading files:', error);
         uploadError = error instanceof Error ? error.message : 'An error occurred during upload';
@@ -120,20 +166,32 @@
     function copyShareUrl() {
       navigator.clipboard.writeText(shareUrl);
     }
+
+    function copyPassword() {
+      navigator.clipboard.writeText(displayedPassword);
+    }
     
     async function refreshImages() {
       isRefreshing = true;
       
       try {
-        const response = await fetch(`/api/folders/${folder.id}/images`);
-        if (response.ok) {
-          const refreshedImages = await response.json();
+        // First, get updated folder data to get the latest image_count
+        const folderResponse = await fetch(`/api/folders/${folder.id}`);
+        if (folderResponse.ok) {
+          const updatedFolder = await folderResponse.json();
+          folder = updatedFolder;
+        }
+        
+        // Then, get updated image list
+        const imagesResponse = await fetch(`/api/folders/${folder.id}/images`);
+        if (imagesResponse.ok) {
+          const refreshedImages = await imagesResponse.json();
           images = refreshedImages;
           // Clear selections when refreshing
           selectedImages = [];
           selectAllChecked = false;
         } else {
-          const errorData = await response.json();
+          const errorData = await imagesResponse.json();
           throw new Error(errorData.message || 'Failed to refresh images');
         }
       } catch (error) {
@@ -200,6 +258,11 @@
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to delete image');
+        }
+        
+        // Update our local count
+        if (currentImageCount > 0) {
+          currentImageCount--;
         }
         
         return true;
@@ -316,25 +379,10 @@
 
   <div class="container mx-auto py-8 px-4">
     <div class="flex flex-col gap-6">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 class="text-3xl font-bold mb-1">{folder.name}</h1>
-          <p class="text-base-content/70">Created: {new Date(folder.createdAt).toLocaleDateString()}</p>
-        </div>
-        
-        <div class="flex flex-wrap gap-2">
-          <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={refreshImages} disabled={isRefreshing}>
-            <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
-            Refresh
-          </button>
-          
-          <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={() => showShareDialog = true}>
-            <Icon icon="lucide:share" class="h-4 w-4" />
-            Share
-          </button>
-        </div>
+      <div>
+        <h1 class="text-3xl font-bold mb-1">{folder.name}</h1>
+        <p class="text-base-content/70">Created: {new Date(folder.createdAt).toLocaleDateString()}</p>
       </div>
-      
       {#if !isAuthenticated}
         <div class="card bg-base-100 shadow-xl border-base-300 border-1">
           <div class="card-body items-center text-center py-20">
@@ -366,110 +414,22 @@
           </div>
         </div>
       {:else}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Image upload section -->
-          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4 border-base-300 border-1">
-            <div class="card-body items-center text-center">
-              <div class="rounded-full bg-primary/10 p-4 mb-2">
-                <Icon icon="lucide:upload" class="h-10 w-10 text-primary" />
-              </div>
-              <h2 class="text-xl font-semibold">Upload Images</h2>
-              
-              <div class="w-full mt-4">
-                <label class="label mb-2">
-                  <span class="label-text font-medium">Select Images</span>
-                  <!-- <span class="label-text-alt">{remainingImagesCount} of 20 remaining</span> -->
-                </label>
-                <input 
-                  type="file" 
-                  accept="image/jpeg,image/png,image/gif,image/webp" 
-                  multiple 
-                  bind:files 
-                  disabled={isUploading || remainingImagesCount <= 0}
-                  class="file-input file-input-bordered w-full rounded-lg"
-                />
-                <p class="text-xs text-base-content/70 mt-2">
-                  Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
-                </p>
-              </div>
-              
-              {#if isUploading}
-                <div class="w-full mt-4">
-                  <progress class="progress progress-primary w-full" value={uploadProgress} max="100"></progress>
-                  <p class="text-center text-sm text-base-content/70 mt-2">
-                    Uploading... {Math.round(uploadProgress)}%
-                  </p>
-                </div>
-              {/if}
-              
-              {#if uploadError}
-                <div class="alert alert-error mt-4 rounded-lg">
-                  <Icon icon="lucide:alert-circle" class="h-4 w-4" />
-                  <span>{uploadError}</span>
-                </div>
-              {/if}
-              
-              <button 
-                class="btn btn-primary w-full mt-4 rounded-xl" 
-                on:click={handleUpload} 
-                disabled={!files || files.length === 0 || isUploading || remainingImagesCount <= 0}
-              >
-                {isUploading ? 'Uploading...' : 'Upload Photos'}
-              </button>
-              
-              {#if remainingImagesCount <= 0}
-                <div class="alert alert-warning mt-4 rounded-lg">
-                  <Icon icon="lucide:alert-triangle" class="h-4 w-4" />
-                  <span>Maximum number of images reached (20). Delete some images to upload more.</span>
-                </div>
-              {/if}
-            </div>
-          </div>
-          
-          <!-- Share information -->
-          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4 border-base-300 border-1">
-            <div class="card-body items-center text-center">
-              <div class="rounded-full bg-primary/10 p-4 mb-2">
-                <Icon icon="lucide:share" class="h-10 w-10 text-primary" />
-              </div>
-              <h2 class="text-xl font-semibold">Share Instructions</h2>
-              
-              <div class="space-y-4 w-full mt-4">
-                <div>
-                  <label class="label mb-2">
-                    <span class="label-text font-medium">Share Link</span>
-                  </label>
-                  <div class="join w-full">
-                    <input value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
-                    <button class="btn join-item rounded-r-lg" on:click={copyShareUrl}>
-                      <Icon icon="lucide:copy" class="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-                
-                {#if folder.hasPassword}
-                <div class="p-4 bg-base-200 rounded-xl">
-                  <div class="flex items-center gap-2 mb-2">
-                    <Icon icon="lucide:shield" class="h-5 w-5 text-primary" />
-                    <span class="font-medium">Password Protected</span>
-                  </div>
-                  <p class="text-sm text-base-content/70">
-                    Remember to share the password with people who need to view or upload images.
-                  </p>
-                </div>
-                {:else}
-                <div class="p-4 bg-base-200 rounded-xl">
-                  <div class="flex items-center gap-2 mb-2">
-                    <Icon icon="lucide:alert-triangle" class="h-5 w-5 text-warning" />
-                    <span class="font-medium">Public Folder</span>
-                  </div>
-                  <p class="text-sm text-base-content/70">
-                    This folder is not password protected. Anyone with the link can view and upload images.
-                  </p>
-                </div>
-                {/if}
-              </div>
-            </div>
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">          
+          <div class="flex flex-wrap gap-2">
+            <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={refreshImages} disabled={isRefreshing}>
+              <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
+              Refresh
+            </button>
+            
+            <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={() => showUploadDialog = true}>
+              <Icon icon="lucide:upload" class="h-4 w-4" />
+              Upload
+            </button>
+            
+            <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={() => showShareDialog = true}>
+              <Icon icon="lucide:share" class="h-4 w-4" />
+              Share
+            </button>
           </div>
         </div>
         
@@ -480,7 +440,7 @@
               <span>{images.length} Image(s)</span>
               {#if images.length > 0}
                 <span class="text-xs bg-base-200 ml-2 px-2 py-1 rounded-full text-base-content/70">
-                  Max 20 allowed
+                  Max {maxImageCount} allowed
                 </span>
               {/if}
             </h2>
@@ -538,6 +498,13 @@
               <p class="mt-2 text-base-content/70 max-w-md">
                 Upload images or share this folder with others to get started
               </p>
+              <button 
+                class="btn btn-primary mt-4 md:hidden rounded-xl" 
+                on:click={() => showUploadDialog = true}
+              >
+                <Icon icon="lucide:upload" class="h-4 w-4 mr-2" />
+                Upload Photos
+              </button>
             </div>
           {:else}
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -615,20 +582,55 @@
     <div class="modal modal-open">
       <div class="modal-box rounded-xl">
         <h3 class="font-bold text-lg">Share this folder</h3>
-        <p class="py-4 text-base-content/70">
-          Anyone with this link can view and upload to this folder
+        
+        <div class="space-y-4 mt-4">
+          <div>
+            <label class="label mb-2">
+              <span class="label-text font-medium">Share Link</span>
+            </label>
+            <div class="join w-full">
+              <input value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+              <button class="btn join-item rounded-r-lg" on:click={copyShareUrl}>
+                <Icon icon="lucide:copy" class="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+          
           {#if folder.hasPassword}
-          (with password)
+            <div>
+              <label class="label mb-2">
+                <span class="label-text font-medium">Password</span>
+              </label>
+              <div class="join w-full">
+                <input value={displayedPassword} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+                <button class="btn join-item rounded-r-lg" on:click={copyPassword}>
+                  <Icon icon="lucide:copy" class="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-base-200 rounded-xl mt-4">
+              <div class="flex items-center gap-2 mb-2">
+                <Icon icon="lucide:shield" class="h-5 w-5 text-primary" />
+                <span class="font-medium">Password Protected</span>
+              </div>
+              <p class="text-sm text-base-content/70">
+                Remember to share the password with people who need to view or upload images.
+              </p>
+            </div>
           {:else}
-          (no password required)
+            <div class="p-4 bg-base-200 rounded-xl mt-4">
+              <div class="flex items-center gap-2 mb-2">
+                <Icon icon="lucide:alert-triangle" class="h-5 w-5 text-warning" />
+                <span class="font-medium">Public Folder</span>
+              </div>
+              <p class="text-sm text-base-content/70">
+                This folder is not password protected. Anyone with the link can view and upload images.
+              </p>
+            </div>
           {/if}
-        </p>
-        <div class="join w-full">
-          <input value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
-          <button class="btn join-item rounded-r-lg" on:click={copyShareUrl}>
-            <Icon icon="lucide:copy" class="h-4 w-4" />
-          </button>
         </div>
+        
         <div class="modal-action">
           <button class="btn rounded-full" on:click={() => showShareDialog = false}>Close</button>
           <button class="btn btn-primary rounded-full" on:click={() => { copyShareUrl(); showShareDialog = false; }}>
@@ -637,6 +639,68 @@
         </div>
       </div>
       <div class="modal-backdrop" on:click={() => showShareDialog = false}></div>
+    </div>
+  {/if}
+
+  <!-- Upload Dialog -->
+  {#if showUploadDialog}
+    <div class="modal modal-open">
+      <div class="modal-box rounded-xl">
+        <h3 class="font-bold text-lg">Upload Images</h3>
+        
+        <div class="w-full mt-4">
+          <label class="label mb-2">
+            <span class="label-text font-medium">Select Images</span>
+            <span class="label-text-alt">{remainingImagesCount} of {maxImageCount} remaining</span>
+          </label>
+          <input 
+            type="file" 
+            accept="image/jpeg,image/png,image/gif,image/webp" 
+            multiple 
+            bind:files 
+            disabled={isUploading}
+            class="file-input file-input-bordered w-full rounded-lg"
+          />
+          <p class="text-xs text-base-content/70 mt-2">
+            Supported formats: JPEG, PNG, GIF, WebP.
+          </p>
+
+          {#if exceededLimit}
+            <div class="alert alert-warning mt-4 rounded-lg">
+              <Icon icon="lucide:alert-triangle" class="h-4 w-4" />
+              <span>You've selected {pendingImageCount} files, but only {remainingImagesCount} more can be added to stay within the {maxImageCount} image limit.</span>
+            </div>
+          {/if}
+        </div>
+        
+        {#if isUploading}
+          <div class="w-full mt-4">
+            <progress class="progress progress-primary w-full" value={uploadProgress} max="100"></progress>
+            <p class="text-center text-sm text-base-content/70 mt-2">
+              Uploading... {Math.round(uploadProgress)}%
+            </p>
+          </div>
+        {/if}
+        
+        {#if uploadError}
+          <div class="alert alert-error mt-4 rounded-lg">
+            <Icon icon="lucide:alert-circle" class="h-4 w-4" />
+            <span>{uploadError}</span>
+          </div>
+        {/if}
+        
+        <div class="modal-action">
+          <button class="btn rounded-full" on:click={() => showUploadDialog = false} disabled={isUploading}>Cancel</button>
+          <button 
+            class="btn btn-primary rounded-full" 
+            on:click={handleUpload} 
+            disabled={!files || files.length === 0 || isUploading}
+          >
+            {isUploading ? 'Uploading...' : 'Upload Photos'}
+          </button>
+        </div>
+      </div>
+      <div class="modal-backdrop" on:click={() => isUploading ? null : (showUploadDialog = false)}></div>
     </div>
   {/if}
 
