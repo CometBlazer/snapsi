@@ -378,7 +378,7 @@
               <div class="w-full mt-4">
                 <label class="label mb-2">
                   <span class="label-text font-medium">Select Images</span>
-                  <span class="label-text-alt">{remainingImagesCount} of 20 remaining</span>
+                  <!-- <span class="label-text-alt">{remainingImagesCount} of 20 remaining</span> -->
                 </label>
                 <input 
                   type="file" 
@@ -544,7 +544,7 @@
               {#each images as image}
                 <div class="relative group">
                   <!-- Checkbox for selection -->
-                  <div class="absolute top-4 left-4 z-10">
+                  <div class="absolute top-2 left-2 sm:top-4 sm:left-4 z-10">
                     <input 
                       type="checkbox" 
                       class="checkbox checkbox-secondary checkbox-md rounded-md border-1 bg-base-100" 
@@ -562,7 +562,7 @@
                     />
                     
                     <!-- Image info overlay -->
-                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2 sm:p-4">
                       <div class="flex justify-end">
                         <div class="flex gap-1">
                           <button 
