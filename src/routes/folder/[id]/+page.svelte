@@ -25,12 +25,12 @@
     
     $: folder = data.folder;
     $: images = data.images;
-    $: maxImageCount = 20;
+    $: MAX_IMAGE_COUNT = 20;
     $: currentImageCount = images.length;
-    $: remainingImagesCount = maxImageCount - currentImageCount;
+    $: remainingImagesCount = MAX_IMAGE_COUNT - currentImageCount;
     $: hasSelectedImages = selectedImages.length > 0;
     $: pendingImageCount = files ? files.length : 0;
-    $: exceededLimit = currentImageCount + pendingImageCount > maxImageCount;
+    $: exceededLimit = currentImageCount + pendingImageCount > MAX_IMAGE_COUNT;
 
     onMount(() => {
       shareUrl = window.location.href;
@@ -91,16 +91,16 @@
       }
       
       // Check if total would exceed max count
-      if (currentImageCount + files.length > maxImageCount) {
-        const allowedCount = maxImageCount - currentImageCount;
+      if (currentImageCount + files.length > MAX_IMAGE_COUNT) {
+        const allowedCount = MAX_IMAGE_COUNT - currentImageCount;
         
         if (allowedCount <= 0) {
-          uploadError = `Maximum number of images (${maxImageCount}) reached. Delete some images to upload more.`;
+          uploadError = `Maximum number of images (${MAX_IMAGE_COUNT}) reached. Delete some images to upload more.`;
           return;
         }
         
         // Alert user that only some files will be uploaded
-        alert(`Only ${allowedCount} of ${files.length} files will be uploaded to stay within the limit of ${maxImageCount} images.`);
+        alert(`Only ${allowedCount} of ${files.length} files will be uploaded to stay within the limit of ${MAX_IMAGE_COUNT} images.`);
       }
       
       isUploading = true;
@@ -113,7 +113,7 @@
       try {
         for (let i = 0; i < totalFiles; i++) {
           // Stop uploading if we hit the max limit
-          if (currentImageCount + successCount >= maxImageCount) {
+          if (currentImageCount + successCount >= MAX_IMAGE_COUNT) {
             break;
           }
           
@@ -142,7 +142,7 @@
           }
           
           successCount++;
-          uploadProgress = (successCount / Math.min(totalFiles, maxImageCount - currentImageCount)) * 100;
+          uploadProgress = (successCount / Math.min(totalFiles, MAX_IMAGE_COUNT - currentImageCount)) * 100;
         }
         
         // Update the current image count based on successful uploads
@@ -440,7 +440,7 @@
               <span>{images.length} Image(s)</span>
               {#if images.length > 0}
                 <span class="text-xs bg-base-200 ml-2 px-2 py-1 rounded-full text-base-content/70">
-                  Max {maxImageCount} allowed
+                  Max {MAX_IMAGE_COUNT} allowed
                 </span>
               {/if}
             </h2>
@@ -651,7 +651,7 @@
         <div class="w-full mt-4">
           <label class="label mb-2">
             <span class="label-text font-medium">Select Images</span>
-            <span class="label-text-alt">{remainingImagesCount} of {maxImageCount} remaining</span>
+            <span class="label-text-alt">{remainingImagesCount} of {MAX_IMAGE_COUNT} remaining</span>
           </label>
           <input 
             type="file" 
@@ -668,7 +668,7 @@
           {#if exceededLimit}
             <div class="alert alert-warning mt-4 rounded-lg">
               <Icon icon="lucide:alert-triangle" class="h-4 w-4" />
-              <span>You've selected {pendingImageCount} files, but only {remainingImagesCount} more can be added to stay within the {maxImageCount} image limit.</span>
+              <span>You've selected {pendingImageCount} files, but only {remainingImagesCount} more can be added to stay within the {MAX_IMAGE_COUNT} image limit.</span>
             </div>
           {/if}
         </div>
