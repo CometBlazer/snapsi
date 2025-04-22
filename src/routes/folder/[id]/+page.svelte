@@ -433,6 +433,113 @@
           </div>
         </div>
         
+        <div class="hidden md:grid md:grid-cols-2 gap-6">
+          <!-- Image upload section -->
+          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4 border-base-300 border-1">
+            <div class="card-body items-center text-center">
+              <div class="rounded-full bg-primary/10 p-4 mb-2">
+                <Icon icon="lucide:upload" class="h-10 w-10 text-primary" />
+              </div>
+              <h2 class="text-xl font-semibold">Upload Images</h2>
+              
+              <div class="w-full mt-4">
+                <label class="label mb-2">
+                  <span class="label-text font-medium">Select Images</span>
+                  <!-- <span class="label-text-alt">{remainingImagesCount} of 20 remaining</span> -->
+                </label>
+                <input 
+                  type="file" 
+                  accept="image/jpeg,image/png,image/gif,image/webp" 
+                  multiple 
+                  bind:files 
+                  disabled={isUploading || remainingImagesCount <= 0}
+                  class="file-input file-input-bordered w-full rounded-lg"
+                />
+                <p class="text-xs text-base-content/70 mt-2">
+                  Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
+                </p>
+              </div>
+              
+              {#if isUploading}
+                <div class="w-full mt-4">
+                  <progress class="progress progress-primary w-full" value={uploadProgress} max="100"></progress>
+                  <p class="text-center text-sm text-base-content/70 mt-2">
+                    Uploading... {Math.round(uploadProgress)}%
+                  </p>
+                </div>
+              {/if}
+              
+              {#if uploadError}
+                <div class="alert alert-error mt-4 rounded-lg">
+                  <Icon icon="lucide:alert-circle" class="h-4 w-4" />
+                  <span>{uploadError}</span>
+                </div>
+              {/if}
+              
+              <button 
+                class="btn btn-primary w-full mt-4 rounded-xl" 
+                on:click={handleUpload} 
+                disabled={!files || files.length === 0 || isUploading || remainingImagesCount <= 0}
+              >
+                {isUploading ? 'Uploading...' : 'Upload Photos'}
+              </button>
+              
+              {#if remainingImagesCount <= 0}
+                <div class="alert alert-warning mt-4 rounded-lg">
+                  <Icon icon="lucide:alert-triangle" class="h-4 w-4" />
+                  <span>Maximum number of images reached (20). Delete some images to upload more.</span>
+                </div>
+              {/if}
+            </div>
+          </div>
+          
+          <!-- Share information -->
+          <div class="card bg-base-100 shadow-xl rounded-2xl py-10 px-4 border-base-300 border-1">
+            <div class="card-body items-center text-center">
+              <div class="rounded-full bg-primary/10 p-4 mb-2">
+                <Icon icon="lucide:share" class="h-10 w-10 text-primary" />
+              </div>
+              <h2 class="text-xl font-semibold">Share Instructions</h2>
+              
+              <div class="space-y-4 w-full mt-4">
+                <div>
+                  <label class="label mb-2">
+                    <span class="label-text font-medium">Share Link</span>
+                  </label>
+                  <div class="join w-full">
+                    <input value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+                    <button class="btn join-item rounded-r-lg" on:click={copyShareUrl}>
+                      <Icon icon="lucide:copy" class="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+                
+                {#if folder.hasPassword}
+                <div class="p-4 bg-base-200 rounded-xl">
+                  <div class="flex items-center gap-2 mb-2">
+                    <Icon icon="lucide:shield" class="h-5 w-5 text-primary" />
+                    <span class="font-medium">Password Protected</span>
+                  </div>
+                  <p class="text-sm text-base-content/70">
+                    Remember to share the password with people who need to view or upload images.
+                  </p>
+                </div>
+                {:else}
+                <div class="p-4 bg-base-200 rounded-xl">
+                  <div class="flex items-center gap-2 mb-2">
+                    <Icon icon="lucide:alert-triangle" class="h-5 w-5 text-warning" />
+                    <span class="font-medium">Public Folder</span>
+                  </div>
+                  <p class="text-sm text-base-content/70">
+                    This folder is not password protected. Anyone with the link can view and upload images.
+                  </p>
+                </div>
+                {/if}
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <!-- Image gallery -->
         <div>
           <div class="flex items-center justify-between mt-3 mb-6">
