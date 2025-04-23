@@ -4,6 +4,8 @@
 	import { WebsiteName } from "./../config"
 	import "./../app.css"
 	import Icon from '@iconify/svelte';
+	import { dev } from '$app/environment';
+	import { injectAnalytics } from '@vercel/analytics/sveltekit';
   
 	// Define navItems if not provided by siteConfig
 	const navItems = [
@@ -17,6 +19,8 @@
 		className: "border border-primary rounded-full ml-4",
 	  },
 	]
+	
+	injectAnalytics({ mode: dev ? 'development' : 'production' });
 </script>
 
 <div data-theme="snappitheme" class="min-h-screen bg-primary/3">
