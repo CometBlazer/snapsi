@@ -484,11 +484,12 @@
               <h2 class="text-xl font-semibold">Upload Images</h2>
               
               <div class="w-full mt-4">
-                <label class="label mb-2">
+                <label class="label mb-2" for="image-upload-input">
                   <span class="label-text font-medium">Select Images</span>
                   <span class="label-text-alt">{remainingImagesCount} of {MAX_IMAGE_COUNT} remaining</span>
                 </label>
                 <input 
+                  id="image-upload-input"
                   type="file" 
                   accept="image/jpeg,image/png,image/gif,image/webp" 
                   multiple 
@@ -544,11 +545,11 @@
         
               <div class="space-y-4 mt-4">
                 <div>
-                  <label class="label mb-2">
+                  <label class="label mb-2" for="share-link">
                     <span class="label-text font-medium">Share Link</span>
                   </label>
                   <div class="join w-full">
-                    <input value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+                    <input id="share-link" value={shareUrl} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
                     <button class="btn join-item rounded-r-lg" on:click={copyShareUrl}>
                       <Icon icon="lucide:copy" class="h-4 w-4" />
                     </button>
@@ -557,11 +558,11 @@
                 
                 {#if folder.hasPassword}
                   <div>
-                    <label class="label mb-2">
+                    <label class="label mb-2" for="password-input">
                       <span class="label-text font-medium">Password</span>
                     </label>
                     <div class="join w-full">
-                      <input value={displayedPassword} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
+                      <input id="password-input" value={displayedPassword} readonly class="input input-bordered join-item flex-1 rounded-l-lg" />
                       <button class="btn join-item rounded-r-lg" on:click={copyPassword}>
                         <Icon icon="lucide:copy" class="h-4 w-4" />
                       </button>
@@ -625,7 +626,7 @@
                     <Icon icon="lucide:more-horizontal" class="h-4 w-4" />
                     Selected ({selectedImages.length})
                   </button>
-                  <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                  <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                     <li>
                       <button on:click={downloadSelectedImages} disabled={!hasSelectedImages || isDownloading}>
                         <Icon icon="lucide:download" class="h-4 w-4" />
@@ -750,7 +751,7 @@
         
         <div class="space-y-4 mt-4">
           <div>
-            <label class="label mb-2">
+            <label class="label mb-2" for="share-link">
               <span class="label-text font-medium">Share Link</span>
             </label>
             <div class="join w-full">
@@ -763,7 +764,7 @@
           
           {#if folder.hasPassword}
             <div>
-              <label class="label mb-2">
+              <label class="label mb-2" for="password-input">
                 <span class="label-text font-medium">Password</span>
               </label>
               <div class="join w-full">
@@ -803,7 +804,13 @@
           </button>
         </div>
       </div>
-      <div class="modal-backdrop" on:click={() => showShareDialog = false}></div>
+      <button 
+        type="button" 
+        class="modal-backdrop" 
+        aria-label="Close share dialog" 
+        on:click={() => showShareDialog = false} 
+        on:keydown={(e) => e.key === 'Enter' || e.key === ' ' ? (showShareDialog = false) : null}>
+      </button>
     </div>
   {/if}
 
@@ -814,11 +821,12 @@
         <h3 class="font-bold text-lg">Upload Images</h3>
         
         <div class="w-full mt-4">
-          <label class="label mb-2">
+          <label class="label mb-2" for="image-upload">
             <span class="label-text font-medium">Select Images</span>
             <span class="label-text-alt">{remainingImagesCount} of {MAX_IMAGE_COUNT} remaining</span>
           </label>
           <input 
+            id="image-upload"
             type="file" 
             accept="image/jpeg,image/png,image/gif,image/webp" 
             multiple 
@@ -865,7 +873,13 @@
           </button>
         </div>
       </div>
-      <div class="modal-backdrop" on:click={() => isUploading ? null : (showUploadDialog = false)}></div>
+      <button 
+        type="button" 
+        class="modal-backdrop" 
+        aria-label="Close upload dialog" 
+        on:click={() => isUploading ? null : (showUploadDialog = false)} 
+        on:keydown={(e) => e.key === 'Enter' || e.key === ' ' ? (isUploading ? null : (showUploadDialog = false)) : null}>
+      </button>
     </div>
   {/if}
 
@@ -895,7 +909,13 @@
           </button>
         </div>
       </div>
-      <div class="modal-backdrop" on:click={() => showDeleteDialog = false}></div>
+      <button 
+        type="button" 
+        class="modal-backdrop" 
+        aria-label="Close delete dialog" 
+        on:click={() => showDeleteDialog = false} 
+        on:keydown={(e) => e.key === 'Enter' || e.key === ' ' ? (showDeleteDialog = false) : null}>
+      </button>
     </div>
   {/if}
 
