@@ -119,6 +119,12 @@
           
           const file = files[i];
           
+          // Check file size client-side (10MB limit)
+          if (file.size > 10 * 1024 * 1024) {
+            uploadError = `File ${file.name} exceeds the 10MB size limit`;
+            continue;
+          }
+          
           // Check file type client-side
           if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
             uploadError = `File ${file.name} has an invalid type. Only JPEG, PNG, GIF, and WebP are allowed`;
@@ -130,28 +136,46 @@
           formData.append('file', file);
           formData.append('password', password);
           
-          // Upload directly to our server endpoint
-          const response = await fetch(`/api/upload/${folder.id}`, {
-            method: 'POST',
-            body: formData
-          });
-          
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to upload file');
+          try {
+            // Upload directly to our server endpoint
+            const response = await fetch(`/api/upload/${folder.id}`, {
+              method: 'POST',
+              body: formData
+            });
+            
+            // Handle non-JSON responses
+            let errorData;
+            try {
+              if (!response.ok) {
+                errorData = await response.json();
+              }
+            } catch (parseError) {
+              // If JSON parsing fails, try to get text response
+              const textResponse = await response.text();
+              throw new Error(textResponse || `Upload failed with status: ${response.status}`);
+            }
+            
+            if (!response.ok) {
+              throw new Error(errorData?.message || `Upload failed with status: ${response.status}`);
+            }
+            
+            successCount++;
+            uploadProgress = (successCount / Math.min(totalFiles, MAX_IMAGE_COUNT - currentImageCount)) * 100;
+          } catch (fileError: unknown) {
+            console.error(`Error uploading file ${file.name}:`, fileError);
+            uploadError = `Error uploading ${file.name}: ${fileError instanceof Error ? fileError.message : 'Unknown error'}`;
+            // Continue with next file instead of breaking the entire upload
           }
-          
-          successCount++;
-          uploadProgress = (successCount / Math.min(totalFiles, MAX_IMAGE_COUNT - currentImageCount)) * 100;
         }
-        
         // Update the current image count based on successful uploads
         currentImageCount += successCount;
         
-        // Refresh the image list
-        await refreshImages();
-        // Close upload dialog after successful upload
-        showUploadDialog = false;
+        if (successCount > 0) {
+          // Refresh the image list
+          await refreshImages();
+          // Close upload dialog after successful upload
+          showUploadDialog = false;
+        }
       } catch (error) {
         console.error('Error uploading files:', error);
         uploadError = error instanceof Error ? error.message : 'An error occurred during upload';
@@ -325,9 +349,10 @@
       }
     }
     
-    // Create a zip file with selected images (if JSZip is available)
-    async function downloadAsZip() {
-      if (selectedImages.length === 0) return;
+    // Modified downloadAsZip function to work with all images when triggered from the top button
+    async function downloadAsZip(allImages = false) {
+      // If allImages is true or there are selected images, proceed
+      if (!(allImages || selectedImages.length > 0)) return;
       
       try {
         // Import JSZip dynamically
@@ -336,20 +361,36 @@
         
         isDownloading = true;
         
+        // Determine which images to download
+        const imagesToDownload = allImages ? images.map(img => img.name) : selectedImages;
+        
         // Add each selected image to the zip
-        for (const imageName of selectedImages) {
+        for (const imageName of imagesToDownload) {
           const image = images.find(img => img.name === imageName);
           if (image) {
-            const response = await fetch(image.url);
-            if (response.ok) {
-              const blob = await response.blob();
-              zip.file(image.name, blob);
+            try {
+              const response = await fetch(image.url);
+              if (response.ok) {
+                const blob = await response.blob();
+                zip.file(image.name, blob);
+              } else {
+                console.error(`Failed to fetch image ${image.name}: ${response.status}`);
+              }
+            } catch (fetchError) {
+              console.error(`Error fetching ${image.name}:`, fetchError);
+              // Continue with other images instead of stopping the whole process
             }
           }
         }
         
         // Generate the zip file
-        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        const zipBlob = await zip.generateAsync({ 
+          type: 'blob',
+          compression: 'DEFLATE',
+          compressionOptions: {
+            level: 6 // Balance between size and speed
+          }
+        });
         
         // Create a download link for the zip
         const zipUrl = URL.createObjectURL(zipBlob);
@@ -362,11 +403,11 @@
         // Clean up
         document.body.removeChild(link);
         URL.revokeObjectURL(zipUrl);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Error creating zip file:', error);
-        alert('Failed to create zip file. Downloading images individually instead.');
-        // Fall back to downloading images one by one
-        await downloadSelectedImages();
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        alert('Failed to create zip file. Error: ' + errorMessage);
+        // Don't fall back to downloading images one by one as that could be disruptive
       } finally {
         isDownloading = false;
       }
@@ -416,7 +457,7 @@
       {:else}
         <div class="flex flex-col md:flex-row justify-between items-center sm:items-start md:items-center gap-4">          
           <div class="flex flex-wrap gap-2">
-            <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={downloadAsZip} disabled={!hasSelectedImages || isDownloading}>
+            <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={() => downloadAsZip(true)}>
               <Icon icon="lucide:archive" class="h-4 w-4" />
               Download All as ZIP
             </button>
@@ -592,7 +633,7 @@
                       </button>
                     </li>
                     <li>
-                      <button on:click={downloadAsZip} disabled={!hasSelectedImages || isDownloading}>
+                      <button on:click={() => downloadAsZip(true)} disabled={!hasSelectedImages || isDownloading}>
                         <Icon icon="lucide:archive" class="h-4 w-4" />
                         Download as ZIP
                       </button>
