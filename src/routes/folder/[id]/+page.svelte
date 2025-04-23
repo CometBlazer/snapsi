@@ -416,11 +416,11 @@
       {:else}
         <div class="flex flex-col md:flex-row justify-between items-center sm:items-start md:items-center gap-4">          
           <div class="flex flex-wrap gap-2">
-            <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={refreshImages} disabled={isRefreshing}>
-              <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
-              Refresh
+            <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={downloadAsZip} disabled={!hasSelectedImages || isDownloading}>
+              <Icon icon="lucide:archive" class="h-4 w-4" />
+              Download All as ZIP
             </button>
-            
+           
             <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={() => showUploadDialog = true}>
               <Icon icon="lucide:upload" class="h-4 w-4" />
               Upload
@@ -559,7 +559,7 @@
             <h2 class="text-xl font-semibold flex-row items-center gap-4">
               <span>{images.length} Image(s)</span>
               {#if images.length > 0}
-                <span class="text-xs bg-base-200 ml-2 px-2 py-1 rounded-full text-base-content/70">
+                <span class="text-xs bg-primary/20 ml-2 px-2 py-1 rounded-full text-base-content/70">
                   Max {MAX_IMAGE_COUNT} allowed
                 </span>
               {/if}
@@ -580,7 +580,7 @@
                 </div>
                 
                 <div class="dropdown dropdown-end">
-                  <button class="btn btn-sm rounded-full" disabled={!hasSelectedImages}>
+                  <button class="btn btn-sm rounded-full btn-secondary" disabled={!hasSelectedImages}>
                     <Icon icon="lucide:more-horizontal" class="h-4 w-4" />
                     Selected ({selectedImages.length})
                   </button>
@@ -605,6 +605,10 @@
                     </li>
                   </ul>
                 </div>
+                <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={refreshImages} disabled={isRefreshing}>
+                  <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
+                  Refresh
+                </button>
               </div>
             {/if}
           </div>
