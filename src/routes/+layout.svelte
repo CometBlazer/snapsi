@@ -11,7 +11,7 @@
 	const navItems = [
 	  // { href: "/blog", label: "Blog" },
 	  { href: "/pricing", label: "Pricing" },
-	  { href: "/", label: "Contact Us" },
+	  // { href: "/", label: "Contact Us" },
 	  // { href: "/search", label: "Search" },
 	  {
 		href: "/folder/create",
@@ -52,7 +52,7 @@
 		<div class="dropdown dropdown-end sm:hidden">
 		  <div class="flex items-center gap-2">
 			<!-- <ModeToggle /> -->
-			<!-- Using button instead of label, and adding tabindex for dropdown trigger -->
+
 			<!-- svelte-ignore a11y_consider_explicit_label -->
 			<button tabindex="0" class="btn btn-ghost btn-circle">
 			  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -60,6 +60,7 @@
 			  </svg>
 			</button>
 		  </div>
+		  
 		  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 		  <ul tabindex="0" class="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-52 font-bold">
 			{#each navItems as item}
