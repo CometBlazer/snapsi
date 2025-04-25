@@ -1,5 +1,5 @@
 <script lang="ts">
-	//src/routes/+layout.svelte
+	// src/routes/+layout.svelte
 	import { page } from "$app/stores"
 	import { WebsiteName } from "./../config"
 	import "./../app.css"

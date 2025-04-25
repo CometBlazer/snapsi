@@ -1,5 +1,5 @@
 <script lang="ts">
-  //src/routes/+page.svelte
+  // src/routes/+page.svelte
   import { goto } from '$app/navigation';
   import Icon from '@iconify/svelte';
   import { onMount } from 'svelte';
