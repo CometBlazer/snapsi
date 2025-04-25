@@ -417,6 +417,20 @@
   function togglePasswordVisibility() {
     showPassword = !showPassword;
   }
+
+  // Function to generate compressed image URLs for display
+  function getCompressedImageUrl(originalUrl: string) {
+    // Check if the URL is from Google Cloud Storage
+
+    // CURRENTLY DOES NOT WORK
+    // if (originalUrl.includes('storage.googleapis.com')) {
+    //   // Add image processing parameters to the URL
+    //   // =s400 resizes to 400px max dimension
+    //   // -c limits file size and reduces quality
+    //   return `${originalUrl}=s400-c`;
+    // }
+    return originalUrl;
+  }
 </script>
 
 <div class="container mx-auto py-8 px-4">
@@ -702,9 +716,10 @@
                 <!-- Image card -->
                 <div class="relative aspect-square rounded-xl overflow-hidden border bg-base-200">
                   <img
-                    src={image.url}
+                    src={getCompressedImageUrl(image.url)}
                     alt={image.name}
                     class="h-full w-full object-cover transition-all group-hover:scale-105"
+                    loading="lazy"
                   />
                   
                   <!-- Image info overlay -->
