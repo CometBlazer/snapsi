@@ -498,7 +498,7 @@
                 class="file-input file-input-bordered w-full rounded-lg"
               />
               <p class="text-xs text-base-content/70 mt-2">
-                Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
+                Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP. Ensure you have good internet connection.
               </p>
             </div>
             
@@ -836,6 +836,9 @@
         />
         <p class="text-xs text-base-content/70 mt-2">
           Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
+        </p>
+        <p class="text-xs text-base-content/70 mt-2">
+          Ensure you have good internet connection.
         </p>
 
         {#if exceededLimit}
