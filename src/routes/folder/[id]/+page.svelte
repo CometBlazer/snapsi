@@ -680,7 +680,7 @@
               <button class="btn btn-outline btn-sm gap-2 rounded-full" on:click={refreshImages} disabled={isRefreshing}>
                 <Icon icon="lucide:refresh-cw" class="h-4 w-4" />
                 Refresh
-              </button>
+              </button>  
             </div>
           {/if}
         </div>
@@ -731,7 +731,7 @@
                 <!-- Image card -->
                 <div class="relative aspect-square rounded-xl overflow-hidden border bg-base-200">
                   <img
-                    src={getCompressedImageUrl(image.url, { width: 400, quality: 80, format: 'webp' })}
+                    src={getCompressedImageUrl(image.url, { width: 1000, quality: 80, format: 'webp' })}
                     alt={image.name}
                     class="h-full w-full object-cover transition-all group-hover:scale-105"
                     loading="lazy"
