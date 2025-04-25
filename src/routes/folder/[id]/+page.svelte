@@ -197,6 +197,7 @@
   
   async function refreshImages() {
     isRefreshing = true;
+    images = []; // Clear images while refreshing
     
     try {
       // First, get updated folder data to get the latest image_count
@@ -656,22 +657,34 @@
         </div>
         
         {#if images.length === 0}
-          <div class="flex flex-col items-center justify-center py-16 text-center bg-base-200 rounded-xl">
-            <div class="rounded-full bg-base-100 p-6 mb-4">
-              <Icon icon="lucide:image" class="h-16 w-16 text-base-content/50" />
+          {#if !isRefreshing}
+            <div class="flex flex-col items-center justify-center py-16 text-center bg-base-200 rounded-xl">
+              <div class="rounded-full bg-base-100 p-6 mb-4">
+                <Icon icon="lucide:image" class="h-16 w-16 text-base-content/50" />
+              </div>
+              <h3 class="text-xl font-medium">No images yet</h3>
+              <p class="mt-2 text-base-content/70 max-w-md">
+                Upload images or share this folder with others to get started!
+              </p>
+              <button 
+                class="btn btn-primary mt-4 rounded-full" 
+                on:click={() => showUploadDialog = true}
+              >
+                <Icon icon="lucide:upload" class="h-4 w-4 mr-2" />
+                Upload Photos
+              </button>
             </div>
-            <h3 class="text-xl font-medium">No images yet</h3>
-            <p class="mt-2 text-base-content/70 max-w-md">
-              Upload images or share this folder with others to get started!
-            </p>
-            <button 
-              class="btn btn-primary mt-4 rounded-full" 
-              on:click={() => showUploadDialog = true}
-            >
-              <Icon icon="lucide:upload" class="h-4 w-4 mr-2" />
-              Upload Photos
-            </button>
-          </div>
+          {:else}
+            <div class="flex flex-col items-center justify-center py-16 text-center bg-base-200 rounded-xl">
+              <div class="rounded-full bg-base-100 p-6 mb-4">
+                <Icon icon="lucide:refresh-cw" class="h-16 w-16 text-base-content/50 animate-spin" />
+              </div>
+              <h3 class="text-xl font-medium">Refreshing...</h3>
+              <p class="mt-2 text-base-content/70 max-w-md">
+                Your images will be updated shortly. Please wait a moment.
+              </p>
+            </div>
+          {/if}
         {:else}
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {#each images as image}
