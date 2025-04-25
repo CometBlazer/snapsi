@@ -4,7 +4,6 @@
   import Icon from '@iconify/svelte';
   
   export let data;
-  
   let password = '';
   let isAuthenticated = false;
   let isUploading = false;
@@ -22,6 +21,9 @@
   let isDownloading = false;
   let showPassword = false;
   let displayedPassword = '';
+
+  const DOMAIN = "https://snappi-v1.imgix.net"; 
+  const BUCKET_NAME = "snappi-v1-images"; //cannot add environment variable to client side code, so hardcoding for now
   
   $: folder = data.folder;
   $: images = data.images;
@@ -418,18 +420,31 @@
     showPassword = !showPassword;
   }
 
-  // Function to generate compressed image URLs for display
-  function getCompressedImageUrl(originalUrl: string) {
-    // Check if the URL is from Google Cloud Storage
+  // Function to generate compressed image URLs for display with imgix
+  function getCompressedImageUrl(originalUrl: string, options?: { width?: number; quality?: number; format?: string }) {
+    const original = new URL(originalUrl);
 
-    // CURRENTLY DOES NOT WORK
-    // if (originalUrl.includes('storage.googleapis.com')) {
-    //   // Add image processing parameters to the URL
-    //   // =s400 resizes to 400px max dimension
-    //   // -c limits file size and reduces quality
-    //   return `${originalUrl}=s400-c`;
-    // }
-    return originalUrl;
+    // Remove the bucket name from the beginning of the pathname
+    let relativePath = original.pathname;
+    if (relativePath.startsWith(`/${BUCKET_NAME}/`)) {
+      relativePath = relativePath.slice(BUCKET_NAME.length + 2); // +2 for the leading slash "/"
+    } else if (relativePath.startsWith(BUCKET_NAME)) {
+      relativePath = relativePath.slice(BUCKET_NAME.length);
+    }
+
+    const url = new URL(`${DOMAIN}/${relativePath}`);
+
+    if (options?.width) {
+      url.searchParams.set('w', options.width.toString());
+    }
+    if (options?.quality) {
+      url.searchParams.set('q', options.quality.toString());
+    }
+    if (options?.format) {
+      url.searchParams.set('fm', options.format);
+    }
+
+    return url.toString();
   }
 </script>
 
@@ -716,7 +731,7 @@
                 <!-- Image card -->
                 <div class="relative aspect-square rounded-xl overflow-hidden border bg-base-200">
                   <img
-                    src={getCompressedImageUrl(image.url)}
+                    src={getCompressedImageUrl(image.url, { width: 400, quality: 80, format: 'webp' })}
                     alt={image.name}
                     class="h-full w-full object-cover transition-all group-hover:scale-105"
                     loading="lazy"
