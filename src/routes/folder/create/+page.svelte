@@ -125,7 +125,8 @@
                 <span class="loading loading-spinner"></span>
                 Creating...
               {:else}
-                Create Folder
+              <Icon icon="lucide:check-circle" class="h-5 w-5 mr-2" />
+                Finish Creating Folder
               {/if}
             </button>
           </div>

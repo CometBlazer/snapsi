@@ -58,14 +58,14 @@
     </p>
 
     <div class="my-12 flex flex-col sm:flex-row gap-4">
-      <button class="btn btn-primary btn-lg rounded-full gap-2 text-primary-content" on:click={openFolderDialog}>
-        <Icon icon="lucide:eye" class="h-5 w-5" />
-        View Your Photos
-      </button>
-
-      <button class="btn btn-outline btn-lg rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
+      <button class="btn btn-primary btn-lg rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
         <Icon icon="lucide:folder-plus" class="h-5 w-5" />
         Create A Folder
+      </button>
+
+      <button class="btn btn-outline btn-lg rounded-full gap-2 text-primary-content" on:click={openFolderDialog}>
+        <Icon icon="lucide:eye" class="h-5 w-5" />
+        View Your Photos
       </button>
     </div>
     
