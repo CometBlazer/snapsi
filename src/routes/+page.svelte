@@ -59,7 +59,7 @@
 
     <div class="my-12 flex flex-col sm:flex-row gap-4">
       <button class="btn btn-primary btn-xl rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
-        <Icon icon="lucide:share" class="h-5 w-5" />
+        <Icon icon="lucide:upload" class="h-5 w-5" />
         Try It Free Now
       </button>
 
@@ -110,7 +110,7 @@
   </div>
 </div>
 
-<div class="container mx-auto py-16 px-4 max-w-5xl">
+<div class="container mx-auto py-10 px-4 max-w-5xl">
   <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mb-10">Frequently Asked Questions</h2>
   <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box">
     <input type="checkbox" />
@@ -166,6 +166,17 @@
     </div>
   </div>
 </div>
+
+<div class="container mx-auto pb-16 px-4 max-w-5xl">
+  <div class="mt-16 text-center card bg-primary/80 border-base-300 border-1 shadow-xl p-16 md:p-30 rounded-3xl">
+    <h2 class="text-2xl md:text-4xl font-bold mb-10">Share your photos quickly and securely today with <span class="font-extrabold underline">Snappi</span>.</h2>
+    <button class="btn btn-outline bg-base-100 btn-xl rounded-full gap-2 text-primary-content max-w-lg mx-auto" on:click={() => goto('/folder/create')}>
+      <Icon icon="lucide:sparkles" class="h-5 w-5" />
+      Try It Free Now
+    </button>
+  </div>
+</div>
+
 
 <!-- Folder ID Dialog -->
 {#if showDialog}
