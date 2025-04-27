@@ -165,6 +165,16 @@
       <p>Each folder has a limit of 100 photos, and each photo can be up to 500 MB in size.</p>
     </div>
   </div>
+
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-4">
+    <input type="checkbox" />
+    <div class="collapse-title text-xl font-medium">
+      I want to delete my photos, how do I do that?
+    </div>
+    <div class="collapse-content">
+      <p>You can delete your photos at any time by selecting the photos you want to delete and clicking "Delete Selected".</p>
+    </div>
+  </div>
 </div>
 
 <div class="container mx-auto pb-16 px-4 max-w-5xl">
