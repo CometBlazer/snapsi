@@ -52,23 +52,24 @@
 
 <div class="container mx-auto py-16 px-4">
   <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
-    <h1 class="text-4xl md:text-5xl font-bold text-base-content">Sharing Photos Made <span class="text-secondary font-extrabold">Simple</span></h1>
+    <h1 class="text-4xl md:text-5xl font-bold text-base-content">Share <span class="text-secondary font-extrabold">Large Amounts</span> of Photos <span class="text-secondary font-extrabold">Quickly</span>. Free.</h1>
     <p class="mt-4 text-xl text-base-content/70">
       Create <b>private, secure</b> folders to upload and share photos with anyone, protected by passwords.
     </p>
 
     <div class="my-12 flex flex-col sm:flex-row gap-4">
-      <button class="btn btn-primary btn-lg rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
-        <Icon icon="lucide:folder-plus" class="h-5 w-5" />
-        Create A Folder
+      <button class="btn btn-primary btn-xl rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
+        <Icon icon="lucide:share" class="h-5 w-5" />
+        Try It Free Now
       </button>
 
-      <button class="btn btn-outline btn-lg rounded-full gap-2 text-primary-content" on:click={openFolderDialog}>
+      <button class="btn btn-outline btn-xl rounded-full gap-2 text-primary-content" on:click={openFolderDialog}>
         <Icon icon="lucide:eye" class="h-5 w-5" />
         View Your Photos
       </button>
     </div>
-    
+
+    <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mt-20">It's Easy as <span class="text-secondary font-extrabold">1, 2, 3</span>. <span class="underline">No Sign-In</span> Required.</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full">
       <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
         <div class="card-body items-center text-center">
@@ -136,7 +137,7 @@
   <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-4">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
-      Is this service free? 
+      Is this service really free? 
     </div>
     <div class="collapse-content">
       <p>
