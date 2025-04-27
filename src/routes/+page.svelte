@@ -52,7 +52,7 @@
 
 <div class="container mx-auto py-16 px-4">
   <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
-    <h1 class="text-4xl md:text-5xl font-bold text-base-content">Sharing Photos Made Simple</h1>
+    <h1 class="text-4xl md:text-5xl font-bold text-base-content">Sharing Photos Made <span class="text-secondary font-extrabold">Simple</span></h1>
     <p class="mt-4 text-xl text-base-content/70">
       Create <b>private, secure</b> folders to upload and share photos with anyone, protected by passwords.
     </p>
@@ -128,7 +128,7 @@
     </div>
     <div class="collapse-content">
       <p>
-        This service is for people who want to share large amounts of photos with friends and family. It is perfect for events like weddings, parties, or vacations where you want to share a lot of photos with a group of people. Just create a folder, upload your photos, and share your unique link to your friends for them to view, download, and upload their own photos. You can also protect your folder with a password for added security.
+        This service is for people who want to <b>quickly share large amounts of photos with friends and family</b>. It is perfect for events like weddings, parties, or vacations where you want to share a lot of photos with a group of people. Just create a folder, upload your photos, and share your unique link to your friends for them to view, download, and upload their own photos. You can also protect your folder with a password for added security.
       </p>
     </div>
   </div> 
@@ -140,7 +140,7 @@
     </div>
     <div class="collapse-content">
       <p>
-        Yes, this service is completely free to use. We are currently in beta and will be adding more features in the future. If you have any feedback or suggestions, please let us know! (direct message u/hydrocomet on Reddit)
+        Yes, this service is completely <b>free to use</b>! We are currently in beta and will be adding more features in the future. If you have any feedback or suggestions, please let us know! (direct message u/hydrocomet on Reddit)
       </p>
     </div>
   </div> 
@@ -161,7 +161,7 @@
       What are limits on the number of photos I can upload and the size of each photo?
     </div>
     <div class="collapse-content">
-      <p>Each folder has a limit of 100 photos, and each photo can be up to 500MB in size.</p>
+      <p>Each folder has a limit of 100 photos, and each photo can be up to 500 MB in size.</p>
     </div>
   </div>
 </div>
