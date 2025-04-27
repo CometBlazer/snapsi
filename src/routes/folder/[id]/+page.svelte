@@ -27,7 +27,7 @@
   
   $: folder = data.folder;
   $: images = data.images;
-  $: MAX_IMAGE_COUNT = 20;
+  $: MAX_IMAGE_COUNT = 100;
   $: currentImageCount = images.length;
   $: remainingImagesCount = MAX_IMAGE_COUNT - currentImageCount;
   $: hasSelectedImages = selectedImages.length > 0;
@@ -121,9 +121,9 @@
         
         const file = files[i];
         
-        // Check file size client-side (10MB limit)
-        if (file.size > 10 * 1024 * 1024) {
-          uploadError = `File ${file.name} exceeds the 10MB size limit`;
+        // Check file size client-side (500 MB limit)
+        if (file.size > 500 * 1024 * 1024) {
+          uploadError = `File ${file.name} exceeds the 500 MB size limit`;
           continue;
         }
         
@@ -559,7 +559,7 @@
             {#if remainingImagesCount <= 0}
               <div class="alert alert-warning mt-4 rounded-lg">
                 <Icon icon="lucide:alert-triangle" class="h-4 w-4" />
-                <span>Maximum number of images reached (20). Delete some images to upload more.</span>
+                <span>Maximum number of images reached ({MAX_IMAGE_COUNT}). Delete some images to upload more.</span>
               </div>
             {/if}
           </div>

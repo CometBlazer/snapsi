@@ -18,14 +18,14 @@ const storage = new Storage({
 
 const bucket = storage.bucket(GOOGLE_CLOUD_BUCKET_NAME);
 
-// Create a rate limiter - 100 uploads per minute per folder
-const uploadRateLimiter = createRateLimiter(100, 60 * 1000); // 5 requests per minute
+// Create a rate limiter - 400 uploads per minute per folder
+const uploadRateLimiter = createRateLimiter(400, 60 * 1000); // 400 requests per minute
 
 // Maximum file size (10MB)
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+const MAX_FILE_SIZE = 500 * 1024 * 1024; // 10MB in bytes
 
 // Maximum number of images per folder
-const MAX_IMAGES_PER_FOLDER = 20;
+const MAX_IMAGES_PER_FOLDER = 100;
 
 // Allowed MIME types
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
