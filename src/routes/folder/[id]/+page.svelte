@@ -528,7 +528,7 @@
                 class="file-input file-input-bordered w-full rounded-lg"
               />
               <p class="text-xs text-base-content/70 mt-2">
-                Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP. Ensure you have good internet connection.
+                Max 500 MB per file. Supported formats: JPEG, PNG, GIF, WebP. Ensure you have good internet connection.
               </p>
             </div>
             
@@ -789,7 +789,7 @@
 <!-- Share Dialog -->
 {#if showShareDialog}
   <div class="modal modal-open">
-    <div class="modal-box rounded-xl">
+    <div class="modal-box p-8 rounded-xl">
       <h3 class="font-bold text-lg">Share this folder</h3>
       
       <div class="space-y-4 mt-4">
@@ -878,7 +878,7 @@
           class="file-input file-input-bordered w-full rounded-lg"
         />
         <p class="text-xs text-base-content/70 mt-2">
-          Max 10 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
+          Max 500 MB per file. Supported formats: JPEG, PNG, GIF, WebP.
         </p>
         <p class="text-xs text-base-content/70 mt-2">
           Ensure you have good internet connection.
