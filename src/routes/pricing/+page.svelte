@@ -1,6 +1,7 @@
 <style>
   main {
-    height: calc(100vh - 24rem);
+    /* height: calc(100vh - 24rem); */
+    height: calc(100vh - 10rem);
   }
 </style>
 
