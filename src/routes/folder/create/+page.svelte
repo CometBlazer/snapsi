@@ -58,7 +58,7 @@
           </div>
           <h2 class="text-3xl font-bold">Create New Folder</h2>
           <p class="text-base-content/70 mt-2 max-w-md">
-            Create a secure folder where you and others can upload and share photos
+            Create a secure folder where you and others can upload and share photos for free. 
           </p>
         </div>
         

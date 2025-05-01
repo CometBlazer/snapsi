@@ -60,51 +60,53 @@
     <div class="my-12 flex flex-col sm:flex-row gap-4">
       <button class="btn btn-primary btn-xl rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
         <Icon icon="lucide:upload" class="h-5 w-5" />
-        Try It Free Now
+        Upload Photos for Free
       </button>
 
       <button class="btn btn-outline btn-xl rounded-full gap-2 text-primary-content" on:click={openFolderDialog}>
         <Icon icon="lucide:eye" class="h-5 w-5" />
-        View Your Photos
+        View Folder Photos
       </button>
     </div>
+  </div>
+</div>
 
-    <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mt-20">It's Easy as <span class="text-secondary font-extrabold">1, 2, 3</span>. <span class="underline">No Sign-In</span> Required.</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full">
-      <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-        <div class="card-body items-center text-center">
-          <div class="rounded-full bg-primary/10 p-3 mb-4">
-            <Icon icon="lucide:folder-plus" class="h-8 w-8 text-primary" />
-          </div>
-          <h2 class="card-title text-base-content">1. Create Folder.</h2>
-          <p class="text-base-content/70">
-            Create a private folder to organize and share your photos
-          </p>
+<div class="container mx-auto py-10 px-4 max-w-5xl">
+  <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mt-20">It's Easy as <span class="text-secondary font-extrabold">1, 2, 3</span>. <span class="underline">No Sign-In</span> Required.</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full">
+    <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
+      <div class="card-body items-center text-center">
+        <div class="rounded-full bg-primary/10 p-3 mb-4">
+          <Icon icon="lucide:folder-plus" class="h-8 w-8 text-primary" />
         </div>
+        <h2 class="card-title text-base-content">1. Create Folder.</h2>
+        <p class="text-base-content/70">
+          Create a private folder to organize and share your photos
+        </p>
       </div>
-      
-      <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-        <div class="card-body items-center text-center">
-          <div class="rounded-full bg-primary/10 p-3 mb-4">
-            <Icon icon="lucide:upload" class="h-8 w-8 text-primary" />
-          </div>
-          <h2 class="card-title text-base-content">2. Upload photos.</h2>
-          <p class="text-base-content/70">
-            Securely upload photos to your folder
-          </p>
+    </div>
+    
+    <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
+      <div class="card-body items-center text-center">
+        <div class="rounded-full bg-primary/10 p-3 mb-4">
+          <Icon icon="lucide:upload" class="h-8 w-8 text-primary" />
         </div>
+        <h2 class="card-title text-base-content">2. Upload photos.</h2>
+        <p class="text-base-content/70">
+          Securely upload photos to your folder
+        </p>
       </div>
-      
-      <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-        <div class="card-body items-center text-center">
-          <div class="rounded-full bg-primary/10 p-3 mb-4">
-            <Icon icon="lucide:image" class="h-8 w-8 text-primary" />
-          </div>
-          <h2 class="card-title text-base-content">3. Share Securely!</h2>
-          <p class="text-base-content/70">
-            Share your unique folder link with optional password protection
-          </p>
+    </div>
+    
+    <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
+      <div class="card-body items-center text-center">
+        <div class="rounded-full bg-primary/10 p-3 mb-4">
+          <Icon icon="lucide:image" class="h-8 w-8 text-primary" />
         </div>
+        <h2 class="card-title text-base-content">3. Share Securely!</h2>
+        <p class="text-base-content/70">
+          Share your unique folder link with optional password protection
+        </p>
       </div>
     </div>
   </div>
@@ -141,7 +143,7 @@
     </div>
     <div class="collapse-content">
       <p>
-        Yes, this service is completely <b>free to use</b>! We are currently in beta and will be adding more features in the future. If you have any feedback or suggestions, please let us know! (direct message u/hydrocomet on Reddit)
+        Yes, this service is completely <b>free to use</b>! We are currently in beta and will be adding more features in the future. 
       </p>
     </div>
   </div> 
