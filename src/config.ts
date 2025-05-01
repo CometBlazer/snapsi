@@ -1,5 +1,5 @@
-export const WebsiteName: string = "Snappi"
-export const WebsiteBaseUrl: string = "https://snappi.pages.dev"
+export const WebsiteName: string = "Snapsi"
+export const WebsiteBaseUrl: string = "https://snapsi.me"
 export const WebsiteDescription: string =
-  "Generate professional, high-quality headshots using AI technology. Perfect for LinkedIn, resumes, and professional profiles."
+  "Share your photos for free with anyone, anywhere, without the hassle of email attachments or signing in. Snapsi is the easiest way to share large amounts of photos quickly and securely."
 export const CreateProfileStep: boolean = false

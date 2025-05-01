@@ -3,6 +3,37 @@
   import { goto } from '$app/navigation';
   import Icon from '@iconify/svelte';
   import { onMount } from 'svelte';
+	import { WebsiteBaseUrl, WebsiteDescription, WebsiteName } from '../config';
+
+  const ldJson = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: WebsiteName,
+    url: WebsiteBaseUrl,
+  }
+  const jsonldScript = `<script type="application/ld+json">${
+    JSON.stringify(ldJson) + "<"
+  }/script>`
+
+  // Specify image dimensions and use WebP if available
+  const profileImages = [
+    {
+      headshot:
+        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fwhite%20man.png?alt=media&token=a4d7bee7-ae05-408b-8581-ef20064e02c4",
+      linkedin:
+        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fwhite_man_linkedin.jpg?alt=media&token=7d1a34c1-2a0a-494a-8f6d-7a2a15d38b03",
+      width: 400,
+      height: 400,
+    },
+    {
+      headshot:
+        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fhispanic%20woman.jpg?alt=media&token=c7fafccb-f083-4b88-a7b4-2b5455e2f21d",
+      linkedin:
+        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fhispanic_woman_linkedin.jpg?alt=media&token=31fc76a9-2af5-48ee-894d-866696af85e0",
+      width: 400,
+      height: 400,
+    },
+  ]
 
   let showDialog = false;
   let folderId = '';
@@ -50,6 +81,56 @@
   });
 </script>
 
+<svelte:head>
+  <title>{WebsiteName} | Easy Photo Sharing</title>
+  <meta name="description" content={WebsiteDescription} />
+  <meta
+    name="keywords"
+    content="Free photo sharing, file sharing, {WebsiteName}"
+  />
+  <meta
+    property="og:title"
+    content="{WebsiteName} | Easy Photo Sharing"
+  />
+  <meta property="og:description" content={WebsiteDescription} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://snapsi.me" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content="{WebsiteName} | Easy Photo Sharing"
+  />
+  <meta name="twitter:description" content={WebsiteDescription} />
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+  {@html jsonldScript}
+
+  <!-- Preload critical hero images -->
+  <link
+    rel="preload"
+    href={profileImages[0].headshot}
+    as="image"
+    fetchpriority="high"
+  />
+  <link
+    rel="preload"
+    href={profileImages[0].linkedin}
+    as="image"
+    fetchpriority="high"
+  />
+  <link
+    rel="preload"
+    href={profileImages[1].headshot}
+    as="image"
+    fetchpriority="high"
+  />
+  <link
+    rel="preload"
+    href={profileImages[1].linkedin}
+    as="image"
+    fetchpriority="high"
+  />
+</svelte:head>
+
 <div class="container mx-auto py-24 px-4">
   <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
     <h1 class="text-4xl md:text-5xl font-bold text-base-content">Share <span class="text-secondary font-extrabold">Large Amounts</span> of Photos <span class="text-secondary font-extrabold">Quickly</span>. Free.</h1>
@@ -69,13 +150,76 @@
       </button>
     </div>
   </div>
+  <!-- Image Gallery -->
+  <div class="relative w-full h-52 md:h-72 max-w-5xl mx-auto">
+    <!-- First Person Images - Left Side -->
+    <div
+      class="absolute bottom-0 left-4 sm:left-8 md:left-12 h-52 md:h-72 w-44 md:w-60"
+    >
+      <img
+        src={profileImages[0].headshot}
+        alt="man headshot"
+        width={profileImages[0].width}
+        height={profileImages[0].height}
+        loading="eager"
+        decoding="async"
+        class="absolute w-20 sm:w-24 md:w-40 h-20 sm:h-24 md:h-40
+         object-cover rounded-full shadow-lg
+         bottom-24 md:bottom-36 left-0 z-20
+         transition-transform hover:scale-105"
+      />
+      <img
+        src={profileImages[0].linkedin}
+        alt="man LinkedIn"
+        width={profileImages[0].width}
+        height={profileImages[0].height}
+        loading="eager"
+        decoding="async"
+        class="absolute w-28 sm:w-32 md:w-48 h-28 sm:h-32 md:h-48
+         object-cover rounded-lg shadow-lg
+         bottom-0 left-10 md:left-20 z-10
+         transition-transform hover:scale-105"
+      />
+    </div>
+
+    <!-- Second Person Images - Right Side -->
+    <div
+      class="absolute bottom-0 right-4 sm:right-8 md:right-12 h-52 md:h-72 w-44 md:w-60"
+    >
+      <img
+        src={profileImages[1].headshot}
+        alt="woman headshot"
+        width={profileImages[1].width}
+        height={profileImages[1].height}
+        loading="eager"
+        decoding="async"
+        class="absolute w-20 sm:w-24 md:w-40 h-20 sm:h-24 md:h-40
+         object-cover rounded-lg shadow-lg
+         bottom-24 md:bottom-36 right-0 z-20
+         transition-transform hover:scale-105
+         filter contrast-65 brightness-40"
+      />
+      <img
+        src={profileImages[1].linkedin}
+        alt="woman LinkedIn"
+        width={profileImages[1].width}
+        height={profileImages[1].height}
+        loading="eager"
+        decoding="async"
+        class="absolute w-28 sm:w-32 md:w-48 h-28 sm:h-32 md:h-48
+         object-cover object-top rounded-full shadow-lg
+         bottom-0 right-12 md:right-28 z-10
+         transition-transform hover:scale-105"
+      />
+    </div>
+  </div>
 </div>
 
-<div class="container mx-auto py-24 px-4 max-w-5xl">
+<div class="container mx-auto py-10 sm:py-24 px-4 max-w-5xl">
   <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mt-12 mb-16">It's Easy as <span class="text-secondary font-extrabold">1, 2, 3</span>. <span class="underline">No Sign-In</span> Required.</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 w-full">
     <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-      <div class="card-body items-center text-center">
+      <div class="card-body items-center text-center py-20">
         <div class="rounded-full bg-primary/10 p-4 mb-6">
           <Icon icon="lucide:folder-plus" class="h-10 w-10 text-primary" />
         </div>
@@ -87,7 +231,7 @@
     </div>
     
     <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-      <div class="card-body items-center text-center">
+      <div class="card-body items-center text-center py-20">
         <div class="rounded-full bg-primary/10 p-4 mb-6">
           <Icon icon="lucide:upload" class="h-10 w-10 text-primary" />
         </div>
@@ -99,7 +243,7 @@
     </div>
     
     <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-      <div class="card-body items-center text-center">
+      <div class="card-body items-center text-center py-20">
         <div class="rounded-full bg-primary/10 p-4 mb-6">
           <Icon icon="lucide:image" class="h-10 w-10 text-primary" />
         </div>
