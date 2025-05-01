@@ -50,14 +50,14 @@
   });
 </script>
 
-<div class="container mx-auto py-16 px-4">
+<div class="container mx-auto py-24 px-4">
   <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
     <h1 class="text-4xl md:text-5xl font-bold text-base-content">Share <span class="text-secondary font-extrabold">Large Amounts</span> of Photos <span class="text-secondary font-extrabold">Quickly</span>. Free.</h1>
-    <p class="mt-4 text-xl text-base-content/70">
+    <p class="mt-6 text-xl text-base-content/70">
       Create <b>private, secure</b> folders to upload and share photos with anyone, protected by passwords.
     </p>
 
-    <div class="my-12 flex flex-col sm:flex-row gap-4">
+    <div class="my-16 flex flex-col sm:flex-row gap-4">
       <button class="btn btn-primary btn-xl rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
         <Icon icon="lucide:upload" class="h-5 w-5" />
         Upload Photos for Free
@@ -71,13 +71,13 @@
   </div>
 </div>
 
-<div class="container mx-auto py-10 px-4 max-w-5xl">
-  <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mt-20">It's Easy as <span class="text-secondary font-extrabold">1, 2, 3</span>. <span class="underline">No Sign-In</span> Required.</h2>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full">
+<div class="container mx-auto py-24 px-4 max-w-5xl">
+  <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mt-12 mb-16">It's Easy as <span class="text-secondary font-extrabold">1, 2, 3</span>. <span class="underline">No Sign-In</span> Required.</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 w-full">
     <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
       <div class="card-body items-center text-center">
-        <div class="rounded-full bg-primary/10 p-3 mb-4">
-          <Icon icon="lucide:folder-plus" class="h-8 w-8 text-primary" />
+        <div class="rounded-full bg-primary/10 p-4 mb-6">
+          <Icon icon="lucide:folder-plus" class="h-10 w-10 text-primary" />
         </div>
         <h2 class="card-title text-base-content">1. Create Folder.</h2>
         <p class="text-base-content/70">
@@ -88,8 +88,8 @@
     
     <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
       <div class="card-body items-center text-center">
-        <div class="rounded-full bg-primary/10 p-3 mb-4">
-          <Icon icon="lucide:upload" class="h-8 w-8 text-primary" />
+        <div class="rounded-full bg-primary/10 p-4 mb-6">
+          <Icon icon="lucide:upload" class="h-10 w-10 text-primary" />
         </div>
         <h2 class="card-title text-base-content">2. Upload photos.</h2>
         <p class="text-base-content/70">
@@ -100,8 +100,8 @@
     
     <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
       <div class="card-body items-center text-center">
-        <div class="rounded-full bg-primary/10 p-3 mb-4">
-          <Icon icon="lucide:image" class="h-8 w-8 text-primary" />
+        <div class="rounded-full bg-primary/10 p-4 mb-6">
+          <Icon icon="lucide:image" class="h-10 w-10 text-primary" />
         </div>
         <h2 class="card-title text-base-content">3. Share Securely!</h2>
         <p class="text-base-content/70">
@@ -112,8 +112,8 @@
   </div>
 </div>
 
-<div class="container mx-auto py-10 px-4 max-w-5xl">
-  <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mb-10">Frequently Asked Questions</h2>
+<div class="container mx-auto pt-24 px-4 max-w-5xl">
+  <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mb-16">Frequently Asked Questions</h2>
   <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
@@ -124,7 +124,7 @@
     </div>
   </div> 
 
-  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-4">
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       What is this service for? 
@@ -136,7 +136,7 @@
     </div>
   </div> 
 
-  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-4">
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       Is this service really free? 
@@ -148,7 +148,7 @@
     </div>
   </div> 
 
-  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-4">
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       How do I share my folder?
@@ -158,7 +158,7 @@
     </div>
   </div>
 
-  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-4">
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       What are limits on the number of photos I can upload and the size of each photo?
@@ -168,7 +168,7 @@
     </div>
   </div>
 
-  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-4">
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       I want to delete my photos, how do I do that?
@@ -179,9 +179,9 @@
   </div>
 </div>
 
-<div class="container mx-auto pb-16 px-4 max-w-5xl">
+<div class="container mx-auto pt-10 pb-24 px-4 max-w-5xl">
   <div class="mt-16 text-center card bg-primary/80 border-base-300 border-1 shadow-xl p-16 md:p-30 rounded-3xl">
-    <h2 class="text-2xl md:text-4xl font-bold mb-10">Share your photos quickly and securely today with <span class="font-extrabold underline">Snappi</span>.</h2>
+    <h2 class="text-2xl md:text-4xl font-bold mb-12">Share your photos quickly and securely today with <span class="font-extrabold underline">Snappi</span>.</h2>
     <button class="btn btn-outline bg-base-100 btn-xl rounded-full gap-2 text-primary-content max-w-lg mx-auto" on:click={() => goto('/folder/create')}>
       <Icon icon="lucide:sparkles" class="h-5 w-5" />
       Try It Free Now
