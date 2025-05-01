@@ -150,8 +150,9 @@
       </button>
     </div>
   </div>
-  <!-- Image Gallery -->
-  <div class="relative w-full h-52 md:h-72 max-w-5xl mx-auto mt-12">
+  
+  <!-- Image Gallery with Artistic Floating Icons -->
+  <div class="relative w-full h-72 md:h-96 max-w-5xl mx-auto mt-16">
     <!-- First Person Images - Left Side -->
     <div
       class="absolute bottom-0 left-4 sm:left-8 md:left-12 h-52 md:h-72 w-44 md:w-60"
@@ -180,20 +181,6 @@
          bottom-0 left-10 md:left-20 z-10
          transition-transform hover:scale-105"
       />
-      
-      <!-- Floating Upload Icon 1 - Left Side Top -->
-      <div class="absolute top-4 left-38 z-30 animate-bounce-slow">
-        <div class="bg-primary text-primary-content p-2 rounded-full shadow-lg">
-          <Icon icon="lucide:upload-cloud" class="h-10 w-10" />
-        </div>
-      </div>
-      
-      <!-- Floating Upload Icon 2 - Left Side Bottom -->
-      <div class="absolute bottom-12 left-2 z-30 animate-pulse">
-        <div class="bg-secondary text-secondary-content p-2 rounded-full shadow-lg">
-          <Icon icon="lucide:image-plus" class="h-4 w-4" />
-        </div>
-      </div>
     </div>
 
     <!-- Second Person Images - Right Side -->
@@ -224,39 +211,88 @@
          bottom-0 right-12 md:right-28 z-10
          transition-transform hover:scale-105"
       />
-      
-      <!-- Floating Upload Icon 3 - Right Side Top -->
-      <div class="absolute top-0 right-35 z-30 animate-bounce-slow">
-        <div class="bg-accent text-accent-content p-2 rounded-full shadow-lg">
-          <Icon icon="lucide:camera" class="h-10 w-10" />
-        </div>
-      </div>
-      
-      <!-- Floating Upload Icon 4 - Right Side Bottom -->
-      <div class="absolute bottom-10 right-2 z-30 animate-bounce-slow">
-        <div class="bg-primary text-primary-content p-3 rounded-full shadow-lg">
-          <Icon icon="lucide:file-image" class="h-8 w-8" />
-        </div>
+    </div>
+    
+    <!-- Artistically scattered floating upload icons -->
+    <!-- Icon 1 - Top Left Corner -->
+    <div class="absolute top-2 md:top-6 left-10 md:left-28 z-30 animate-float-3">
+      <div class="bg-primary/80 text-primary-content p-3 md:p-4 rounded-full shadow-lg">
+        <Icon icon="lucide:upload-cloud" class="h-8 w-8 md:h-10 md:w-10" />
       </div>
     </div>
     
-    <!-- Central Floating Icons -->
-    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 z-30 animate-float">
-      <div class="bg-secondary/80 text-secondary-content p-3 rounded-full shadow-lg">
-        <Icon icon="lucide:upload" class="h-6 w-6" />
+    <!-- Icon 2 - Top Right -->
+    <div class="absolute top-10 md:top-16 right-16 md:right-46 z-30 animate-pulse">
+      <div class="bg-secondary/80 text-secondary-content p-3 md:p-4 rounded-full shadow-lg">
+        <Icon icon="lucide:image-plus" class="h-7 w-7 md:h-9 md:w-9" />
       </div>
     </div>
     
-    <!-- Additional Floating Small Icons -->
-    <div class="absolute top-10 left-1/3 z-30 animate-pulse-slow">
-      <div class="bg-primary/70 text-primary-content p-1.5 rounded-full shadow-lg">
-        <Icon icon="lucide:image" class="h-4 w-4" />
+    <!-- Icon 3 - Bottom Left -->
+    <div class="absolute bottom-28 md:bottom-44 left-24 md:left-44 z-30 animate-bounce-slow">
+      <div class="bg-accent/75 text-accent-content p-3 md:p-4 rounded-full shadow-lg">
+        <Icon icon="lucide:camera" class="h-6 w-6 md:h-8 md:w-8" />
       </div>
     </div>
     
-    <div class="absolute top-6 right-1/3 z-30 animate-bounce-slow">
-      <div class="bg-accent/70 text-accent-content p-1.5 rounded-full shadow-lg">
-        <Icon icon="lucide:folder-plus" class="h-10 w-10" />
+    <!-- Icon 4 - Top Middle -->
+    <div class="absolute top-4 md:top-0 left-1/2 transform -translate-x-1/2 z-30 animate-float-4">
+      <div class="bg-secondary/80 text-secondary-content p-4 md:p-5 rounded-full shadow-lg">
+        <Icon icon="lucide:upload" class="h-10 w-10 md:h-12 md:w-12" />
+      </div>
+    </div>
+    
+    <!-- Icon 5 - Middle Left -->
+    <!-- <div class="absolute top-1/3 left-6 md:left-16 z-30 animate-pulse-slow-2">
+      <div class="bg-primary/70 text-primary-content p-2 md:p-3 rounded-full shadow-lg">
+        <Icon icon="lucide:image" class="h-5 w-5 md:h-7 md:w-7" />
+      </div>
+    </div> -->
+    
+    <!-- Icon 6 - Middle Right -->
+    <div class="absolute top-1/3 right-6 md:right-0 z-30 animate-float-2">
+      <div class="bg-accent/70 text-accent-content p-2 md:p-3 rounded-full shadow-lg">
+        <Icon icon="lucide:folder-plus" class="h-5 w-5 md:h-7 md:w-7" />
+      </div>
+    </div>
+    
+    <!-- Icon 7 - Center Floating -->
+    <!-- <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 animate-pulse-slow-3">
+      <div class="bg-primary/80 text-primary-content p-3 md:p-4 rounded-full shadow-lg">
+        <Icon icon="lucide:file-image" class="h-8 w-8 md:h-10 md:w-10" />
+      </div>
+    </div> -->
+    
+    <!-- Icon 8 - Bottom Right -->
+    <!-- <div class="absolute bottom-20 md:bottom-28 right-28 md:right-48 z-30 animate-bounce-slow-2">
+      <div class="bg-secondary/70 text-secondary-content p-2.5 md:p-3.5 rounded-full shadow-lg">
+        <Icon icon="lucide:cloud-upload" class="h-6 w-6 md:h-8 md:w-8" />
+      </div>
+    </div> -->
+    
+    <!-- Icon 9 - Bottom Middle -->
+    <div class="absolute bottom-10 md:bottom-16 left-1/2 transform -translate-x-1/2 z-30 animate-float-1">
+      <div class="bg-primary/75 text-primary-content p-2.5 md:p-3.5 rounded-full shadow-lg">
+        <Icon icon="lucide:share" class="h-6 w-6 md:h-8 md:w-8" />
+      </div>
+    </div>
+    
+    <!-- Some smaller accent icons scattered throughout -->
+    <div class="absolute top-1/4 left-1/4 z-30 animate-float-5">
+      <div class="bg-accent/60 text-accent-content p-1.5 md:p-2.5 rounded-full shadow-lg">
+        <Icon icon="lucide:heart" class="h-4 w-4 md:h-5 md:w-5" />
+      </div>
+    </div>
+    
+    <div class="absolute top-3/4 right-1/3 z-30 animate-pulse-slow-4">
+      <div class="bg-secondary/60 text-secondary-content p-1.5 md:p-2.5 rounded-full shadow-lg">
+        <Icon icon="lucide:star" class="h-4 w-4 md:h-5 md:w-5" />
+      </div>
+    </div>
+    
+    <div class="absolute top-2/5 right-2/5 z-30 animate-bounce-slow-3">
+      <div class="bg-primary/60 text-primary-content p-1.5 md:p-2.5 rounded-full shadow-lg">
+        <Icon icon="lucide:plus" class="h-4 w-4 md:h-5 md:w-5" />
       </div>
     </div>
   </div>
@@ -438,7 +474,7 @@
 {/if}
 
 <style>
-  /* Add these animation styles to your global CSS or in this component */
+  /* Enhanced animation styles with varied timing and effects */
   @keyframes float {
     0%, 100% {
       transform: translateY(0px);
@@ -451,7 +487,7 @@
   @keyframes pulse-slow {
     0%, 100% {
       transform: scale(1);
-      opacity: 1;
+      opacity: 0.9;
     }
     50% {
       transform: scale(1.05);
@@ -464,19 +500,65 @@
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-8px);
+      transform: translateY(-10px);
     }
   }
   
-  .animate-float {
+  /* Multiple animation variations for more natural, random-looking movement */
+  .animate-float-1 {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  .animate-float-2 {
+    animation: float 5s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+  
+  .animate-float-3 {
     animation: float 6s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+  
+  .animate-float-4 {
+    animation: float 7s ease-in-out infinite;
+    animation-delay: 0.7s;
+  }
+  
+  .animate-float-5 {
+    animation: float 5.5s ease-in-out infinite;
+    animation-delay: 0.3s;
   }
   
   .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow-2 {
     animation: pulse-slow 5s ease-in-out infinite;
+    animation-delay: 0.7s;
+  }
+  
+  .animate-pulse-slow-3 {
+    animation: pulse-slow 6s ease-in-out infinite;
+    animation-delay: 1.2s;
+  }
+  
+  .animate-pulse-slow-4 {
+    animation: pulse-slow 4.5s ease-in-out infinite;
+    animation-delay: 0.5s;
   }
   
   .animate-bounce-slow {
     animation: bounce-slow 4s ease-in-out infinite;
+  }
+  
+  .animate-bounce-slow-2 {
+    animation: bounce-slow 5s ease-in-out infinite;
+    animation-delay: 0.3s;
+  }
+  
+  .animate-bounce-slow-3 {
+    animation: bounce-slow 6s ease-in-out infinite;
+    animation-delay: 0.8s;
   }
 </style>
