@@ -19,17 +19,17 @@
   const heroImages = [
     {
       image1:
-        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fwhite%20man.png?alt=media&token=a4d7bee7-ae05-408b-8581-ef20064e02c4",
+        "https://snappi-v1.imgix.net/8a0b7a67-ed8c-4d25-9cb8-b21168ea78b4/family-sunset_1746120391049.png",
       image2:
-        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fwhite_man_linkedin.jpg?alt=media&token=7d1a34c1-2a0a-494a-8f6d-7a2a15d38b03",
+        "https://snappi-v1.imgix.net/8a0b7a67-ed8c-4d25-9cb8-b21168ea78b4/pexels-asadphoto-1024960_1746120380962.jpg",
       width: 400,
       height: 400,
     },
     {
       image1:
-        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fhispanic%20woman.jpg?alt=media&token=c7fafccb-f083-4b88-a7b4-2b5455e2f21d",
+        "https://snappi-v1.imgix.net/cc558ef6-146a-430e-bdc5-9e34b0262cf4/dog%20(7)_1745634056493.jpg",
       image2:
-        "https://firebasestorage.googleapis.com/v0/b/profilepicgenerator.appspot.com/o/uploads%2Fhero%2Fhispanic_woman_linkedin.jpg?alt=media&token=31fc76a9-2af5-48ee-894d-866696af85e0",
+        "https://snappi-v1.imgix.net/cc558ef6-146a-430e-bdc5-9e34b0262cf4/dog%20(10)_1745634058609.jpg",
       width: 400,
       height: 400,
     },
@@ -151,7 +151,7 @@
     </div>
   </div>
   <!-- Image Gallery -->
-  <div class="relative w-full h-52 md:h-72 max-w-5xl mx-auto">
+  <div class="relative w-full h-52 md:h-72 max-w-5xl mx-auto mt-12">
     <!-- First Person Images - Left Side -->
     <div
       class="absolute bottom-0 left-4 sm:left-8 md:left-12 h-52 md:h-72 w-44 md:w-60"
@@ -180,6 +180,20 @@
          bottom-0 left-10 md:left-20 z-10
          transition-transform hover:scale-105"
       />
+      
+      <!-- Floating Upload Icon 1 - Left Side Top -->
+      <div class="absolute top-4 left-38 z-30 animate-bounce-slow">
+        <div class="bg-primary text-primary-content p-2 rounded-full shadow-lg">
+          <Icon icon="lucide:upload-cloud" class="h-10 w-10" />
+        </div>
+      </div>
+      
+      <!-- Floating Upload Icon 2 - Left Side Bottom -->
+      <div class="absolute bottom-12 left-2 z-30 animate-pulse">
+        <div class="bg-secondary text-secondary-content p-2 rounded-full shadow-lg">
+          <Icon icon="lucide:image-plus" class="h-4 w-4" />
+        </div>
+      </div>
     </div>
 
     <!-- Second Person Images - Right Side -->
@@ -196,8 +210,7 @@
         class="absolute w-20 sm:w-24 md:w-40 h-20 sm:h-24 md:h-40
          object-cover rounded-2xl shadow-lg
          bottom-24 md:bottom-36 right-0 z-20
-         transition-transform hover:scale-105
-         filter contrast-65 brightness-40"
+         transition-transform hover:scale-105"
       />
       <img
         src={heroImages[1].image2}
@@ -211,6 +224,40 @@
          bottom-0 right-12 md:right-28 z-10
          transition-transform hover:scale-105"
       />
+      
+      <!-- Floating Upload Icon 3 - Right Side Top -->
+      <div class="absolute top-0 right-35 z-30 animate-bounce-slow">
+        <div class="bg-accent text-accent-content p-2 rounded-full shadow-lg">
+          <Icon icon="lucide:camera" class="h-10 w-10" />
+        </div>
+      </div>
+      
+      <!-- Floating Upload Icon 4 - Right Side Bottom -->
+      <div class="absolute bottom-10 right-2 z-30 animate-bounce-slow">
+        <div class="bg-primary text-primary-content p-3 rounded-full shadow-lg">
+          <Icon icon="lucide:file-image" class="h-8 w-8" />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Central Floating Icons -->
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 z-30 animate-float">
+      <div class="bg-secondary/80 text-secondary-content p-3 rounded-full shadow-lg">
+        <Icon icon="lucide:upload" class="h-6 w-6" />
+      </div>
+    </div>
+    
+    <!-- Additional Floating Small Icons -->
+    <div class="absolute top-10 left-1/3 z-30 animate-pulse-slow">
+      <div class="bg-primary/70 text-primary-content p-1.5 rounded-full shadow-lg">
+        <Icon icon="lucide:image" class="h-4 w-4" />
+      </div>
+    </div>
+    
+    <div class="absolute top-6 right-1/3 z-30 animate-bounce-slow">
+      <div class="bg-accent/70 text-accent-content p-1.5 rounded-full shadow-lg">
+        <Icon icon="lucide:folder-plus" class="h-10 w-10" />
+      </div>
     </div>
   </div>
 </div>
@@ -225,7 +272,7 @@
         </div>
         <h2 class="card-title text-base-content">1. Create Folder.</h2>
         <p class="text-base-content/70">
-          Create a private folder to organize and share your photos
+          Enter a folder name and create a private folder to organize your photos.
         </p>
       </div>
     </div>
@@ -237,7 +284,7 @@
         </div>
         <h2 class="card-title text-base-content">2. Upload photos.</h2>
         <p class="text-base-content/70">
-          Securely upload photos to your folder
+          Securely upload photos to your folder without compression or quality loss. 
         </p>
       </div>
     </div>
@@ -249,7 +296,7 @@
         </div>
         <h2 class="card-title text-base-content">3. Share Securely!</h2>
         <p class="text-base-content/70">
-          Share your unique folder link with optional password protection
+          Share your unique folder link with optional password protection.
         </p>
       </div>
     </div>
@@ -389,3 +436,47 @@
     </div>
   </div>
 {/if}
+
+<style>
+  /* Add these animation styles to your global CSS or in this component */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+  }
+  
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 5s ease-in-out infinite;
+  }
+  
+  .animate-bounce-slow {
+    animation: bounce-slow 4s ease-in-out infinite;
+  }
+</style>
