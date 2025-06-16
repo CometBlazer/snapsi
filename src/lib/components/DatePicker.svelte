@@ -90,46 +90,85 @@
 </div>
 
 <style>
+  /* @import 'pikaday/css/pikaday.css'; */
   :global(.pika-single) {
-    background: white;          /* change calendar background */
-    border: 2px solid #4b5563;  /* tweak border color & width */
-    border-radius: 0.5rem;      /* round corners more */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    padding: 0.75rem;
+    width: max-content;
   }
 
   :global(.pika-title) {
-    background: #f9fafb;        /* header bar color */
-    color: #111827;             /* header text color */
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+    font-size: 1rem;
+    color: blue; /* Tailwind gray-700 */
   }
 
-  :global(.pika-prev), 
+  :global(.pika-prev),
   :global(.pika-next) {
-    color: #6b7280;             /* arrow color */
+    color: #6b7280; /* Tailwind gray-500 */
+    transition: color 0.2s ease;
+  }
+
+  :global(.pika-prev:hover),
+  :global(.pika-next:hover) {
+    color: #111827;
+    background-color: #6b7280;
+  }
+
+  :global(.pika-table) {
+    width: 100%;
+    border-collapse: collapse;
   }
 
   :global(.pika-table th) {
-    font-weight: 600;
-    color: #4b5563;             /* weekday labels */
+    color: green; /* Tailwind gray-400 */
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding-bottom: 0.25rem;
   }
 
   :global(.pika-button) {
-    border-radius: 0.25rem;
-    margin: 0.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 2.25rem;
     height: 2.25rem;
+    /* border-radius: 0.75rem; */
+    font-size: 0.875rem;
+    background-color: white;
+    font-weight: 500;
+    color: #374151; /* gray-700 */
+    transition: background 0.2s ease;
   }
 
   :global(.pika-button:hover) {
-    background: #f3f4f6;        /* hover state */
+    background-color: black; /* gray-100 */
+    /* border-radius: 0.75rem; */
   }
 
-  :global(.is-today) {
-    border-bottom: 2px solid #3b82f6; /* highlight today */
+  :global(.pika-button.is-selected) {
+    background-color: yellow; /* blue-500 */
+    /* border-radius: 0.75rem !important; */
+    color: white;
   }
 
-  :global(.is-selected) {
-    background: #3b82f6;        /* selected date bg */
-    color: white;               /* selected date text */
+  :global(.pika-button.is-today) {
+    border: 1px solid yellow; /* outline today */
+    /* border-radius: 0.75rem; */
+    color: red;
+  }
+
+  :global(.pika-button.is-disabled) {
+    color: #d1d5db; /* gray-300 */
+    /* border-radius: 0.75rem; */
+    pointer-events: none;
   }
 </style>
+
 
