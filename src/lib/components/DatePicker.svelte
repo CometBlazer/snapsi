@@ -95,7 +95,7 @@
   <button
     bind:this={buttonEl}
     type="button"
-    class="btn {buttonColor} w-50"
+    class="btn btn-soft rounded-full {buttonColor} w-50"
     on:click={toggleCalendar}
   >
     {buttonText}
@@ -152,31 +152,36 @@
     justify-content: center;
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem !important;
     font-size: 0.875rem;
     background-color: white;
     font-weight: 500;
     color: #374151;
     transition: background 0.2s ease;
+    border: none;
   }
-
+   
   :global(.pika-button:hover) {
-    background-color: black;
+    background-color: black !important;
+    border-radius: 0.75rem !important;
   }
 
   :global(.pika-button.is-selected) {
-    background-color: #3b82f6;
-    color: white;
+    background-color: #3b82f6 !important;
+    color: white !important;
+    border-radius: 0.75rem !important;
   }
 
   :global(.pika-button.is-today) {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: #fef3c7 !important;
+    color: #92400e !important;
+    border-radius: 0.75rem !important;
   }
 
   :global(.pika-button.is-disabled) {
-    color: #d1d5db;
+    color: #d1d5db !important;
     pointer-events: none;
+    border-radius: 0.75rem !important;
   }
 
 
