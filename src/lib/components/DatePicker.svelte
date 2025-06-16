@@ -18,26 +18,42 @@
     picker.isVisible() ? picker.hide() : picker.show();
   }
 
-  function getButtonText() {
+  $: buttonText = (() => {
+    // When calendar is open, show date or selection prompt
     if (isOpen) {
-      return selectedDate
-        ? dayjs(selectedDate).format('MMMM D, YYYY')
-        : 'Select a date';
+      if (selectedDate) {
+        return dayjs(selectedDate).format('MMMM D, YYYY');
+      } else {
+        return 'Click to set deadline';
+      }
     }
-    if (!selectedDate) return 'Select a date';
+
+    // When calendar is closed
+    if (!selectedDate) {
+      return 'Click to set deadline';
+    }
 
     const diff = dayjs(selectedDate)
       .startOf('day')
       .diff(dayjs().startOf('day'), 'day');
 
-    if (diff < 0) return 'Deadline past';
-    if (diff === 0) return 'Due today';
-    return diff <= 7
-      ? `Due in ${diff} day${diff > 1 ? 's' : ''}`
-      : dayjs(selectedDate).format('MMMM D, YYYY');
-  }
+    if (diff < 0) {
+      return 'Deadline past';
+    } else if (diff === 0) {
+      return 'Due today';
+    } else if (diff <= 7) {
+      if (diff === 1) {
+        return 'Due in 1 day';
+      } else {
+        return `Due in ${diff} days`;
+      }
+    } else {
+      return `Due on ${dayjs(selectedDate).format('MMMM D, YYYY')}`;
+    }
+  })();
 
-  function getButtonColor() {
+  // Also make getButtonColor reactive:
+  $: buttonColor = (() => {
     if (!selectedDate) return 'btn-neutral';
     const diff = dayjs(selectedDate)
       .startOf('day')
@@ -47,7 +63,7 @@
     if (diff <= 3) return 'btn-error';
     if (diff <= 7) return 'btn-warning';
     return 'btn-neutral';
-  }
+  })();
 
   onMount(async () => {
     if (!browser) return;
@@ -79,13 +95,12 @@
   <button
     bind:this={buttonEl}
     type="button"
-    class="btn {getButtonColor()}"
+    class="btn {buttonColor} w-50"
     on:click={toggleCalendar}
   >
-    {getButtonText()}
+    {buttonText}
   </button>
 
-  <!-- Hidden input just to give Pikaday a field to bind to -->
   <input type="hidden" bind:this={inputEl} />
 </div>
 
