@@ -12,7 +12,7 @@
 	//   { href: "/docs", label: "Docs" },
 	  { href: "/api/health", label: "Status Check" },
 	  // { href: "/", label: "Contact Us" },
-	  { href: "/pricing", label: "Pricing" },
+	//   { href: "/pricing", label: "Pricing" },
 	  {
 		href: "/docs",
 		label: "API Docs",

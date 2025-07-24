@@ -25,7 +25,7 @@
   let style: 'short' | 'brandable' | 'keyword' | 'creative' | 'professional' = 'brandable';
   let domainPreference = 'any';
   let providerPreference: 'name.com' | 'porkbun' | 'any' = 'name.com';
-  let maxPrice = 50;
+  let maxPrice = 200;
   let numChoices = 10;
   let additionalDomains = '';
 
@@ -35,6 +35,8 @@
   let error = '';
   let searchSummary: any = null;
   let showAdvanced = false;
+  let showJsonOutput = false;
+  let fullApiResponse: any = null;
 
   // Auto-detect input type
   $: {
@@ -59,6 +61,8 @@
     error = '';
     searchResults = [];
     searchSummary = null;
+    fullApiResponse = null;
+    showJsonOutput = false;
 
     try {
       const request: DomainRequest = {
@@ -76,6 +80,7 @@
       const response = await domainAPI.suggestDomains(request);
       searchResults = response.domains;
       searchSummary = response.search_summary;
+      fullApiResponse = response; // Store the full response for JSON display
     } catch (err) {
       error = err instanceof Error ? err.message : 'An error occurred';
     } finally {
@@ -96,6 +101,19 @@
     if (score >= 4) return 'Good';
     if (score >= 2) return 'Fair';
     return 'Poor';
+  }
+
+  function copyJsonToClipboard() {
+    if (fullApiResponse) {
+      navigator.clipboard.writeText(JSON.stringify(fullApiResponse, null, 2))
+        .then(() => {
+          // You could add a toast notification here
+          console.log('JSON copied to clipboard');
+        })
+        .catch(err => {
+          console.error('Failed to copy JSON: ', err);
+        });
+    }
   }
 
   const inputTypeOptions = [
@@ -249,7 +267,7 @@
 
             <div class="form-control">
               <label class="label" for="num-choices">
-                <span class="label-text">Results</span>
+                <span class="label-text">Max Results</span>
               </label>
               <input 
                 id="num-choices"
@@ -387,7 +405,7 @@
       {/if}
 
       <!-- Results Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {#each searchResults as domain, index}
           <div class="card bg-base-100 shadow-lg border border-base-300 hover:shadow-xl transition-shadow">
             <div class="card-body p-6">
@@ -453,21 +471,50 @@
                   </div>
                 </div>
               {/if}
-
-              <!-- Source Badge -->
-              <div class="flex justify-between items-center mt-4">
-                <div class="badge badge-outline capitalize">
-                  {domain.input_source.replace('_', ' ')}
-                </div>
-                <button class="btn btn-primary btn-sm">
-                  <Icon icon="lucide:external-link" class="h-4 w-4 mr-1" />
-                  Register
-                </button>
-              </div>
             </div>
           </div>
         {/each}
       </div>
+
+      <!-- API Response Section -->
+      {#if fullApiResponse}
+        <div class="card bg-base-100 shadow-lg border border-base-300 mb-8">
+          <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-bold flex items-center gap-2">
+                <Icon icon="lucide:code" class="h-5 w-5" />
+                API Response
+              </h3>
+              <div class="flex gap-2">
+                <button 
+                  class="btn btn-sm btn-outline"
+                  on:click={copyJsonToClipboard}
+                >
+                  <Icon icon="lucide:copy" class="h-4 w-4 mr-1" />
+                  Copy JSON
+                </button>
+                <button 
+                  class="btn btn-sm btn-ghost"
+                  on:click={() => showJsonOutput = !showJsonOutput}
+                >
+                  <Icon icon={showJsonOutput ? 'lucide:chevron-up' : 'lucide:chevron-down'} class="h-4 w-4 mr-1" />
+                  {showJsonOutput ? 'Hide' : 'Show'} JSON
+                </button>
+              </div>
+            </div>
+            
+            {#if showJsonOutput}
+              <div class="mockup-code bg-base-200 text-sm max-h-96 overflow-y-auto">
+                <pre class="px-4 py-2"><code>{JSON.stringify(fullApiResponse, null, 2)}</code></pre>
+              </div>
+            {:else}
+              <div class="text-base-content/60 text-center py-8">
+                Click "Show JSON" to view the complete API response
+              </div>
+            {/if}
+          </div>
+        </div>
+      {/if}
     </div>
   {/if}
 
@@ -530,36 +577,25 @@
 
 <div class="container mx-auto pt-24 px-4 max-w-5xl">
   <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mb-16">Frequently Asked Questions</h2>
+  
   <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box">
-    <input type="checkbox" />
-    <div class="collapse-title text-xl font-medium">
-      Is this secure? 
-    </div>
-    <div class="collapse-content">
-      <p>Yes, we take the security of your photos seriously. All images are securely uploaded to a private Google Cloud Storage bucket, and all image retreivals are through signed URLs that expire after 24 hours. Your images are <b>private to YOU</b> and never shared with any third parties. You can also delete your images at any time.</p>
-    </div>
-  </div> 
-
-  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
-    <input type="checkbox" />
-    <div class="collapse-title text-xl font-medium">
-      What is this service for? 
-    </div>
-    <div class="collapse-content">
-      <p>
-        This service is for people who want to <b>quickly share large amounts of photos with friends and family</b>. It is perfect for events like weddings, parties, or vacations where you want to share a lot of photos with a group of people. Just create a folder, upload your photos, and share your unique link to your friends for them to view, download, and upload their own photos. You can also protect your folder with a password for added security.
-      </p>
-    </div>
-  </div> 
-
-  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
       Is this service really free? 
     </div>
     <div class="collapse-content">
+      <p>Yes, our domain finder tool is completely <b>free to use</b>! We're currently in beta and focused on providing the best domain search experience. The API is also free during our development phase.</p>
+    </div>
+  </div> 
+
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
+    <input type="checkbox" />
+    <div class="collapse-title text-xl font-medium">
+      How accurate are the domain availability results?
+    </div>
+    <div class="collapse-content">
       <p>
-        Yes, this service is completely <b>free to use</b>! We are currently in beta and will be adding more features in the future. 
+        We provide <b>real-time availability checking</b> directly from registrar APIs (Name.com and Porkbun). Results are highly accurate, though we recommend double-checking before making a purchase as domain availability can change rapidly.
       </p>
     </div>
   </div> 
@@ -567,30 +603,52 @@
   <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
-      How do I share my folder?
+      What makes your AI suggestions different from other domain tools?
     </div>
     <div class="collapse-content">
-      <p>You can share your folder by copying the share link and optionally protecting it with a password. Remember, your link is private and should only be shared with people you trust.</p>
+      <p>
+        Our AI considers multiple factors including <b>brandability, memorability, length, keyword relevance, and TLD quality</b> to provide intelligent scoring from 0-10. We focus on generating creative, professional names rather than just keyword combinations.
+      </p>
+    </div>
+  </div> 
+
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
+    <input type="checkbox" />
+    <div class="collapse-title text-xl font-medium">
+      Can I use your API for commercial projects?
+    </div>
+    <div class="collapse-content">
+      <p>Yes! Our API is designed for <b>agentic workflows and commercial use</b>. Check out our comprehensive API documentation for integration details. We currently offer 100 requests per minute during our beta phase.</p>
     </div>
   </div>
 
   <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
-      What are limits on the number of photos I can upload and the size of each photo?
+      Why do you recommend Name.com over Porkbun?
     </div>
     <div class="collapse-content">
-      <p>Each folder has a limit of 100 photos, and each photo can be up to 500 MB in size.</p>
+      <p>Name.com offers <b>faster bulk checking</b> (up to 50 domains per request vs 1 domain every 10 seconds with Porkbun) and higher rate limits. Porkbun is better for individual domain checks and may have different pricing for some TLDs.</p>
     </div>
   </div>
 
   <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
-      I want to delete my photos, how do I do that?
+      What domain extensions (TLDs) do you support?
     </div>
     <div class="collapse-content">
-      <p>You can delete your photos at any time by selecting the photos you want to delete and clicking "Delete Selected".</p>
+      <p>We support <b>45+ domain extensions</b> including .com, .net, .org, .io, .ai, .app, .dev, .tech, .online, .store, .shop, and many more. Our AI ranking system considers TLD quality in the final scoring.</p>
+    </div>
+  </div>
+
+  <div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box mt-6">
+    <input type="checkbox" />
+    <div class="collapse-title text-xl font-medium">
+      How does the domain scoring system work?
+    </div>
+    <div class="collapse-content">
+      <p>Our scoring algorithm weighs multiple factors: <b>source quality (30%), word quality (25%), length (20%), TLD quality (15%), keyword relevance (15%)</b>, plus memorability, brandability, and price factors. Scores range from 0-10, with 8+ being premium quality.</p>
     </div>
   </div>
 </div>

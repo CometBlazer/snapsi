@@ -79,13 +79,13 @@
               </div>
             {/if}
           </div>
-          <button 
+          <!-- <button 
             class="btn btn-primary btn-sm"
             on:click={() => openRegistrar(domain.domain, domain.registrar)}
           >
             <Icon icon="lucide:external-link" class="h-4 w-4 mr-1" />
             Register
-          </button>
+          </button> -->
         </div>
       </div>
     {/if}
