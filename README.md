@@ -1,38 +1,88 @@
-# sv
+# Snapsi API: Domain Finder API Frontend
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A modern domain suggestion tool with intelligent ranking and real-time availability checking. Built with SvelteKit and DaisyUI for developers and businesses looking for the perfect domain name.
 
-## Creating a project
+## ✨ Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **📊 Intelligent Ranking** - Smart scoring system (0-10) considering memorability, brandability, and keyword relevance
+- **⚡ Real-time Availability** - Instant domain availability checking across multiple registrars
+- **🔄 API-First Design** - Built for agentic workflows with comprehensive API integration
+- **💰 Live Pricing** - Real-time pricing from Name.com and Porkbun
+- **🎯 Multiple Search Types** - Business ideas, base names, or exact domain checking
+- **📋 JSON Output** - View complete API responses for developers
+- **🎨 Modern UI** - Clean, responsive design with DaisyUI components
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm, yarn, or pnpm
+
+### Installation
 
 ```bash
-# create a new project in the current directory
-npx sv create
+# Clone the repository
+git clone https://github.com/CometBlazer/snappi-v0.5
+cd snappi-v0.5
 
-# create a new project in my-app
-npx sv create my-app
-```
+# Install dependencies
+npm install
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
+# Start development server
 npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# Open http://localhost:5173
 ```
 
-## Building
+## 🛠️ Tech Stack
 
-To create a production version of your app:
+- **Framework**: [SvelteKit](https://kit.svelte.dev/)
+- **Styling**: [DaisyUI](https://daisyui.com/) + [Tailwind CSS](https://tailwindcss.com/)
+
+## 📖 Usage
+
+### Search Types
+
+1. **Business Idea**: Enter your business concept (e.g., "AI startup platform")
+2. **Base Name**: Check different TLDs for a specific name (e.g., "mycompany")
+3. **Exact Domain**: Verify specific domain availability (e.g., "google123456.com")
+
+### Advanced Options
+
+- **Generation Style**: Choose from brandable, short, keyword, creative, or professional
+- **TLD Preference**: Filter by domain extension (.com, .io, .ai, etc.)
+- **Price Filtering**: Set maximum annual price
+- **Provider Selection**: Choose between Name.com (fast) or Porkbun (different pricing)
+
+## 🚦 Development
+
+### Scripts
+
+```bash
+# Development
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint code
+npm run lint
+
+# Format code
+npm run format
+
+# Type checking
+npm run check
+```
+
+## 📦 Deployment
+
+### Build for Production
 
 ```bash
 npm run build
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
