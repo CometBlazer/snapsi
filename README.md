@@ -1,4 +1,4 @@
-# Snapsi API: Domain Finder API Frontend
+# Snapsi: Domain Finder API Frontend
 
 A modern domain suggestion tool with intelligent ranking and real-time availability checking. Built with SvelteKit and DaisyUI for developers and businesses looking for the perfect domain name.
 
@@ -23,8 +23,8 @@ A modern domain suggestion tool with intelligent ranking and real-time availabil
 
 ```bash
 # Clone the repository
-git clone https://github.com/CometBlazer/snappi-v0.5
-cd snappi-v0.5
+git clone https://github.com/CometBlazer/snapsi
+cd snapsi
 
 # Install dependencies
 npm install
