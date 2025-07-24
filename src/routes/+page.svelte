@@ -4,8 +4,6 @@
   import Icon from '@iconify/svelte';
   import { onMount } from 'svelte';
 	import { WebsiteBaseUrl, WebsiteDescription, WebsiteName } from '../config';
-
-  import DatePicker from '$lib/components/DatePicker.svelte';
   let picked: Date | null = null;
 
   const ldJson = {
@@ -135,7 +133,6 @@
 </svelte:head>
 
 <div class="container mx-auto py-24 px-4">
-  <DatePicker bind:selectedDate={picked} onSelect={(d) => console.log('Picked', d)} />
   <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
     <h1 class="text-4xl md:text-5xl font-bold text-base-content">Share <span class="text-secondary font-extrabold">Large Amounts</span> of Photos <span class="text-secondary font-extrabold">Quickly</span>. Free.</h1>
     <p class="mt-6 text-xl text-base-content/70">
