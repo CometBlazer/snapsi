@@ -18,7 +18,7 @@
   <!-- Header -->
   <div class="text-center mb-12">
     <h1 class="text-4xl font-bold text-base-content mb-4">
-      <span class="text-primary">{WebsiteName}</span> API Documentation
+      <span class="text-primary">{WebsiteName}</span> Documentation
     </h1>
     <p class="text-xl text-base-content/70">
       Complete guide to integrating with our domain suggestion API
@@ -356,7 +356,7 @@
       </div>
 
       <h3 class="text-xl font-semibold mb-4">Base Name Expansion</h3>
-      <p class="mb-4">Check a base name with different TLDs:</p>A
+      <p class="mb-4">Check a base name with different TLDs:</p>
       <div class="mockup-code mb-6">
         <pre data-prefix="$"><code>curl -X POST "http://localhost:5173/api/domains/suggest" \</code></pre>
         <pre data-prefix=">"><code>  -H "Content-Type: application/json" \</code></pre>
