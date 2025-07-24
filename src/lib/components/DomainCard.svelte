@@ -23,7 +23,7 @@
   }
 
   function openRegistrar(domain: string, registrar: string) {
-    const urls = {
+    const urls: { [key: string]: string } = {
       'name.com': `https://www.name.com/domain/search/${domain}`,
       'porkbun': `https://porkbun.com/checkout/search?q=${domain}`,
     };

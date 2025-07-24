@@ -1,4 +1,4 @@
-<!-- src/lib/components/SearchFilters.svelte -->
+<!-- src/lib/components/SearchFilters.svelte (Fixed accessibility) -->
 <script lang="ts">
   import Icon from '@iconify/svelte';
   
@@ -33,13 +33,13 @@
 </script>
 
 <!-- Input Type Selection -->
-<div class="form-control mb-6">
-  <label class="label">
+<fieldset class="form-control mb-6">
+  <legend class="label">
     <span class="label-text font-semibold flex items-center gap-2">
       <Icon icon="lucide:layers" class="h-4 w-4" />
       Search Type
     </span>
-  </label>
+  </legend>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
     {#each inputTypeOptions as option}
       <label class="label cursor-pointer justify-start p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors" class:bg-primary={inputType === option.value} class:text-primary-content={inputType === option.value}>
@@ -60,18 +60,18 @@
       </label>
     {/each}
   </div>
-</div>
+</fieldset>
 
 <!-- Quick Settings -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="form-control">
-    <label class="label">
+    <label for="tld-preference" class="label">
       <span class="label-text flex items-center gap-2">
         <Icon icon="lucide:globe" class="h-4 w-4" />
         TLD Preference
       </span>
     </label>
-    <select bind:value={domainPreference} class="select select-bordered">
+    <select id="tld-preference" bind:value={domainPreference} class="select select-bordered">
       {#each tldOptions as tld}
         <option value={tld}>{tld}</option>
       {/each}
@@ -79,7 +79,7 @@
   </div>
 
   <div class="form-control">
-    <label class="label">
+    <label for="max-price-filter" class="label">
       <span class="label-text flex items-center gap-2">
         <Icon icon="lucide:dollar-sign" class="h-4 w-4" />
         Max Price
@@ -88,6 +88,7 @@
     <div class="input-group">
       <span class="bg-base-200 px-3 py-2 border border-base-300 rounded-l-lg">$</span>
       <input 
+        id="max-price-filter"
         type="number" 
         bind:value={maxPrice}
         min="1" 
@@ -98,13 +99,14 @@
   </div>
 
   <div class="form-control">
-    <label class="label">
+    <label for="num-choices-filter" class="label">
       <span class="label-text flex items-center gap-2">
         <Icon icon="lucide:hash" class="h-4 w-4" />
         Results
       </span>
     </label>
     <input 
+      id="num-choices-filter"
       type="number" 
       bind:value={numChoices}
       min="1" 
@@ -119,13 +121,13 @@
   <div class="space-y-4 border-t pt-6 mt-6">
     <!-- Style Selection for AI Generation -->
     {#if inputType === 'idea'}
-      <div class="form-control">
-        <label class="label">
+      <fieldset class="form-control">
+        <legend class="label">
           <span class="label-text font-semibold flex items-center gap-2">
             <Icon icon="lucide:palette" class="h-4 w-4" />
             Generation Style
           </span>
-        </label>
+        </legend>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {#each styleOptions as option}
             <label class="label cursor-pointer justify-start p-3 border border-base-300 rounded-lg hover:bg-base-200 transition-colors" class:bg-secondary={style === option.value} class:text-secondary-content={style === option.value}>
@@ -146,16 +148,17 @@
             </label>
           {/each}
         </div>
-      </div>
+      </fieldset>
 
       <div class="form-control">
-        <label class="label">
+        <label for="field-filter" class="label">
           <span class="label-text flex items-center gap-2">
             <Icon icon="lucide:building" class="h-4 w-4" />
             Industry/Field (optional)
           </span>
         </label>
         <input 
+          id="field-filter"
           type="text" 
           bind:value={field}
           placeholder="e.g., technology, healthcare, e-commerce"
@@ -165,18 +168,18 @@
     {/if}
 
     <div class="form-control">
-      <label class="label">
+      <label for="provider-filter" class="label">
         <span class="label-text flex items-center gap-2">
           <Icon icon="lucide:server" class="h-4 w-4" />
           Provider
         </span>
       </label>
-      <select bind:value={providerPreference} class="select select-bordered">
+      <select id="provider-filter" bind:value={providerPreference} class="select select-bordered">
         <option value="name.com">Name.com (Fast, Recommended)</option>
         <option value="porkbun">Porkbun (Slow, Different Pricing)</option>
         <option value="any">All Providers (Best Coverage)</option>
       </select>
-      <label class="label">
+      <label for="provider-filter" class="label">
         <span class="label-text-alt text-base-content/60">
           Name.com is recommended for faster bulk checking
         </span>
@@ -185,13 +188,14 @@
 
     {#if inputType === 'exact_name'}
       <div class="form-control">
-        <label class="label">
+        <label for="additional-domains-filter" class="label">
           <span class="label-text flex items-center gap-2">
             <Icon icon="lucide:plus" class="h-4 w-4" />
             Additional Domains (comma-separated)
           </span>
         </label>
         <textarea 
+          id="additional-domains-filter"
           bind:value={additionalDomains}
           placeholder="example.io, mycompany.ai, startup.dev"
           class="textarea textarea-bordered"

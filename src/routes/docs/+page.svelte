@@ -1,11 +1,32 @@
-<!-- src/routes/docs/+page.svelte -->
+<!-- src/routes/docs/+page.svelte (Fixed syntax error) -->
 <script lang="ts">
   import { onMount } from 'svelte';
   import Icon from '@iconify/svelte';
   import { domainAPI, API_BASE_URL } from '$lib/api';
 
+  interface ExampleData {
+    description?: string;
+    example_request?: any;
+    expected_suggestions?: string[];
+    will_check?: string[];
+  }
+
+  interface RankingDetails {
+    weight: string;
+    description: string;
+    scores?: Record<string, any>;
+    factors?: string[];
+  }
+
+  interface ProviderDetails {
+    rate_limit: string;
+    bulk_check: string;
+    pricing: string;
+    recommended?: string;
+  }
+
   let apiHealth: any = null;
-  let examples: any = null;
+  let examples: Record<string, ExampleData> = {};
   let pricing: any = null;
   let ranking: any = null;
   let tlds: any = null;
@@ -210,13 +231,7 @@
                     <div class="mockup-code">
                       <pre><code>curl -X POST "{API_BASE_URL}/api/domains/suggest" \
   -H "Content-Type: application/json" \
-  -d '{
-    "input_text": "ai startup platform",
-    "input_type": "idea",
-    "field": "technology",
-    "style": "brandable",
-    "num_choices": 5
-  }'</code></pre>
+  -d '{JSON.stringify({"input_text": "ai startup platform", "input_type": "idea", "field": "technology", "style": "brandable", "num_choices": 5})}'</code></pre>
                     </div>
                     <button 
                       class="btn btn-sm btn-outline mt-2"
@@ -263,9 +278,9 @@
                       <button class="tab">cURL</button>
                     </div>
                     <div class="mockup-code">
-                      <pre><code>// JavaScript/TypeScript
+                      <pre><code>{`// JavaScript/TypeScript
 async function searchDomains(query) {
-  const response = await fetch('{API_BASE_URL}/api/domains/suggest', {
+  const response = await fetch('${API_BASE_URL}/api/domains/suggest', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -276,7 +291,7 @@ async function searchDomains(query) {
   });
   
   return response.json();
-}</code></pre>
+}`}</code></pre>
                     </div>
                   </div>
                 </div>
@@ -492,13 +507,13 @@ async function searchDomains(query) {
                     <div class="card-body p-4">
                       <h3 class="card-title text-lg capitalize">
                         {factor.replace('_', ' ')}
-                        <span class="badge badge-primary">{details.weight}</span>
+                        <span class="badge badge-primary">{(details as RankingDetails).weight}</span>
                       </h3>
-                      <p class="text-sm text-base-content/70 mb-3">{details.description}</p>
+                      <p class="text-sm text-base-content/70 mb-3">{(details as RankingDetails).description}</p>
                       
-                      {#if details.scores}
+                      {#if (details as RankingDetails).scores}
                         <div class="space-y-1">
-                          {#each Object.entries(details.scores) as [key, value]}
+                          {#each Object.entries((details as RankingDetails).scores || {}) as [key, value]}
                             <div class="flex justify-between text-sm">
                               <span>{key}:</span>
                               <span class="font-mono">{value}</span>
@@ -507,9 +522,9 @@ async function searchDomains(query) {
                         </div>
                       {/if}
 
-                      {#if details.factors}
+                      {#if (details as RankingDetails).factors}
                         <ul class="text-sm space-y-1">
-                          {#each details.factors as factorItem}
+                          {#each (details as RankingDetails).factors || [] as factorItem}
                             <li class="flex items-start gap-2">
                               <Icon icon="lucide:check" class="h-3 w-3 mt-0.5 text-success flex-shrink-0" />
                               {factorItem}
@@ -565,19 +580,19 @@ async function searchDomains(query) {
                     <div class="card-body">
                       <h3 class="card-title capitalize mb-2">
                         {provider}
-                        {#if details.recommended?.includes('✅')}
+                        {#if (details as ProviderDetails).recommended?.includes('✅')}
                           <span class="badge badge-success">Recommended</span>
-                        {:else if details.recommended?.includes('⚠️')}
+                        {:else if (details as ProviderDetails).recommended?.includes('⚠️')}
                           <span class="badge badge-warning">Limited</span>
                         {/if}
                       </h3>
                       
                       <div class="space-y-2 text-sm">
-                        <div><strong>Rate Limit:</strong> {details.rate_limit}</div>
-                        <div><strong>Bulk Check:</strong> {details.bulk_check}</div>
-                        <div><strong>Pricing:</strong> {details.pricing}</div>
-                        {#if details.recommended}
-                          <div class="text-base-content/70">{details.recommended}</div>
+                        <div><strong>Rate Limit:</strong> {(details as ProviderDetails).rate_limit}</div>
+                        <div><strong>Bulk Check:</strong> {(details as ProviderDetails).bulk_check}</div>
+                        <div><strong>Pricing:</strong> {(details as ProviderDetails).pricing}</div>
+                        {#if (details as ProviderDetails).recommended}
+                          <div class="text-base-content/70">{(details as ProviderDetails).recommended}</div>
                         {/if}
                       </div>
                     </div>
