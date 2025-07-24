@@ -725,7 +725,7 @@ async function searchDomains(query) &#123;
             <Icon icon="lucide:github" class="h-12 w-12 mx-auto mb-4 text-neutral" />
             <h3 class="font-semibold mb-2">GitHub</h3>
             <p class="text-sm text-base-content/70 mb-3">Source code & issues</p>
-            <a href="#" class="btn btn-sm btn-outline">View Repository</a>
+            <a href="/" class="btn btn-sm btn-outline">View Repository</a>
           </div>
         </div>
       </div>
@@ -766,7 +766,7 @@ async function searchDomains(query) &#123;
         <a href="/api/health" class="link link-hover">API Status</a>
         <a href="/api/rate-limit" class="link link-hover">Rate Limits</a>
         <a href="mailto:support@example.com" class="link link-hover">Support</a>
-        <a href="#" class="link link-hover">GitHub</a>
+        <a href="/" class="link link-hover">GitHub</a>
       </div>
       <p class="text-xs text-base-content/50 mt-4">
         Made with ❤️ for developers who need great domains

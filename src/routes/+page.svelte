@@ -1,4 +1,4 @@
-<!-- src/routes/+page.svelte -->
+<!-- src/routes/+page.svelte (Fixed layout and price input) -->
 <script lang="ts">
   import { goto } from '$app/navigation';
   import Icon from '@iconify/svelte';
@@ -151,190 +151,202 @@
     </div>
   </div>
 
-  <!-- Search Form -->
-  <div class="card bg-base-100 shadow-xl max-w-6xl mx-auto mb-8">
-    <div class="card-body p-8">
-      <form on:submit|preventDefault={handleSearch} class="space-y-6">
-        <!-- Main Search Input -->
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text text-lg font-semibold">What are you looking for?</span>
-          </label>
-          <div class="input-group">
-            <input 
-              type="text" 
-              bind:value={searchQuery}
-              placeholder="e.g., 'AI startup platform' or 'mycompany' or 'google.com'"
-              class="input input-bordered input-lg flex-1" 
-              disabled={isLoading}
-            />
-            <button 
-              type="submit" 
-              class="btn btn-primary btn-lg"
-              class:loading={isLoading}
-              disabled={isLoading || !searchQuery.trim()}
-            >
-              {#if isLoading}
-                <Icon icon="lucide:loader-2" class="h-5 w-5 animate-spin" />
-              {:else}
-                <Icon icon="lucide:search" class="h-5 w-5" />
-              {/if}
-              Search
-            </button>
-          </div>
-          <label class="label">
-            <span class="label-text-alt">
-              Auto-detected as: <span class="font-semibold capitalize">{inputType.replace('_', ' ')}</span>
-            </span>
-          </label>
-        </div>
-
-        <!-- Input Type Selection -->
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">Search Type</span>
-          </label>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-            {#each inputTypeOptions as option}
-              <label class="label cursor-pointer justify-start">
-                <input 
-                  type="radio" 
-                  name="inputType" 
-                  value={option.value}
-                  bind:group={inputType}
-                  class="radio radio-primary mr-3" 
-                />
-                <div>
-                  <div class="font-medium">{option.label}</div>
-                  <div class="text-sm text-base-content/60">{option.description}</div>
-                </div>
-              </label>
-            {/each}
-          </div>
-        </div>
-
-        <!-- Quick Settings -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">TLD Preference</span>
+  <!-- Search Form - Centered and Full Width -->
+  <div class="max-w-7xl mx-auto mb-8">
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body p-8">
+        <form on:submit|preventDefault={handleSearch} class="space-y-8">
+          <!-- Main Search Input - Centered -->
+          <div class="form-control max-w-4xl mx-auto">
+            <label class="label justify-center" for="search-input">
+              <span class="label-text text-lg font-semibold">What are you looking for?</span>
             </label>
-            <select bind:value={domainPreference} class="select select-bordered">
-              {#each tldOptions as tld}
-                <option value={tld}>{tld}</option>
-              {/each}
-            </select>
-          </div>
-
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Max Price</span>
-            </label>
-            <div class="input-group">
-              <span class="bg-base-200 px-3 py-2 border border-base-300 rounded-l-lg">$</span>
+            <div class="join w-full">
               <input 
+                id="search-input"
+                type="text" 
+                bind:value={searchQuery}
+                placeholder="e.g., 'AI startup platform' or 'mycompany' or 'google.com'"
+                class="input input-bordered input-lg join-item flex-1" 
+                disabled={isLoading}
+              />
+              <button 
+                type="submit" 
+                class="btn btn-primary btn-lg join-item"
+                class:loading={isLoading}
+                disabled={isLoading || !searchQuery.trim()}
+              >
+                {#if isLoading}
+                  <Icon icon="lucide:loader-2" class="h-5 w-5 animate-spin" />
+                {:else}
+                  <Icon icon="lucide:search" class="h-5 w-5" />
+                {/if}
+                Search
+              </button>
+            </div>
+            <label class="label justify-center" for="search-input">
+              <span class="label-text-alt">
+                Auto-detected as: <span class="font-semibold capitalize">{inputType.replace('_', ' ')}</span>
+              </span>
+            </label>
+          </div>
+
+          <!-- Input Type Selection -->
+          <div class="form-control max-w-5xl mx-auto">
+            <fieldset>
+              <legend class="label justify-center">
+                <span class="label-text font-semibold">Search Type</span>
+              </legend>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {#each inputTypeOptions as option}
+                  <label class="label cursor-pointer justify-start">
+                    <input 
+                      type="radio" 
+                      name="inputType" 
+                      value={option.value}
+                      bind:group={inputType}
+                      class="radio radio-primary mr-3" 
+                    />
+                    <div>
+                      <div class="font-medium">{option.label}</div>
+                      <div class="text-sm text-base-content/60">{option.description}</div>
+                    </div>
+                  </label>
+                {/each}
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- Quick Settings -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div class="form-control">
+              <label class="label" for="tld-preference">
+                <span class="label-text">TLD Preference</span>
+              </label>
+              <select id="tld-preference" bind:value={domainPreference} class="select select-bordered">
+                {#each tldOptions as tld}
+                  <option value={tld}>{tld}</option>
+                {/each}
+              </select>
+            </div>
+
+            <div class="form-control">
+              <label class="label" for="max-price">
+                <span class="label-text">Max Price</span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <span>$</span>
+                <input 
+                  id="max-price"
+                  type="number" 
+                  bind:value={maxPrice}
+                  min="1" 
+                  max="1000000" 
+                  class="grow"
+                />
+              </label>
+            </div>
+
+            <div class="form-control">
+              <label class="label" for="num-choices">
+                <span class="label-text">Results</span>
+              </label>
+              <input 
+                id="num-choices"
                 type="number" 
-                bind:value={maxPrice}
+                bind:value={numChoices}
                 min="1" 
-                max="1000" 
-                class="input input-bordered flex-1 rounded-l-none"
+                max="20" 
+                class="input input-bordered"
               />
             </div>
           </div>
 
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Results</span>
-            </label>
-            <input 
-              type="number" 
-              bind:value={numChoices}
-              min="1" 
-              max="20" 
-              class="input input-bordered"
-            />
+          <!-- Advanced Options Toggle -->
+          <div class="divider max-w-4xl mx-auto">
+            <button 
+              type="button"
+              class="btn btn-ghost btn-sm"
+              on:click={() => showAdvanced = !showAdvanced}
+            >
+              <Icon icon={showAdvanced ? 'lucide:chevron-up' : 'lucide:chevron-down'} class="h-4 w-4 mr-2" />
+              Advanced Options
+            </button>
           </div>
-        </div>
 
-        <!-- Advanced Options Toggle -->
-        <div class="divider">
-          <button 
-            type="button"
-            class="btn btn-ghost btn-sm"
-            on:click={() => showAdvanced = !showAdvanced}
-          >
-            <Icon icon={showAdvanced ? 'lucide:chevron-up' : 'lucide:chevron-down'} class="h-4 w-4 mr-2" />
-            Advanced Options
-          </button>
-        </div>
-
-        {#if showAdvanced}
-          <div class="space-y-4 border-t pt-6">
-            <!-- Style Selection for AI Generation -->
-            {#if inputType === 'idea'}
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-semibold">Generation Style</span>
-                </label>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                  {#each styleOptions as option}
-                    <label class="label cursor-pointer justify-start">
-                      <input 
-                        type="radio" 
-                        name="style" 
-                        value={option.value}
-                        bind:group={style}
-                        class="radio radio-secondary mr-3" 
-                      />
-                      <div>
-                        <div class="font-medium">{option.label}</div>
-                        <div class="text-sm text-base-content/60">{option.description}</div>
-                      </div>
-                    </label>
-                  {/each}
+          {#if showAdvanced}
+            <div class="space-y-6 border-t pt-6 max-w-4xl mx-auto">
+              <!-- Style Selection for AI Generation -->
+              {#if inputType === 'idea'}
+                <div class="form-control">
+                  <fieldset>
+                    <legend class="label">
+                      <span class="label-text font-semibold">Generation Style</span>
+                    </legend>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {#each styleOptions as option}
+                      <label class="label cursor-pointer justify-start">
+                        <input 
+                          type="radio" 
+                          name="style" 
+                          value={option.value}
+                          bind:group={style}
+                          class="radio radio-secondary mr-3" 
+                        />
+                        <div>
+                          <div class="font-medium">{option.label}</div>
+                          <div class="text-sm text-base-content/60">{option.description}</div>
+                        </div>
+                      </label>
+                    {/each}
+                    </div>
+                  </fieldset>
                 </div>
-              </div>
+
+                <div class="form-control">
+                  <label class="label" for="field-input">
+                    <span class="label-text">Industry/Field (optional)</span>
+                  </label>
+                  <input 
+                    id="field-input"
+                    type="text" 
+                    bind:value={field}
+                    placeholder="e.g., technology, healthcare, e-commerce"
+                    class="input input-bordered"
+                  />
+                </div>
+              {/if}
 
               <div class="form-control">
+                <!-- svelte-ignore a11y_label_has_associated_control -->
                 <label class="label">
-                  <span class="label-text">Industry/Field (optional)</span>
+                  <span class="label-text">Provider</span>
                 </label>
-                <input 
-                  type="text" 
-                  bind:value={field}
-                  placeholder="e.g., technology, healthcare, e-commerce"
-                  class="input input-bordered"
-                />
+                <select bind:value={providerPreference} class="select select-bordered">
+                  <option value="name.com">Name.com (Fast, Recommended)</option>
+                  <option value="porkbun">Porkbun (Slow, Different Pricing)</option>
+                  <option value="any">All Providers (Best Coverage)</option>
+                </select>
               </div>
-            {/if}
 
-            <div class="form-control">
-              <label class="label">
-                <span class="label-text">Provider</span>
-              </label>
-              <select bind:value={providerPreference} class="select select-bordered">
-                <option value="name.com">Name.com (Fast, Recommended)</option>
-                <option value="porkbun">Porkbun (Slow, Different Pricing)</option>
-                <option value="any">All Providers (Best Coverage)</option>
-              </select>
+              {#if inputType === 'exact_name'}
+                <!-- svelte-ignore a11y_label_has_associated_control -->
+                <div class="form-control">
+                  <label class="label">
+                    <span class="label-text">Additional Domains (comma-separated)</span>
+                  </label>
+                  <textarea 
+                    bind:value={additionalDomains}
+                    placeholder="example.io, mycompany.ai, startup.dev"
+                    class="textarea textarea-bordered"
+                    rows="2"
+                  ></textarea>
+                </div>
+              {/if}
             </div>
-
-            {#if inputType === 'exact_name'}
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Additional Domains (comma-separated)</span>
-                </label>
-                <textarea 
-                  bind:value={additionalDomains}
-                  placeholder="example.io, mycompany.ai, startup.dev"
-                  class="textarea textarea-bordered"
-                  rows="2"
-                ></textarea>
-              </div>
-            {/if}
-          </div>
-        {/if}
-      </form>
+          {/if}
+        </form>
+      </div>
     </div>
   </div>
 
