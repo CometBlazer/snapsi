@@ -12,7 +12,7 @@
     "@type": "WebSite",
     name: "Domain Finder AI",
     url: WebsiteBaseUrl,
-    description: "Find the perfect domain name with AI-powered suggestions and intelligent ranking"
+    description: "Find the perfect domain name with smart suggestions and intelligent ranking"
   }
   const jsonldScript = `<script type="application/ld+json">${
     JSON.stringify(ldJson) + "<"
@@ -119,16 +119,16 @@
 </script>
 
 <svelte:head>
-  <title>Domain Finder AI | Find Perfect Domain Names with AI</title>
-  <meta name="description" content="Find the perfect domain name with AI-powered suggestions, intelligent ranking, and real-time availability checking. Free domain search tool." />
+  <title>{WebsiteName} | Find Perfect Domain Names with API</title>
+  <meta name="description" content="Find the perfect domain name with smart suggestions, intelligent ranking, and real-time availability checking. Free domain search tool." />
   <meta name="keywords" content="domain finder, domain search, AI domain suggestions, domain availability, domain names" />
   <meta property="og:title" content="Domain Finder AI | Find Perfect Domain Names" />
-  <meta property="og:description" content="Find the perfect domain name with AI-powered suggestions and intelligent ranking" />
+  <meta property="og:description" content="Find the perfect domain name with smart suggestions and intelligent ranking" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={WebsiteBaseUrl} />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Domain Finder AI | Find Perfect Domain Names" />
-  <meta name="twitter:description" content="Find the perfect domain name with AI-powered suggestions and intelligent ranking" />
+  <meta name="twitter:description" content="Find the perfect domain name with smart suggestions and intelligent ranking" />
   {@html jsonldScript}
 </svelte:head>
 
@@ -137,14 +137,14 @@
   <div class="text-center max-w-5xl mx-auto mb-16">
     <h1 class="text-4xl md:text-6xl font-bold text-base-content mb-6">
       Find the <span class="text-primary font-extrabold">Perfect Domain</span> 
-      with <span class="text-secondary font-extrabold">AI</span>
+      with <span class="text-secondary font-extrabold">API</span>
     </h1>
     <p class="text-xl text-base-content/70 mb-8">
       Get intelligent domain suggestions with name ranking, real-time availability, and competitive pricing
     </p>
     
     <div class="flex flex-wrap gap-2 justify-center">
-      <div class="badge badge-primary">AI-Powered</div>
+      <div class="badge badge-primary">API-First for Agentic Workflows</div>
       <div class="badge badge-secondary">Real-time Availability</div>
       <div class="badge badge-accent">Smart Ranking</div>
       <div class="badge badge-neutral">Multi-Provider</div>
@@ -157,11 +157,11 @@
       <div class="card-body p-8">
         <form on:submit|preventDefault={handleSearch} class="space-y-8">
           <!-- Main Search Input - Centered -->
-          <div class="form-control max-w-5xl mx-auto">
+          <div class="form-control max-w-5xl mx-auto text-center">
             <label class="label justify-center" for="search-input">
-              <span class="label-text text-lg font-semibold">What are you looking for?</span>
+              <span class="label-text text-2xl font-semibold">What are you looking for?</span>
             </label>
-            <div class="join w-full">
+            <div class="join w-full my-3">
               <input 
                 id="search-input"
                 type="text" 
@@ -192,7 +192,7 @@
           </div>
 
           <!-- Input Type Selection -->
-          <div class="form-control max-w-5xl mx-auto">
+          <div class="form-control max-w-5xl mx-auto mt-10">
             <fieldset>
               <legend class="label justify-center">
                 <span class="label-text font-semibold">Search Type</span>
@@ -275,7 +275,7 @@
           </div>
 
           {#if showAdvanced}
-            <div class="space-y-6 border-t pt-6 max-w-5xl mx-auto">
+            <div class="space-y-6 pt-6 max-w-5xl mx-auto">
               <!-- Style Selection for AI Generation -->
               {#if inputType === 'idea'}
                 <div class="form-control">
@@ -380,7 +380,6 @@
             <div class="text-sm">
               Found {searchSummary.available_domains_found} available domains 
               from {searchSummary.domains_actually_checked_by_providers} checked
-              • Method: {searchSummary.generation_method.type.replace('_', ' ')}
               • Providers: {searchSummary.providers_used.join(', ')}
             </div>
           </div>
@@ -494,9 +493,9 @@
             <div class="rounded-full bg-primary/10 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
               <Icon icon="lucide:brain" class="h-8 w-8 text-primary" />
             </div>
-            <h3 class="text-xl font-bold mb-2">AI-Powered Suggestions</h3>
+            <h3 class="text-xl font-bold mb-2">Smart Suggestions</h3>
             <p class="text-base-content/70">
-              Advanced algorithms generate brandable, memorable domain names tailored to your business
+              Snapsi generates brandable, memorable domain names tailored to your business
             </p>
           </div>
         </div>
