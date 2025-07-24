@@ -134,13 +134,13 @@
 
 <div class="container mx-auto py-12 px-4">
   <!-- Hero Section -->
-  <div class="text-center max-w-4xl mx-auto mb-16">
+  <div class="text-center max-w-5xl mx-auto mb-16">
     <h1 class="text-4xl md:text-6xl font-bold text-base-content mb-6">
       Find the <span class="text-primary font-extrabold">Perfect Domain</span> 
       with <span class="text-secondary font-extrabold">AI</span>
     </h1>
     <p class="text-xl text-base-content/70 mb-8">
-      Get intelligent domain suggestions with GoDaddy-style ranking, real-time availability, and competitive pricing
+      Get intelligent domain suggestions with name ranking, real-time availability, and competitive pricing
     </p>
     
     <div class="flex flex-wrap gap-2 justify-center">
@@ -157,7 +157,7 @@
       <div class="card-body p-8">
         <form on:submit|preventDefault={handleSearch} class="space-y-8">
           <!-- Main Search Input - Centered -->
-          <div class="form-control max-w-4xl mx-auto">
+          <div class="form-control max-w-5xl mx-auto">
             <label class="label justify-center" for="search-input">
               <span class="label-text text-lg font-semibold">What are you looking for?</span>
             </label>
@@ -218,7 +218,7 @@
           </div>
 
           <!-- Quick Settings -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <div class="form-control">
               <label class="label" for="tld-preference">
                 <span class="label-text">TLD Preference</span>
@@ -263,7 +263,7 @@
           </div>
 
           <!-- Advanced Options Toggle -->
-          <div class="divider max-w-4xl mx-auto">
+          <div class="divider max-w-5xl mx-auto">
             <button 
               type="button"
               class="btn btn-ghost btn-sm"
@@ -275,7 +275,7 @@
           </div>
 
           {#if showAdvanced}
-            <div class="space-y-6 border-t pt-6 max-w-4xl mx-auto">
+            <div class="space-y-6 border-t pt-6 max-w-5xl mx-auto">
               <!-- Style Selection for AI Generation -->
               {#if inputType === 'idea'}
                 <div class="form-control">
@@ -352,7 +352,7 @@
 
   <!-- Error Display -->
   {#if error}
-    <div class="alert alert-error max-w-4xl mx-auto mb-8">
+    <div class="alert alert-error max-w-5xl mx-auto mb-8">
       <Icon icon="lucide:alert-circle" class="h-5 w-5" />
       <span>{error}</span>
     </div>
@@ -508,7 +508,7 @@
             </div>
             <h3 class="text-xl font-bold mb-2">Intelligent Ranking</h3>
             <p class="text-base-content/70">
-              GoDaddy-style scoring considers memorability, brandability, and keyword relevance
+              Snapsi scoring considers memorability, brandability, and keyword relevance
             </p>
           </div>
         </div>
@@ -528,7 +528,7 @@
     </div>
 
     <!-- CTA Section -->
-    <div class="text-center mt-16 p-8 bg-primary/5 rounded-2xl max-w-4xl mx-auto">
+    <div class="text-center mt-16 p-8 bg-primary/5 rounded-2xl max-w-5xl mx-auto">
       <h2 class="text-2xl font-bold mb-4">Ready to find your perfect domain?</h2>
       <p class="text-base-content/70 mb-6">
         Start by entering your business idea, company name, or exact domain above

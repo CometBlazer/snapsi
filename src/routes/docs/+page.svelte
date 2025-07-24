@@ -416,7 +416,7 @@ async function searchDomains(query) &#123;
       <div class="alert alert-info mb-6">
         <Icon icon="lucide:info" class="h-5 w-5" />
         <div>
-          <div class="font-semibold">GoDaddy-style intelligent domain ranking</div>
+          <div class="font-semibold">Intelligent domain ranking</div>
           <div class="text-sm">Score range: 0.0 to 10.0 (higher is better)</div>
         </div>
       </div>
