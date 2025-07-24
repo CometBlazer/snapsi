@@ -525,20 +525,6 @@
         </div>
       </div>
     </div>
-
-    <!-- CTA Section -->
-    <div class="text-center mt-16 p-8 bg-primary/5 rounded-2xl max-w-5xl mx-auto">
-      <h2 class="text-2xl font-bold mb-4">Ready to find your perfect domain?</h2>
-      <p class="text-base-content/70 mb-6">
-        Start by entering your business idea, company name, or exact domain above
-      </p>
-      <div class="flex justify-center gap-4">
-        <button class="btn btn-outline" on:click={() => goto('/docs')}>
-          <Icon icon="lucide:book" class="h-4 w-4 mr-2" />
-          View API Docs
-        </button>
-      </div>
-    </div>
   {/if}
 </div>
 
@@ -611,10 +597,10 @@
 
 <div class="container mx-auto pt-10 pb-24 px-4 max-w-5xl">
   <div class="mt-16 text-center card bg-primary/80 border-base-300 border-1 shadow-xl p-16 md:p-30 rounded-3xl">
-    <h2 class="text-2xl md:text-4xl font-bold mb-12">Share your photos quickly and securely today with <span class="font-extrabold underline">Snappi</span>.</h2>
-    <button class="btn btn-outline bg-base-100 btn-xl rounded-full gap-2 text-primary-content max-w-lg mx-auto" on:click={() => goto('/folder/create')}>
-      <Icon icon="lucide:sparkles" class="h-5 w-5" />
-      Try It Free Now
+    <h2 class="text-2xl md:text-4xl font-bold mb-12">Build your agentic workflow today with <span class="font-extrabold underline">{WebsiteName}</span>.</h2>
+    <button class="btn btn-outline bg-base-100 btn-xl rounded-full gap-2 text-primary-content max-w-lg mx-auto" on:click={() => goto('/docs')}>
+      <Icon icon="lucide:book" class="h-5 w-5" />
+      View API Docs
     </button>
   </div>
 </div>
