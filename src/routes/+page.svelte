@@ -23,7 +23,7 @@
   let inputType: 'idea' | 'exact_name' | 'base_name' = 'idea';
   let field = '';
   let style: 'short' | 'brandable' | 'keyword' | 'creative' | 'professional' = 'brandable';
-  let domainPreference = '.com';
+  let domainPreference = 'any';
   let providerPreference: 'name.com' | 'porkbun' | 'any' = 'name.com';
   let maxPrice = 50;
   let numChoices = 10;
@@ -113,8 +113,8 @@
   ];
 
   const tldOptions = [
-    '.com', '.io', '.ai', '.app', '.dev', '.net', '.org', '.co', 
-    '.tech', '.online', '.site', '.store', '.shop', 'any'
+    'any', '.com', '.io', '.ai', '.app', '.dev', '.net', '.org', '.co', 
+    '.tech', '.online', '.site', '.store', '.shop'
   ];
 </script>
 
@@ -152,7 +152,7 @@
   </div>
 
   <!-- Search Form -->
-  <div class="card bg-base-100 shadow-xl max-w-4xl mx-auto mb-8">
+  <div class="card bg-base-100 shadow-xl max-w-6xl mx-auto mb-8">
     <div class="card-body p-8">
       <form on:submit|preventDefault={handleSearch} class="space-y-6">
         <!-- Main Search Input -->

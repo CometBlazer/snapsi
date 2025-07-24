@@ -9,7 +9,7 @@
   
 	// Define navItems if not provided by siteConfig
 	const navItems = [
-	  // { href: "/blog", label: "Blog" },
+	  { href: "/docs", label: "Docs" },
 	  { href: "/pricing", label: "Pricing" },
 	  // { href: "/", label: "Contact Us" },
 	  // { href: "/search", label: "Search" },
