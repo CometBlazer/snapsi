@@ -1,39 +1,55 @@
 // src/routes/api/domains/suggest/+server.ts
+
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-const API_BASE_URL = 'https://domainsapi-271115130311.northamerica-northeast2.run.app';
+const EXTERNAL_API_URL = 'https://domainsapi-271115130311.northamerica-northeast2.run.app';
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
-    // Get the request body
-    const body = await request.json();
-    
-    // Forward the request to your external API
-    const response = await fetch(`${API_BASE_URL}/api/domains/suggest`, {
+    const requestBody = await request.json();
+    // This will show up in your SvelteKit/Vite terminal, not the browser console
+    console.log('[PROXY] Received request from client:', JSON.stringify(requestBody, null, 2));
+
+    const externalApiResponse = await fetch(`${EXTERNAL_API_URL}/api/domains/suggest`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Forward user's IP for rate limiting
-        'X-Forwarded-For': request.headers.get('x-forwarded-for') || 
-                          request.headers.get('x-real-ip') || 
-                          'unknown'
+        'User-Agent': 'SvelteKit-Proxy/1.0', // Some APIs require a User-Agent
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(requestBody)
     });
 
-    const data = await response.json();
+    console.log(`[PROXY] External API responded with status: ${externalApiResponse.status}`);
     
-    return json(data, {
-      status: response.status,
-      headers: {
-        'Cache-Control': 'private, no-cache' // Don't cache domain searches
-      }
+    // Get the response as raw text first to prevent JSON parsing errors
+    const responseText = await externalApiResponse.text(); 
+    
+    if (!externalApiResponse.ok) {
+        console.error('[PROXY] External API returned an error response body:', responseText);
+        
+        // Forward the exact error response to the browser
+        // We set Content-Type header to ensure browser interprets it correctly
+        return new Response(responseText, { 
+            status: externalApiResponse.status,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+
+    console.log('[PROXY] External API call was successful. Forwarding response.');
+    
+    return new Response(responseText, {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'private, no-cache'
+        }
     });
+
   } catch (error) {
-    console.error('Domain search failed:', error);
+    console.error('[PROXY] A critical error occurred in the proxy logic itself:', error);
     return json(
-      { error: 'Failed to search domains' },
+      { error: 'The API proxy encountered a critical internal error.' },
       { status: 500 }
     );
   }

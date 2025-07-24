@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/lib/api.ts - API client
 export const API_BASE_URL = '';
 export interface DomainRequest {
@@ -68,6 +69,7 @@ export class DomainAPI {
           ? (typeof error.detail === 'string' ? error.detail : error.detail.message)
           : error.error || 'Unknown error occurred';
         throw new Error(message);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (parseError) {
         throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
