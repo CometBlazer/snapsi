@@ -1,7 +1,7 @@
 // src/routes/api/parse-input/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { API_BASE_URL } from '$lib/api';
+const API_BASE_URL = 'https://domainsapi-271115130311.northamerica-northeast2.run.app';
 
 export const POST: RequestHandler = async ({ request }) => {
   try {

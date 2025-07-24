@@ -1,6 +1,5 @@
 // src/lib/api.ts - API client
-export const API_BASE_URL = 'https://domainsapi-271115130311.northamerica-northeast2.run.app';
-
+export const API_BASE_URL = '';
 export interface DomainRequest {
   input_text: string;
   input_type?: 'idea' | 'exact_name' | 'base_name';
