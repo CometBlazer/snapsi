@@ -1,152 +1,534 @@
+<!-- src/routes/+page.svelte -->
 <script lang="ts">
-  // src/routes/+page.svelte
   import { goto } from '$app/navigation';
   import Icon from '@iconify/svelte';
   import { onMount } from 'svelte';
-	import { WebsiteBaseUrl, WebsiteDescription, WebsiteName } from '../config';
-  let picked: Date | null = null;
+  import { WebsiteBaseUrl, WebsiteDescription, WebsiteName } from '../config';
+  import { domainAPI, type DomainRequest, type DomainResult } from '$lib/api';
 
+  // SEO and meta data
   const ldJson = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: WebsiteName,
+    name: "Domain Finder AI",
     url: WebsiteBaseUrl,
+    description: "Find the perfect domain name with AI-powered suggestions and intelligent ranking"
   }
   const jsonldScript = `<script type="application/ld+json">${
     JSON.stringify(ldJson) + "<"
   }/script>`
 
-  let showDialog = false;
-  let folderId = '';
-  let dialogError = '';
+  // Form state
+  let searchQuery = '';
+  let inputType: 'idea' | 'exact_name' | 'base_name' = 'idea';
+  let field = '';
+  let style: 'short' | 'brandable' | 'keyword' | 'creative' | 'professional' = 'brandable';
+  let domainPreference = '.com';
+  let providerPreference: 'name.com' | 'porkbun' | 'any' = 'name.com';
+  let maxPrice = 50;
+  let numChoices = 10;
+  let additionalDomains = '';
 
-  function openFolderDialog() {
-    showDialog = true;
-    folderId = '';
-    dialogError = '';
+  // UI state
+  let isLoading = false;
+  let searchResults: DomainResult[] = [];
+  let error = '';
+  let searchSummary: any = null;
+  let showAdvanced = false;
+
+  // Auto-detect input type
+  $: {
+    if (searchQuery.trim()) {
+      if (searchQuery.includes('.') && /\.(com|net|org|io|ai|app|dev)$/i.test(searchQuery)) {
+        inputType = 'exact_name';
+      } else if (searchQuery.split(' ').length === 1 && searchQuery.length <= 20) {
+        inputType = 'base_name';
+      } else {
+        inputType = 'idea';
+      }
+    }
   }
 
-  function closeDialog() {
-    showDialog = false;
-  }
-
-  function handleSubmit() {
-    // UUID v4 validation regex
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    
-    if (!folderId.trim()) {
-      dialogError = 'Please enter a folder ID';
+  async function handleSearch() {
+    if (!searchQuery.trim()) {
+      error = 'Please enter a search term';
       return;
     }
 
-    if (!uuidRegex.test(folderId.trim())) {
-      dialogError = 'Invalid folder ID format';
-      return;
-    }
+    isLoading = true;
+    error = '';
+    searchResults = [];
+    searchSummary = null;
 
-    // Navigate to folder page
-    goto(`/folder/${folderId.trim()}`);
-    closeDialog();
+    try {
+      const request: DomainRequest = {
+        input_text: searchQuery.trim(),
+        input_type: inputType,
+        field: field.trim(),
+        style,
+        domain_preference: domainPreference === 'any' ? 'any' : domainPreference,
+        provider_preference: providerPreference,
+        max_price: maxPrice,
+        num_choices: numChoices,
+        additional_domains: additionalDomains.split(',').map(d => d.trim()).filter(Boolean)
+      };
+
+      const response = await domainAPI.suggestDomains(request);
+      searchResults = response.domains;
+      searchSummary = response.search_summary;
+    } catch (err) {
+      error = err instanceof Error ? err.message : 'An error occurred';
+    } finally {
+      isLoading = false;
+    }
   }
 
-  // Close dialog when Escape key is pressed
-  function handleKeydown(event: { key: string; }) {
-    if (event.key === 'Escape' && showDialog) {
-      closeDialog();
-    }
+  function getScoreColor(score: number): string {
+    if (score >= 8) return 'text-success';
+    if (score >= 6) return 'text-info';
+    if (score >= 4) return 'text-warning';
+    return 'text-error';
   }
 
-  onMount(() => {
-    document.addEventListener('keydown', handleKeydown);
-    return () => document.removeEventListener('keydown', handleKeydown);
-  });
+  function getScoreLabel(score: number): string {
+    if (score >= 8) return 'Premium';
+    if (score >= 6) return 'Strong';
+    if (score >= 4) return 'Good';
+    if (score >= 2) return 'Fair';
+    return 'Poor';
+  }
+
+  const inputTypeOptions = [
+    { value: 'idea', label: 'Business Idea', description: 'Generate suggestions from your concept' },
+    { value: 'base_name', label: 'Base Name', description: 'Check different TLDs for a name' },
+    { value: 'exact_name', label: 'Exact Domain', description: 'Check specific domain(s)' }
+  ];
+
+  const styleOptions = [
+    { value: 'brandable', label: 'Brandable', description: 'Modern, memorable names' },
+    { value: 'short', label: 'Short', description: 'Concise, 4-6 characters' },
+    { value: 'keyword', label: 'Keyword', description: 'Industry-relevant terms' },
+    { value: 'creative', label: 'Creative', description: 'Unique variations' },
+    { value: 'professional', label: 'Professional', description: 'Business-focused' }
+  ];
+
+  const tldOptions = [
+    '.com', '.io', '.ai', '.app', '.dev', '.net', '.org', '.co', 
+    '.tech', '.online', '.site', '.store', '.shop', 'any'
+  ];
 </script>
 
 <svelte:head>
-  <title>{WebsiteName} | Easy Photo Sharing</title>
-  <meta name="description" content={WebsiteDescription} />
-  <meta
-    name="keywords"
-    content="Free photo sharing, file sharing, {WebsiteName}"
-  />
-  <meta
-    property="og:title"
-    content="{WebsiteName} | Easy Photo Sharing"
-  />
-  <meta property="og:description" content={WebsiteDescription} />
+  <title>Domain Finder AI | Find Perfect Domain Names with AI</title>
+  <meta name="description" content="Find the perfect domain name with AI-powered suggestions, intelligent ranking, and real-time availability checking. Free domain search tool." />
+  <meta name="keywords" content="domain finder, domain search, AI domain suggestions, domain availability, domain names" />
+  <meta property="og:title" content="Domain Finder AI | Find Perfect Domain Names" />
+  <meta property="og:description" content="Find the perfect domain name with AI-powered suggestions and intelligent ranking" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://snapsi.me" />
+  <meta property="og:url" content={WebsiteBaseUrl} />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content="{WebsiteName} | Easy Photo Sharing"
-  />
-  <meta name="twitter:description" content={WebsiteDescription} />
-  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+  <meta name="twitter:title" content="Domain Finder AI | Find Perfect Domain Names" />
+  <meta name="twitter:description" content="Find the perfect domain name with AI-powered suggestions and intelligent ranking" />
   {@html jsonldScript}
 </svelte:head>
 
-<div class="container mx-auto py-24 px-4">
-  <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
-    <h1 class="text-4xl md:text-5xl font-bold text-base-content">Share <span class="text-secondary font-extrabold">Large Amounts</span> of Photos <span class="text-secondary font-extrabold">Quickly</span>. Free.</h1>
-    <p class="mt-6 text-xl text-base-content/70">
-      Create <b>private, secure</b> folders to upload and share photos with anyone, protected by passwords.
+<div class="container mx-auto py-12 px-4">
+  <!-- Hero Section -->
+  <div class="text-center max-w-4xl mx-auto mb-16">
+    <h1 class="text-4xl md:text-6xl font-bold text-base-content mb-6">
+      Find the <span class="text-primary font-extrabold">Perfect Domain</span> 
+      with <span class="text-secondary font-extrabold">AI</span>
+    </h1>
+    <p class="text-xl text-base-content/70 mb-8">
+      Get intelligent domain suggestions with GoDaddy-style ranking, real-time availability, and competitive pricing
     </p>
-
-    <div class="my-16 flex flex-col sm:flex-row gap-4">
-      <button class="btn btn-primary btn-xl rounded-full gap-2 text-primary-content" on:click={() => goto('/folder/create')}>
-        <Icon icon="lucide:upload" class="h-5 w-5" />
-        Upload Photos for Free
-      </button>
-
-      <button class="btn btn-outline btn-xl rounded-full gap-2 text-primary-content" on:click={openFolderDialog}>
-        <Icon icon="lucide:eye" class="h-5 w-5" />
-        View Folder Photos
-      </button>
+    
+    <div class="flex flex-wrap gap-2 justify-center">
+      <div class="badge badge-primary">AI-Powered</div>
+      <div class="badge badge-secondary">Real-time Availability</div>
+      <div class="badge badge-accent">Smart Ranking</div>
+      <div class="badge badge-neutral">Multi-Provider</div>
     </div>
   </div>
 
-</div>
+  <!-- Search Form -->
+  <div class="card bg-base-100 shadow-xl max-w-4xl mx-auto mb-8">
+    <div class="card-body p-8">
+      <form on:submit|preventDefault={handleSearch} class="space-y-6">
+        <!-- Main Search Input -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text text-lg font-semibold">What are you looking for?</span>
+          </label>
+          <div class="input-group">
+            <input 
+              type="text" 
+              bind:value={searchQuery}
+              placeholder="e.g., 'AI startup platform' or 'mycompany' or 'google.com'"
+              class="input input-bordered input-lg flex-1" 
+              disabled={isLoading}
+            />
+            <button 
+              type="submit" 
+              class="btn btn-primary btn-lg"
+              class:loading={isLoading}
+              disabled={isLoading || !searchQuery.trim()}
+            >
+              {#if isLoading}
+                <Icon icon="lucide:loader-2" class="h-5 w-5 animate-spin" />
+              {:else}
+                <Icon icon="lucide:search" class="h-5 w-5" />
+              {/if}
+              Search
+            </button>
+          </div>
+          <label class="label">
+            <span class="label-text-alt">
+              Auto-detected as: <span class="font-semibold capitalize">{inputType.replace('_', ' ')}</span>
+            </span>
+          </label>
+        </div>
 
-<div class="container mx-auto py-10 sm:py-16 px-4 max-w-5xl">
-  <h2 class="text-3xl md:text-4xl font-bold text-base-content text-center mt-12 mb-16">It's Easy as <span class="text-secondary font-extrabold">1, 2, 3</span>. <span class="underline">No Sign-In</span> Required.</h2>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 w-full">
-    <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-      <div class="card-body items-center text-center py-20">
-        <div class="rounded-full bg-primary/10 p-4 mb-6">
-          <Icon icon="lucide:folder-plus" class="h-10 w-10 text-primary" />
+        <!-- Input Type Selection -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">Search Type</span>
+          </label>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+            {#each inputTypeOptions as option}
+              <label class="label cursor-pointer justify-start">
+                <input 
+                  type="radio" 
+                  name="inputType" 
+                  value={option.value}
+                  bind:group={inputType}
+                  class="radio radio-primary mr-3" 
+                />
+                <div>
+                  <div class="font-medium">{option.label}</div>
+                  <div class="text-sm text-base-content/60">{option.description}</div>
+                </div>
+              </label>
+            {/each}
+          </div>
         </div>
-        <h2 class="card-title text-base-content">1. Create Folder.</h2>
-        <p class="text-base-content/70">
-          Enter a folder name and create a private folder to organize your photos.
-        </p>
-      </div>
-    </div>
-    
-    <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-      <div class="card-body items-center text-center py-20">
-        <div class="rounded-full bg-primary/10 p-4 mb-6">
-          <Icon icon="lucide:upload" class="h-10 w-10 text-primary" />
+
+        <!-- Quick Settings -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">TLD Preference</span>
+            </label>
+            <select bind:value={domainPreference} class="select select-bordered">
+              {#each tldOptions as tld}
+                <option value={tld}>{tld}</option>
+              {/each}
+            </select>
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Max Price</span>
+            </label>
+            <div class="input-group">
+              <span class="bg-base-200 px-3 py-2 border border-base-300 rounded-l-lg">$</span>
+              <input 
+                type="number" 
+                bind:value={maxPrice}
+                min="1" 
+                max="1000" 
+                class="input input-bordered flex-1 rounded-l-none"
+              />
+            </div>
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Results</span>
+            </label>
+            <input 
+              type="number" 
+              bind:value={numChoices}
+              min="1" 
+              max="20" 
+              class="input input-bordered"
+            />
+          </div>
         </div>
-        <h2 class="card-title text-base-content">2. Upload photos.</h2>
-        <p class="text-base-content/70">
-          Securely upload photos to your folder without compression or quality loss. 
-        </p>
-      </div>
-    </div>
-    
-    <div class="card bg-base-100 border-base-300 border-1 shadow-xl">
-      <div class="card-body items-center text-center py-20">
-        <div class="rounded-full bg-primary/10 p-4 mb-6">
-          <Icon icon="lucide:image" class="h-10 w-10 text-primary" />
+
+        <!-- Advanced Options Toggle -->
+        <div class="divider">
+          <button 
+            type="button"
+            class="btn btn-ghost btn-sm"
+            on:click={() => showAdvanced = !showAdvanced}
+          >
+            <Icon icon={showAdvanced ? 'lucide:chevron-up' : 'lucide:chevron-down'} class="h-4 w-4 mr-2" />
+            Advanced Options
+          </button>
         </div>
-        <h2 class="card-title text-base-content">3. Share Securely!</h2>
-        <p class="text-base-content/70">
-          Share your unique folder link with optional password protection.
-        </p>
-      </div>
+
+        {#if showAdvanced}
+          <div class="space-y-4 border-t pt-6">
+            <!-- Style Selection for AI Generation -->
+            {#if inputType === 'idea'}
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-semibold">Generation Style</span>
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {#each styleOptions as option}
+                    <label class="label cursor-pointer justify-start">
+                      <input 
+                        type="radio" 
+                        name="style" 
+                        value={option.value}
+                        bind:group={style}
+                        class="radio radio-secondary mr-3" 
+                      />
+                      <div>
+                        <div class="font-medium">{option.label}</div>
+                        <div class="text-sm text-base-content/60">{option.description}</div>
+                      </div>
+                    </label>
+                  {/each}
+                </div>
+              </div>
+
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Industry/Field (optional)</span>
+                </label>
+                <input 
+                  type="text" 
+                  bind:value={field}
+                  placeholder="e.g., technology, healthcare, e-commerce"
+                  class="input input-bordered"
+                />
+              </div>
+            {/if}
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Provider</span>
+              </label>
+              <select bind:value={providerPreference} class="select select-bordered">
+                <option value="name.com">Name.com (Fast, Recommended)</option>
+                <option value="porkbun">Porkbun (Slow, Different Pricing)</option>
+                <option value="any">All Providers (Best Coverage)</option>
+              </select>
+            </div>
+
+            {#if inputType === 'exact_name'}
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Additional Domains (comma-separated)</span>
+                </label>
+                <textarea 
+                  bind:value={additionalDomains}
+                  placeholder="example.io, mycompany.ai, startup.dev"
+                  class="textarea textarea-bordered"
+                  rows="2"
+                ></textarea>
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </form>
     </div>
   </div>
+
+  <!-- Error Display -->
+  {#if error}
+    <div class="alert alert-error max-w-4xl mx-auto mb-8">
+      <Icon icon="lucide:alert-circle" class="h-5 w-5" />
+      <span>{error}</span>
+    </div>
+  {/if}
+
+  <!-- Loading State -->
+  {#if isLoading}
+    <div class="flex justify-center items-center py-16">
+      <div class="flex flex-col items-center gap-4">
+        <div class="loading loading-spinner loading-lg text-primary"></div>
+        <p class="text-lg">Searching for domains...</p>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Search Results -->
+  {#if searchResults.length > 0}
+    <div class="max-w-6xl mx-auto">
+      <!-- Search Summary -->
+      {#if searchSummary}
+        <div class="alert alert-info mb-6">
+          <Icon icon="lucide:info" class="h-5 w-5" />
+          <div>
+            <div class="font-semibold">Search Complete</div>
+            <div class="text-sm">
+              Found {searchSummary.available_domains_found} available domains 
+              from {searchSummary.domains_actually_checked_by_providers} checked
+              • Method: {searchSummary.generation_method.type.replace('_', ' ')}
+              • Providers: {searchSummary.providers_used.join(', ')}
+            </div>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Results Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {#each searchResults as domain, index}
+          <div class="card bg-base-100 shadow-lg border border-base-300 hover:shadow-xl transition-shadow">
+            <div class="card-body p-6">
+              <!-- Domain Header -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="badge badge-lg {getScoreColor(domain.score)} badge-outline">
+                    #{index + 1}
+                  </div>
+                  <h3 class="text-xl font-bold text-base-content">{domain.domain}</h3>
+                </div>
+                <div class="text-right">
+                  <div class="text-2xl font-bold {getScoreColor(domain.score)}">
+                    {domain.score.toFixed(1)}
+                  </div>
+                  <div class="text-sm text-base-content/60">
+                    {getScoreLabel(domain.score)}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pricing Info -->
+              {#if domain.price_first_year}
+                <div class="flex items-center justify-between mb-4 p-3 bg-base-200 rounded-lg">
+                  <div>
+                    <div class="font-semibold text-lg">
+                      ${domain.price_first_year.toFixed(2)}/first year
+                    </div>
+                    {#if domain.price_annual && domain.price_annual !== domain.price_first_year}
+                      <div class="text-sm text-base-content/60">
+                        Then ${domain.price_annual.toFixed(2)}/year
+                      </div>
+                    {/if}
+                  </div>
+                  <div class="badge badge-ghost">{domain.registrar}</div>
+                </div>
+              {/if}
+
+              <!-- Deal Info -->
+              {#if domain.deal_info}
+                <div class="text-sm text-base-content/70 mb-4 p-2 bg-warning/10 rounded border-l-4 border-warning">
+                  <Icon icon="lucide:tag" class="h-4 w-4 inline mr-1" />
+                  {domain.deal_info}
+                </div>
+              {/if}
+
+              <!-- Ranking Factors -->
+              {#if domain.ranking_factors && showAdvanced}
+                <div class="collapse collapse-arrow border border-base-300 bg-base-100/50">
+                  <input type="checkbox" />
+                  <div class="collapse-title text-sm font-medium">
+                    Ranking Details
+                  </div>
+                  <div class="collapse-content text-xs space-y-1">
+                    {#each Object.entries(domain.ranking_factors) as [key, value]}
+                      {#if typeof value === 'number'}
+                        <div class="flex justify-between">
+                          <span class="capitalize">{key.replace('_', ' ')}:</span>
+                          <span class="font-mono">{value.toFixed(1)}</span>
+                        </div>
+                      {/if}
+                    {/each}
+                  </div>
+                </div>
+              {/if}
+
+              <!-- Source Badge -->
+              <div class="flex justify-between items-center mt-4">
+                <div class="badge badge-outline capitalize">
+                  {domain.input_source.replace('_', ' ')}
+                </div>
+                <button class="btn btn-primary btn-sm">
+                  <Icon icon="lucide:external-link" class="h-4 w-4 mr-1" />
+                  Register
+                </button>
+              </div>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </div>
+  {/if}
+
+  <!-- Empty State -->
+  {#if !isLoading && searchResults.length === 0 && !error && searchQuery}
+    <div class="text-center py-16">
+      <Icon icon="lucide:search-x" class="h-16 w-16 mx-auto text-base-content/30 mb-4" />
+      <h3 class="text-xl font-semibold mb-2">No available domains found</h3>
+      <p class="text-base-content/60">Try adjusting your search terms or increasing the max price</p>
+    </div>
+  {/if}
+
+  <!-- Features Section -->
+  {#if !searchQuery}
+    <div class="max-w-6xl mx-auto mt-16">
+      <h2 class="text-3xl font-bold text-center mb-12">
+        Why Choose Our <span class="text-primary">Domain Finder</span>?
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body text-center">
+            <div class="rounded-full bg-primary/10 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+              <Icon icon="lucide:brain" class="h-8 w-8 text-primary" />
+            </div>
+            <h3 class="text-xl font-bold mb-2">AI-Powered Suggestions</h3>
+            <p class="text-base-content/70">
+              Advanced algorithms generate brandable, memorable domain names tailored to your business
+            </p>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body text-center">
+            <div class="rounded-full bg-secondary/10 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+              <Icon icon="lucide:trending-up" class="h-8 w-8 text-secondary" />
+            </div>
+            <h3 class="text-xl font-bold mb-2">Intelligent Ranking</h3>
+            <p class="text-base-content/70">
+              GoDaddy-style scoring considers memorability, brandability, and keyword relevance
+            </p>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body text-center">
+            <div class="rounded-full bg-accent/10 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+              <Icon icon="lucide:zap" class="h-8 w-8 text-accent" />
+            </div>
+            <h3 class="text-xl font-bold mb-2">Real-time Availability</h3>
+            <p class="text-base-content/70">
+              Instant availability checking across multiple registrars with live pricing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center mt-16 p-8 bg-primary/5 rounded-2xl max-w-4xl mx-auto">
+      <h2 class="text-2xl font-bold mb-4">Ready to find your perfect domain?</h2>
+      <p class="text-base-content/70 mb-6">
+        Start by entering your business idea, company name, or exact domain above
+      </p>
+      <div class="flex justify-center gap-4">
+        <button class="btn btn-outline" on:click={() => goto('/docs')}>
+          <Icon icon="lucide:book" class="h-4 w-4 mr-2" />
+          View API Docs
+        </button>
+      </div>
+    </div>
+  {/if}
 </div>
 
 <div class="container mx-auto pt-24 px-4 max-w-5xl">
@@ -225,60 +607,3 @@
     </button>
   </div>
 </div>
-
-
-<!-- Folder ID Dialog -->
-{#if showDialog}
-  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-    <div class="bg-base-100 rounded-xl shadow-xl max-w-md w-full p-8 relative">
-      <button 
-        class="absolute top-4 right-4 text-base-content/70 hover:text-base-content" 
-        on:click={closeDialog}
-      >
-        <Icon icon="lucide:x" class="h-5 w-5" />
-      </button>
-      
-      <h3 class="text-xl font-bold mb-4 text-base-content">Enter Your Folder ID</h3>
-      
-      <p class="text-base-content/70 mb-4">
-        Enter your unique folder ID to view and access your photos
-      </p>
-      
-      <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-4">
-        <div>
-          <label for="folderId" class="block text-sm font-medium text-base-content/70 mb-2">
-            Folder ID
-          </label>
-          <input 
-            type="text" 
-            id="folderId"
-            bind:value={folderId}
-            class="input input-bordered w-full rounded-xl"
-            placeholder="e.g. c337f810-5ea7-44a7-a0db-d4b2f32e7d91"
-            autocomplete="off"
-          />
-          {#if dialogError}
-            <p class="text-error text-sm mt-1">{dialogError}</p>
-          {/if}
-        </div>
-        
-        <!-- <p class="text-xs text-base-content/60">
-          Example format: c337f810-5ea7-44a7-a0db-d4b2f32e7d91
-        </p> -->
-        
-        <div class="flex justify-end gap-2 mt-2">
-          <button 
-            type="button" 
-            class="btn btn-ghost rounded-full" 
-            on:click={closeDialog}
-          >
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-primary rounded-full">
-            Go to Folder
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-{/if}
