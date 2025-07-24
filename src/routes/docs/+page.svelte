@@ -2,6 +2,7 @@
 <script lang="ts">
   import Icon from '@iconify/svelte';
   import { API_BASE_URL } from '$lib/api';
+	import { WebsiteName } from '../../config';
 
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
@@ -17,10 +18,10 @@
   <!-- Header -->
   <div class="text-center mb-12">
     <h1 class="text-4xl font-bold text-base-content mb-4">
-      <span class="text-primary">Domain Finder AI</span> API Documentation
+      <span class="text-primary">{WebsiteName}</span> API Documentation
     </h1>
     <p class="text-xl text-base-content/70">
-      Complete guide to integrating with our AI-powered domain suggestion API
+      Complete guide to integrating with our domain suggestion API
     </p>
     <div class="badge badge-success mt-4">Version 2.2.0</div>
   </div>
@@ -33,14 +34,14 @@
         Overview
       </h2>
       
-      <div class="bg-base-200 p-6 rounded-lg mb-6">
+      <!-- <div class="bg-base-200 p-6 rounded-lg mb-6">
         <h3 class="text-xl font-semibold mb-3">Base URL</h3>
         <div class="mockup-code">
-          <pre><code>http://localhost:5173/api     # Development
-https://yourdomain.com/api   # Production</code></pre>
+          <pre data-prefix="$"><code>http://localhost:5173/api     # Development</code></pre>
+          <pre data-prefix=">"><code>https://yourdomain.com/api   # Production</code></pre>
         </div>
         <p class="text-sm text-base-content/60 mt-2">All API routes are proxied through SvelteKit</p>
-      </div>
+      </div> -->
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div class="bg-base-100 p-4 rounded-lg border">
@@ -53,7 +54,7 @@ https://yourdomain.com/api   # Production</code></pre>
         </div>
       </div>
 
-      <h3 class="text-xl font-semibold mb-4">Key Features</h3>
+      <!-- <h3 class="text-xl font-semibold mb-4">Key Features</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="flex items-center gap-2 p-3 bg-base-100 rounded-lg border">
           <Icon icon="lucide:brain" class="h-5 w-5 text-primary" />
@@ -71,7 +72,7 @@ https://yourdomain.com/api   # Production</code></pre>
           <Icon icon="lucide:shield" class="h-5 w-5 text-success" />
           <span class="text-sm">Rate Limited</span>
         </div>
-      </div>
+      </div> -->
     </section>
 
     <!-- Quick Start -->
@@ -115,39 +116,41 @@ https://yourdomain.com/api   # Production</code></pre>
 
       <h3 class="text-xl font-semibold mb-4">2. Make Your First Request</h3>
       <div class="mockup-code mb-4">
-        <pre><code>curl -X POST "http://localhost:5173/api/domains/suggest" \
-  -H "Content-Type: application/json" \
-  -d '&#123;
-    "input_text": "ai startup platform",
-    "input_type": "idea",
-    "field": "technology",
-    "style": "brandable",
-    "num_choices": 5
-  &#125;'</code></pre>
+        <pre data-prefix="$"><code>curl -X POST "http://localhost:5173/api/domains/suggest" \</code></pre>
+        <pre data-prefix=">"><code>  -H "Content-Type: application/json" \</code></pre>
+        <pre data-prefix=">"><code>  -d '&#123;</code></pre>
+        <pre data-prefix=">"><code>    "input_text": "ai startup platform",</code></pre>
+        <pre data-prefix=">"><code>    "input_type": "idea",</code></pre>
+        <pre data-prefix=">"><code>    "field": "technology",</code></pre>
+        <pre data-prefix=">"><code>    "style": "brandable",</code></pre>
+        <pre data-prefix=">"><code>    "num_choices": 5</code></pre>
+        <pre data-prefix=">"><code>  &#125;'</code></pre>
       </div>
 
       <h3 class="text-xl font-semibold mb-4">3. Example Response</h3>
       <div class="mockup-code mb-6">
-        <pre><code>{JSON.stringify({
-          domains: [{
-            domain: "aiplatformhub.com",
-            available: true,
-            price_first_year: 12.99,
-            price_annual: 14.99,
-            score: 8.5,
-            registrar: "name.com",
-            input_source: "ai_generated",
-            ranking_factors: {
-              word_quality: 6.5,
-              tld_score: 10.0,
-              length_score: 7.0
-            }
-          }],
-          search_summary: {
-            available_domains_found: 8,
-            input_type: "idea"
-          }
-        }, null, 2)}</code></pre>
+        <pre data-prefix="1"><code>&#123;</code></pre>
+        <pre data-prefix="2"><code>  "domains": [</code></pre>
+        <pre data-prefix="3"><code>    &#123;</code></pre>
+        <pre data-prefix="4"><code>      "domain": "aiplatformhub.com",</code></pre>
+        <pre data-prefix="5"><code>      "available": true,</code></pre>
+        <pre data-prefix="6"><code>      "price_first_year": 12.99,</code></pre>
+        <pre data-prefix="7"><code>      "price_annual": 14.99,</code></pre>
+        <pre data-prefix="8"><code>      "score": 8.5,</code></pre>
+        <pre data-prefix="9"><code>      "registrar": "name.com",</code></pre>
+        <pre data-prefix="10"><code>      "input_source": "ai_generated",</code></pre>
+        <pre data-prefix="11"><code>      "ranking_factors": &#123;</code></pre>
+        <pre data-prefix="12"><code>        "word_quality": 6.5,</code></pre>
+        <pre data-prefix="13"><code>        "tld_score": 10.0,</code></pre>
+        <pre data-prefix="14"><code>        "length_score": 7.0</code></pre>
+        <pre data-prefix="15"><code>      &#125;</code></pre>
+        <pre data-prefix="16"><code>    &#125;</code></pre>
+        <pre data-prefix="17"><code>  ],</code></pre>
+        <pre data-prefix="18"><code>  "search_summary": &#123;</code></pre>
+        <pre data-prefix="19"><code>    "available_domains_found": 8,</code></pre>
+        <pre data-prefix="20"><code>    "input_type": "idea"</code></pre>
+        <pre data-prefix="21"><code>  &#125;</code></pre>
+        <pre data-prefix="22"><code>&#125;</code></pre>
       </div>
     </section>
 
@@ -231,22 +234,24 @@ https://yourdomain.com/api   # Production</code></pre>
 
         <h4 class="font-semibold mb-3">Response Format</h4>
         <div class="mockup-code">
-          <pre><code>{JSON.stringify({
-            domains: [{
-              domain: "string",
-              available: "boolean",
-              price_first_year: "number | null",
-              price_annual: "number | null", 
-              registrar: "string",
-              deal_info: "string | null",
-              score: "number (0-10)",
-              input_source: "string",
-              ranking_factors: "object"
-            }],
-            request_id: "string",
-            timestamp: "string",
-            search_summary: "object"
-          }, null, 2)}</code></pre>
+          <pre data-prefix="1"><code>&#123;</code></pre>
+          <pre data-prefix="2"><code>  "domains": [</code></pre>
+          <pre data-prefix="3"><code>    &#123;</code></pre>
+          <pre data-prefix="4"><code>      "domain": "string",</code></pre>
+          <pre data-prefix="5"><code>      "available": "boolean",</code></pre>
+          <pre data-prefix="6"><code>      "price_first_year": "number | null",</code></pre>
+          <pre data-prefix="7"><code>      "price_annual": "number | null",</code></pre>
+          <pre data-prefix="8"><code>      "registrar": "string",</code></pre>
+          <pre data-prefix="9"><code>      "deal_info": "string | null",</code></pre>
+          <pre data-prefix="10"><code>      "score": "number (0-10)",</code></pre>
+          <pre data-prefix="11"><code>      "input_source": "string",</code></pre>
+          <pre data-prefix="12"><code>      "ranking_factors": "object"</code></pre>
+          <pre data-prefix="13"><code>    &#125;</code></pre>
+          <pre data-prefix="14"><code>  ],</code></pre>
+          <pre data-prefix="15"><code>  "request_id": "string",</code></pre>
+          <pre data-prefix="16"><code>  "timestamp": "string",</code></pre>
+          <pre data-prefix="17"><code>  "search_summary": "object"</code></pre>
+          <pre data-prefix="18"><code>&#125;</code></pre>
         </div>
       </div>
     </section>
@@ -337,86 +342,140 @@ https://yourdomain.com/api   # Production</code></pre>
       <h3 class="text-xl font-semibold mb-4">Business Idea Generation</h3>
       <p class="mb-4">Generate AI suggestions based on business concept:</p>
       <div class="mockup-code mb-6">
-        <pre><code>curl -X POST "http://localhost:5173/api/domains/suggest" \
-  -H "Content-Type: application/json" \
-  -d '&#123;
-    "input_text": "artificial intelligence customer service platform",
-    "input_type": "idea",
-    "field": "technology",
-    "style": "brandable",
-    "domain_preference": ".com",
-    "max_price": 50,
-    "num_choices": 5
-  &#125;'</code></pre>
+        <pre data-prefix="$"><code>curl -X POST "http://localhost:5173/api/domains/suggest" \</code></pre>
+        <pre data-prefix=">"><code>  -H "Content-Type: application/json" \</code></pre>
+        <pre data-prefix=">"><code>  -d '&#123;</code></pre>
+        <pre data-prefix=">"><code>    "input_text": "artificial intelligence customer service platform",</code></pre>
+        <pre data-prefix=">"><code>    "input_type": "idea",</code></pre>
+        <pre data-prefix=">"><code>    "field": "technology",</code></pre>
+        <pre data-prefix=">"><code>    "style": "brandable",</code></pre>
+        <pre data-prefix=">"><code>    "domain_preference": ".com",</code></pre>
+        <pre data-prefix=">"><code>    "max_price": 50,</code></pre>
+        <pre data-prefix=">"><code>    "num_choices": 5</code></pre>
+        <pre data-prefix=">"><code>  &#125;'</code></pre>
       </div>
 
       <h3 class="text-xl font-semibold mb-4">Base Name Expansion</h3>
-      <p class="mb-4">Check a base name with different TLDs:</p>
+      <p class="mb-4">Check a base name with different TLDs:</p>A
       <div class="mockup-code mb-6">
-        <pre><code>curl -X POST "http://localhost:5173/api/domains/suggest" \
-  -H "Content-Type: application/json" \
-  -d '&#123;
-    "input_text": "mycompany",
-    "input_type": "base_name",
-    "domain_preference": "any",
-    "num_choices": 10
-  &#125;'</code></pre>
+        <pre data-prefix="$"><code>curl -X POST "http://localhost:5173/api/domains/suggest" \</code></pre>
+        <pre data-prefix=">"><code>  -H "Content-Type: application/json" \</code></pre>
+        <pre data-prefix=">"><code>  -d '&#123;</code></pre>
+        <pre data-prefix=">"><code>    "input_text": "mycompany",</code></pre>
+        <pre data-prefix=">"><code>    "input_type": "base_name",</code></pre>
+        <pre data-prefix=">"><code>    "domain_preference": "any",</code></pre>
+        <pre data-prefix=">"><code>    "num_choices": 10</code></pre>
+        <pre data-prefix=">"><code>  &#125;'</code></pre>
       </div>
 
       <h3 class="text-xl font-semibold mb-4">Exact Domain Check</h3>
       <p class="mb-4">Check specific domain(s) for availability:</p>
       <div class="mockup-code mb-6">
-        <pre><code>curl -X POST "http://localhost:5173/api/domains/suggest" \
-  -H "Content-Type: application/json" \
-  -d '&#123;
-    "input_text": "mycompany.com",
-    "input_type": "exact_name",
-    "additional_domains": ["mycompany.io", "mycompany.ai"],
-    "num_choices": 10
-  &#125;'</code></pre>
+        <pre data-prefix="$"><code>curl -X POST "http://localhost:5173/api/domains/suggest" \</code></pre>
+        <pre data-prefix=">"><code>  -H "Content-Type: application/json" \</code></pre>
+        <pre data-prefix=">"><code>  -d '&#123;</code></pre>
+        <pre data-prefix=">"><code>    "input_text": "mycompany.com",</code></pre>
+        <pre data-prefix=">"><code>    "input_type": "exact_name",</code></pre>
+        <pre data-prefix=">"><code>    "additional_domains": ["mycompany.io", "mycompany.ai"],</code></pre>
+        <pre data-prefix=">"><code>    "num_choices": 10</code></pre>
+        <pre data-prefix=">"><code>  &#125;'</code></pre>
       </div>
 
-      <h3 class="text-xl font-semibold mb-4">JavaScript Integration</h3>
+      <!-- <h3 class="text-xl font-semibold mb-4">JavaScript Integration</h3>
       <div class="mockup-code mb-6">
-        <pre><code>// JavaScript/TypeScript example
-async function searchDomains(query) &#123;
-  try &#123;
-    const response = await fetch('/api/domains/suggest', &#123;
-      method: 'POST',
-      headers: &#123; 'Content-Type': 'application/json' &#125;,
-      body: JSON.stringify(&#123;
-        input_text: query,
-        input_type: 'idea',
-        style: 'brandable',
-        num_choices: 10
-      &#125;)
-    &#125;);
-
-    if (!response.ok) &#123;
-      throw new Error(`HTTP $&#123;response.status&#125;: $&#123;response.statusText&#125;`);
-    &#125;
-
-    const data = await response.json();
-    return data.domains;
-  &#125; catch (error) &#123;
-    console.error('Domain search failed:', error);
-    throw error;
-  &#125;
-&#125;</code></pre>
-      </div>
+        <pre data-prefix="1"><code>// JavaScript/TypeScript example</code></pre>
+        <pre data-prefix="2"><code>async function searchDomains(query) &#123;</code></pre>
+        <pre data-prefix="3"><code>  try &#123;</code></pre>
+        <pre data-prefix="4"><code>    const response = await fetch('/api/domains/suggest', &#123;</code></pre>
+        <pre data-prefix="5"><code>      method: 'POST',</code></pre>
+        <pre data-prefix="6"><code>      headers: &#123; 'Content-Type': 'application/json' &#125;,</code></pre>
+        <pre data-prefix="7"><code>      body: JSON.stringify(&#123;</code></pre>
+        <pre data-prefix="8"><code>        input_text: query,</code></pre>
+        <pre data-prefix="9"><code>        input_type: 'idea',</code></pre>
+        <pre data-prefix="10"><code>        style: 'brandable',</code></pre>
+        <pre data-prefix="11"><code>        num_choices: 10</code></pre>
+        <pre data-prefix="12"><code>      &#125;)</code></pre>
+        <pre data-prefix="13"><code>    &#125;);</code></pre>
+        <pre data-prefix="14"><code></code></pre>
+        <pre data-prefix="15"><code>    if (!response.ok) &#123;</code></pre>
+        <pre data-prefix="16"><code>      throw new Error(`HTTP       <h3 class="text-xl font-semibold mb-4">JavaScript Integration</h3>
+      <div class="mockup-code mb-6">
+        <pre><code>// JavaScript/TypeScript example</code></pre>
+        <pre><code>async function searchDomains(query) {</code></pre>
+        <pre data-prefix="1"><code>  try {</code></pre>
+        <pre><code>    const response = await fetch('/api/domains/suggest', {</code></pre>
+        <pre><code>      method: 'POST',</code></pre>
+        <pre><code>      headers: { 'Content-Type': 'application/json' },</code></pre>
+        <pre><code>      body: JSON.stringify({</code></pre>
+        <pre><code>        input_text: query,</code></pre>
+        <pre><code>        input_type: 'idea',</code></pre>
+        <pre><code>        style: 'brandable',</code></pre>
+        <pre><code>        num_choices: 10</code></pre>
+        <pre><code>      })</code></pre>
+        <pre><code>    });</code></pre>
+        <pre><code></code></pre>
+        <pre><code>    if (!response.ok) {</code></pre>
+        <pre><code>      throw new Error(`HTTP ${response.status}: ${response.statusText}`);</code></pre>
+        <pre><code>    }</code></pre>
+        <pre><code></code></pre>
+        <pre><code>    const data = await response.json();</code></pre>
+        <pre><code>    return data.domains;</code></pre>
+        <pre><code>  } catch (error) {</code></pre>
+        <pre><code>    console.error('Domain search failed:', error);</code></pre>
+        <pre><code>    throw error;</code></pre>
+        <pre><code>  }</code></pre>
+        <pre><code>}</code></pre>
+      </div>#123;response.status&#125;:       <h3 class="text-xl font-semibold mb-4">JavaScript Integration</h3>
+      <div class="mockup-code mb-6">
+        <pre><code>// JavaScript/TypeScript example</code></pre>
+        <pre><code>async function searchDomains(query) {</code></pre>
+        <pre><code>  try {</code></pre>
+        <pre><code>    const response = await fetch('/api/domains/suggest', {</code></pre>
+        <pre><code>      method: 'POST',</code></pre>
+        <pre><code>      headers: { 'Content-Type': 'application/json' },</code></pre>
+        <pre><code>      body: JSON.stringify({</code></pre>
+        <pre><code>        input_text: query,</code></pre>
+        <pre><code>        input_type: 'idea',</code></pre>
+        <pre><code>        style: 'brandable',</code></pre>
+        <pre><code>        num_choices: 10</code></pre>
+        <pre><code>      })</code></pre>
+        <pre><code>    });</code></pre>
+        <pre><code></code></pre>
+        <pre><code>    if (!response.ok) {</code></pre>
+        <pre><code>      throw new Error(`HTTP ${response.status}: ${response.statusText}`);</code></pre>
+        <pre><code>    }</code></pre>
+        <pre><code></code></pre>
+        <pre><code>    const data = await response.json();</code></pre>
+        <pre><code>    return data.domains;</code></pre>
+        <pre><code>  } catch (error) {</code></pre>
+        <pre><code>    console.error('Domain search failed:', error);</code></pre>
+        <pre><code>    throw error;</code></pre>
+        <pre><code>  }</code></pre>
+        <pre><code>}</code></pre>
+      </div>#123;response.statusText&#125;`);</code></pre>
+        <pre data-prefix="17"><code>    &#125;</code></pre>
+        <pre data-prefix="18"><code></code></pre>
+        <pre data-prefix="19"><code>    const data = await response.json();</code></pre>
+        <pre data-prefix="20"><code>    return data.domains;</code></pre>
+        <pre data-prefix="21"><code>  &#125; catch (error) &#123;</code></pre>
+        <pre data-prefix="22"><code>    console.error('Domain search failed:', error);</code></pre>
+        <pre data-prefix="23"><code>    throw error;</code></pre>
+        <pre data-prefix="24"><code>  &#125;</code></pre>
+        <pre data-prefix="25"><code>&#125;</code></pre>
+      </div> -->
     </section>
 
     <!-- Domain Ranking -->
     <section class="mb-16">
       <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
         <Icon icon="lucide:trending-up" class="h-8 w-8 text-primary" />
-        Domain Ranking System
+        Our Domain Ranking System
       </h2>
 
       <div class="alert alert-info mb-6">
         <Icon icon="lucide:info" class="h-5 w-5" />
         <div>
-          <div class="font-semibold">Intelligent domain ranking</div>
+          <!-- <div class="font-semibold">Intelligent domain ranking</div> -->
           <div class="text-sm">Score range: 0.0 to 10.0 (higher is better)</div>
         </div>
       </div>
@@ -516,6 +575,13 @@ async function searchDomains(query) &#123;
           <div class="text-sm">API is currently free during development phase</div>
         </div>
       </div>
+      <div class="alert alert-info mb-6">
+        <Icon icon="lucide:trending-up" class="h-5 w-5" />
+        <div>
+          <div class="font-semibold">Providers</div>
+          <div class="text-sm">As of right now, the only providers are Name.com and Porkbun. Depending on demand, we may add more in the future. </div>
+        </div>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="card bg-base-100 border">
@@ -608,27 +674,27 @@ async function searchDomains(query) &#123;
 
       <h3 class="text-xl font-semibold mb-4">Example Error Responses</h3>
       <div class="mockup-code mb-4">
-        <pre><code>// Rate limit exceeded (429)
-&#123;
-  "detail": &#123;
-    "error": "Rate limit exceeded",
-    "message": "Maximum 100 requests per minute allowed",
-    "retry_after": 45
-  &#125;
-&#125;</code></pre>
+        <pre data-prefix="1"><code>// Rate limit exceeded (429)</code></pre>
+        <pre data-prefix="2"><code>&#123;</code></pre>
+        <pre data-prefix="3"><code>  "detail": &#123;</code></pre>
+        <pre data-prefix="4"><code>    "error": "Rate limit exceeded",</code></pre>
+        <pre data-prefix="5"><code>    "message": "Maximum 100 requests per minute allowed",</code></pre>
+        <pre data-prefix="6"><code>    "retry_after": 45</code></pre>
+        <pre data-prefix="7"><code>  &#125;</code></pre>
+        <pre data-prefix="8"><code>&#125;</code></pre>
       </div>
 
       <div class="mockup-code mb-6">
-        <pre><code>// Validation error (422)
-&#123;
-  "detail": [
-    &#123;
-      "loc": ["body", "input_text"],
-      "msg": "Input text cannot be empty",
-      "type": "value_error"
-    &#125;
-  ]
-&#125;</code></pre>
+        <pre data-prefix="1"><code>// Validation error (422)</code></pre>
+        <pre data-prefix="2"><code>&#123;</code></pre>
+        <pre data-prefix="3"><code>  "detail": [</code></pre>
+        <pre data-prefix="4"><code>    &#123;</code></pre>
+        <pre data-prefix="5"><code>      "loc": ["body", "input_text"],</code></pre>
+        <pre data-prefix="6"><code>      "msg": "Input text cannot be empty",</code></pre>
+        <pre data-prefix="7"><code>      "type": "value_error"</code></pre>
+        <pre data-prefix="8"><code>    &#125;</code></pre>
+        <pre data-prefix="9"><code>  ]</code></pre>
+        <pre data-prefix="10"><code>&#125;</code></pre>
       </div>
     </section>
 
@@ -722,10 +788,10 @@ async function searchDomains(query) &#123;
 
         <div class="card bg-base-100 border">
           <div class="card-body p-6 text-center">
-            <Icon icon="lucide:github" class="h-12 w-12 mx-auto mb-4 text-neutral" />
-            <h3 class="font-semibold mb-2">GitHub</h3>
-            <p class="text-sm text-base-content/70 mb-3">Source code & issues</p>
-            <a href="/" class="btn btn-sm btn-outline">View Repository</a>
+            <Icon icon="lucide:book" class="h-12 w-12 mx-auto mb-4 text-warning" />
+            <h3 class="font-semibold mb-2">Check Providers</h3>
+            <p class="text-sm text-base-content/70 mb-3">Check all available providers</p>
+            <code class="text-xs bg-base-200 px-2 py-1 rounded">GET /api/test-providers</code>
           </div>
         </div>
       </div>
@@ -751,26 +817,5 @@ async function searchDomains(query) &#123;
         </div>
       </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="text-center py-8 border-t border-base-300">
-      <div class="flex items-center justify-center gap-2 mb-4">
-        <Icon icon="lucide:brain" class="h-6 w-6 text-primary" />
-        <span class="text-lg font-bold">Domain Finder AI</span>
-        <span class="badge badge-primary">v2.2.0</span>
-      </div>
-      <p class="text-base-content/70 mb-4">
-        Intelligent domain suggestions powered by AI
-      </p>
-      <div class="flex justify-center gap-4 text-sm">
-        <a href="/api/health" class="link link-hover">API Status</a>
-        <a href="/api/rate-limit" class="link link-hover">Rate Limits</a>
-        <a href="mailto:support@example.com" class="link link-hover">Support</a>
-        <a href="/" class="link link-hover">GitHub</a>
-      </div>
-      <p class="text-xs text-base-content/50 mt-4">
-        Made with ❤️ for developers who need great domains
-      </p>
-    </footer>
   </article>
 </div>

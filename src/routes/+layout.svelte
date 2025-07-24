@@ -9,13 +9,13 @@
   
 	// Define navItems if not provided by siteConfig
 	const navItems = [
-	  { href: "/docs", label: "Docs" },
-	  { href: "/api/health", label: "API Status" },
+	//   { href: "/docs", label: "Docs" },
+	  { href: "/api/health", label: "Status Check" },
 	  // { href: "/", label: "Contact Us" },
-	  // { href: "/search", label: "Search" },
+	  { href: "/pricing", label: "Pricing" },
 	  {
-		href: "/folder/create",
-		label: "Create Folder",
+		href: "/docs",
+		label: "API Docs",
 		className: "border border-primary rounded-full ml-4",
 	  },
 	]
@@ -91,8 +91,12 @@
 	<div class="px-6 py-8 md:py-12 max-w-6xl mx-auto">
 		<p class="text-sm text-base-content/70 mb-4 md:mb-0 text-center">
 			© {new Date().getFullYear()}
-			{WebsiteName}. All rights reserved.
+			{WebsiteName}. All rights reserved. Made with ❤️ for developers who need great domains
 		  </p>
+		<div class="flex justify-center gap-4 text-sm mt-2">
+			<a href="/api/health" class="link link-hover">API Status</a>
+			<a href="/api/rate-limit" class="link link-hover">Rate Limits</a>
+      	</div>
 	</div>
   </footer>
 </div>
