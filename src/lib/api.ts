@@ -22,19 +22,20 @@ export interface DomainResult {
   deal_info?: string;
   score: number;
   input_source: string;
-  ranking_factors?: Record<string, unknown>;
-  pricing_details?: Record<string, unknown>;
+  ranking_factors?: Record<string, any>;
+  pricing_details?: Record<string, any>;
 }
 
 export interface DomainResponse {
   domains: DomainResult[];
   request_id: string;
   timestamp: string;
-  search_summary: Record<string, unknown>;
+  search_summary: Record<string, any>;
 }
 
 export interface ApiError {
-  detail: string | { error: string; message: string; retry_after?: number };
+  error?: string;
+  detail?: string | { error: string; message: string; retry_after?: number };
 }
 
 export class DomainAPI {
@@ -45,7 +46,9 @@ export class DomainAPI {
   }
 
   async suggestDomains(request: DomainRequest): Promise<DomainResponse> {
-    console.log(request);
+    console.log('🚀 Making request to:', `${this.baseUrl}/api/domains/suggest`);
+    console.log('📦 Request data:', request);
+    
     const response = await fetch(`${this.baseUrl}/api/domains/suggest`, {
       method: 'POST',
       headers: {
@@ -54,41 +57,97 @@ export class DomainAPI {
       body: JSON.stringify(request),
     });
 
+    console.log('📡 Response status:', response.status);
+    
     if (!response.ok) {
-      const error: ApiError = await response.json();
-      throw new Error(typeof error.detail === 'string' ? error.detail : error.detail.message);
+      const errorText = await response.text();
+      console.error('❌ API Error:', errorText);
+      
+      try {
+        const error: ApiError = JSON.parse(errorText);
+        const message = error.detail 
+          ? (typeof error.detail === 'string' ? error.detail : error.detail.message)
+          : error.error || 'Unknown error occurred';
+        throw new Error(message);
+      } catch (parseError) {
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('✅ Success! Got domains:', data.domains?.length || 0);
+    return data;
   }
 
   async getHealth() {
+    console.log('🔍 Checking health at:', `${this.baseUrl}/api/health`);
     const response = await fetch(`${this.baseUrl}/api/health`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
     return response.json();
   }
 
   async getRateLimit() {
     const response = await fetch(`${this.baseUrl}/api/rate-limit`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
     return response.json();
   }
 
   async getExamples() {
     const response = await fetch(`${this.baseUrl}/api/examples`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
     return response.json();
   }
 
   async getPricing() {
     const response = await fetch(`${this.baseUrl}/api/pricing`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
     return response.json();
   }
 
   async getTLDs() {
     const response = await fetch(`${this.baseUrl}/api/tlds`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
     return response.json();
   }
 
   async getRanking() {
     const response = await fetch(`${this.baseUrl}/api/ranking`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  async testProviders() {
+    const response = await fetch(`${this.baseUrl}/api/test-providers`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  async parseInput(request: DomainRequest) {
+    const response = await fetch(`${this.baseUrl}/api/parse-input`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
     return response.json();
   }
 }
