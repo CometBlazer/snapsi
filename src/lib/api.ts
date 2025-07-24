@@ -45,6 +45,7 @@ export class DomainAPI {
   }
 
   async suggestDomains(request: DomainRequest): Promise<DomainResponse> {
+    console.log(request);
     const response = await fetch(`${this.baseUrl}/api/domains/suggest`, {
       method: 'POST',
       headers: {
