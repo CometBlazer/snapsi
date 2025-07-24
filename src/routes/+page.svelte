@@ -498,20 +498,17 @@
                   on:click={() => showJsonOutput = !showJsonOutput}
                 >
                   <Icon icon={showJsonOutput ? 'lucide:chevron-up' : 'lucide:chevron-down'} class="h-4 w-4 mr-1" />
-                  {showJsonOutput ? 'Hide' : 'Show'} JSON
+                  {showJsonOutput ? 'Collapse' : 'Expand'}
                 </button>
               </div>
             </div>
             
-            {#if showJsonOutput}
-              <div class="mockup-code bg-base-200 text-sm max-h-96 overflow-y-auto">
-                <pre class="px-4 py-2"><code>{JSON.stringify(fullApiResponse, null, 2)}</code></pre>
-              </div>
-            {:else}
-              <div class="text-base-content/60 text-center py-8">
-                Click "Show JSON" to view the complete API response
-              </div>
-            {/if}
+            <div class="mockup-code text-sm {showJsonOutput ? '' : 'max-h-32'} overflow-y-auto">
+              <pre class="px-4 py-2"><code>{JSON.stringify(fullApiResponse, null, 2)}</code></pre>
+              {#if !showJsonOutput}
+                <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-base-200 to-transparent pointer-events-none"></div>
+              {/if}
+            </div>
           </div>
         </div>
       {/if}
