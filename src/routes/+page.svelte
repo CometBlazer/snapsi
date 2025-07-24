@@ -153,12 +153,12 @@
 <div class="container mx-auto py-12 px-4">
   <!-- Hero Section -->
   <div class="text-center max-w-5xl mx-auto mb-16">
-    <h1 class="text-4xl md:text-6xl font-bold text-base-content mb-6">
+    <h1 class="text-4xl md:text-5xl font-bold text-base-content mb-6">
       Find the <span class="text-primary font-extrabold">Perfect Domain</span> 
-      with <span class="text-secondary font-extrabold">API</span>
+      with <span class="text-secondary font-extrabold">{WebsiteName}</span>
     </h1>
     <p class="text-xl text-base-content/70 mb-8">
-      Get intelligent domain suggestions with name ranking, real-time availability, and competitive pricing
+      Intelligent domain suggestions with name ranking, real-time availability, and pricing
     </p>
     
     <div class="flex flex-wrap gap-2 justify-center">
