@@ -1,5 +1,8 @@
 # Snapsi: Domain Finder API Frontend
 
+> [!IMPORTANT]
+> **⚠️ Deprecated.** The hosted backend on Google Cloud Run has been paused, so the live site at [snapsi.me](https://snapsi.me) no longer returns suggestions. The code remains fully functional — self-host the [Domains API backend](https://github.com/CometBlazer/domains-api) and point this frontend at it.
+
 A modern domain suggestion tool with intelligent ranking and real-time availability checking. Built with SvelteKit and DaisyUI for developers and businesses looking for the perfect domain name.
 
 ## ✨ Features
