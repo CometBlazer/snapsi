@@ -151,21 +151,41 @@
 </svelte:head>
 
 <div class="container mx-auto py-12 px-4">
+  <!-- Deprecation notice -->
+  <div class="max-w-3xl mx-auto mb-10">
+    <div class="flex items-start gap-3 rounded-2xl border border-warning/40 bg-warning/10 px-5 py-4 text-sm text-base-content/80">
+      <Icon icon="lucide:alert-triangle" class="h-5 w-5 shrink-0 text-warning mt-0.5" />
+      <span>
+        <span class="font-semibold">Heads up:</span> the hosted backend is currently paused, so live
+        searches may not return results. Snapsi is open source and fully self-hostable:
+        see the <a class="link" href="https://github.com/CometBlazer/domains-api" target="_blank" rel="noopener">backend repo</a>.
+      </span>
+    </div>
+  </div>
+
   <!-- Hero Section -->
-  <div class="text-center max-w-5xl mx-auto mb-16">
-    <h1 class="text-4xl md:text-5xl font-bold text-base-content mb-6">
-      Find the <span class="text-primary font-extrabold">Perfect Domain</span> 
-      with <span class="text-secondary font-extrabold">{WebsiteName}</span>
+  <div class="text-center max-w-3xl mx-auto mb-16">
+    <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-base-content mb-5">
+      Find the perfect domain <span class="text-primary">in seconds</span>
     </h1>
-    <p class="text-xl text-base-content/70 mb-8">
-      Intelligent domain suggestions with name ranking, real-time availability, and pricing
+    <p class="text-lg md:text-xl text-base-content/60 leading-relaxed mb-8 max-w-2xl mx-auto">
+      Describe your idea. Snapsi generates brandable names, checks live availability
+      and pricing across registrars, and ranks every result for you.
     </p>
-    
-    <div class="flex flex-wrap gap-2 justify-center">
-      <div class="badge badge-primary">API-First for Agentic Workflows</div>
-      <div class="badge badge-secondary">Real-time Availability</div>
-      <div class="badge badge-accent">Smart Ranking</div>
-      <div class="badge badge-neutral">Multi-Provider</div>
+
+    <div class="flex flex-wrap gap-2 justify-center text-sm">
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-base-100 px-3 py-1 text-base-content/70">
+        <Icon icon="lucide:terminal" class="h-3.5 w-3.5" /> API-first
+      </span>
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-base-100 px-3 py-1 text-base-content/70">
+        <Icon icon="lucide:zap" class="h-3.5 w-3.5" /> Real-time availability
+      </span>
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-base-100 px-3 py-1 text-base-content/70">
+        <Icon icon="lucide:trending-up" class="h-3.5 w-3.5" /> 0–10 smart ranking
+      </span>
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-base-100 px-3 py-1 text-base-content/70">
+        <Icon icon="lucide:layers" class="h-3.5 w-3.5" /> Multi-provider
+      </span>
     </div>
   </div>
 
@@ -177,7 +197,7 @@
           <!-- Main Search Input - Centered -->
           <div class="form-control max-w-5xl mx-auto text-center">
             <label class="label justify-center" for="search-input">
-              <span class="label-text text-2xl font-semibold">What are you looking for?</span>
+              <span class="label-text text-lg font-semibold">What are you looking for?</span>
             </label>
             <div class="join w-full my-3">
               <input 
@@ -215,17 +235,21 @@
               <legend class="label justify-center">
                 <span class="label-text font-semibold">Search Type</span>
               </legend>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {#each inputTypeOptions as option}
-                  <label class="label cursor-pointer justify-start">
-                    <input 
-                      type="radio" 
-                      name="inputType" 
+                  <label
+                    class="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors {inputType === option.value
+                      ? 'border-primary bg-primary/5'
+                      : 'border-base-300 hover:border-base-content/30'}"
+                  >
+                    <input
+                      type="radio"
+                      name="inputType"
                       value={option.value}
                       bind:group={inputType}
-                      class="radio radio-primary mr-3" 
+                      class="radio radio-primary radio-sm mt-0.5"
                     />
-                    <div>
+                    <div class="text-left">
                       <div class="font-medium">{option.label}</div>
                       <div class="text-sm text-base-content/60">{option.description}</div>
                     </div>
@@ -301,17 +325,21 @@
                     <legend class="label">
                       <span class="label-text font-semibold">Generation Style</span>
                     </legend>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {#each styleOptions as option}
-                      <label class="label cursor-pointer justify-start">
-                        <input 
-                          type="radio" 
-                          name="style" 
+                      <label
+                        class="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors {style === option.value
+                          ? 'border-secondary bg-secondary/5'
+                          : 'border-base-300 hover:border-base-content/30'}"
+                      >
+                        <input
+                          type="radio"
+                          name="style"
                           value={option.value}
                           bind:group={style}
-                          class="radio radio-secondary mr-3" 
+                          class="radio radio-secondary radio-sm mt-0.5"
                         />
-                        <div>
+                        <div class="text-left">
                           <div class="font-medium">{option.label}</div>
                           <div class="text-sm text-base-content/60">{option.description}</div>
                         </div>
@@ -531,41 +559,35 @@
         Why Choose Our <span class="text-primary">Domain Finder</span>?
       </h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="card bg-base-100 shadow-lg">
-          <div class="card-body text-center">
-            <div class="rounded-full bg-primary/10 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-              <Icon icon="lucide:brain" class="h-8 w-8 text-primary" />
-            </div>
-            <h3 class="text-xl font-bold mb-2">Smart Suggestions</h3>
-            <p class="text-base-content/70">
-              Snapsi generates brandable, memorable domain names tailored to your business
-            </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="rounded-2xl border border-base-300 bg-base-100 p-8 transition-shadow hover:shadow-md">
+          <div class="rounded-xl bg-primary/10 p-3 w-12 h-12 mb-5 flex items-center justify-center">
+            <Icon icon="lucide:brain" class="h-6 w-6 text-primary" />
           </div>
+          <h3 class="text-lg font-semibold mb-2">Smart suggestions</h3>
+          <p class="text-base-content/60 leading-relaxed">
+            Brandable, memorable names generated from a plain-language description of your business.
+          </p>
         </div>
 
-        <div class="card bg-base-100 shadow-lg">
-          <div class="card-body text-center">
-            <div class="rounded-full bg-secondary/10 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-              <Icon icon="lucide:trending-up" class="h-8 w-8 text-secondary" />
-            </div>
-            <h3 class="text-xl font-bold mb-2">Intelligent Ranking</h3>
-            <p class="text-base-content/70">
-              Snapsi scoring considers memorability, brandability, and keyword relevance
-            </p>
+        <div class="rounded-2xl border border-base-300 bg-base-100 p-8 transition-shadow hover:shadow-md">
+          <div class="rounded-xl bg-secondary/10 p-3 w-12 h-12 mb-5 flex items-center justify-center">
+            <Icon icon="lucide:trending-up" class="h-6 w-6 text-secondary" />
           </div>
+          <h3 class="text-lg font-semibold mb-2">Intelligent ranking</h3>
+          <p class="text-base-content/60 leading-relaxed">
+            Every candidate scored 0–10 on memorability, brandability, length, and keyword relevance.
+          </p>
         </div>
 
-        <div class="card bg-base-100 shadow-lg">
-          <div class="card-body text-center">
-            <div class="rounded-full bg-accent/10 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-              <Icon icon="lucide:zap" class="h-8 w-8 text-accent" />
-            </div>
-            <h3 class="text-xl font-bold mb-2">Real-time Availability</h3>
-            <p class="text-base-content/70">
-              Instant availability checking across multiple registrars with live pricing
-            </p>
+        <div class="rounded-2xl border border-base-300 bg-base-100 p-8 transition-shadow hover:shadow-md">
+          <div class="rounded-xl bg-accent/10 p-3 w-12 h-12 mb-5 flex items-center justify-center">
+            <Icon icon="lucide:zap" class="h-6 w-6 text-accent" />
           </div>
+          <h3 class="text-lg font-semibold mb-2">Real-time availability</h3>
+          <p class="text-base-content/60 leading-relaxed">
+            Availability and live pricing checked directly against registrar APIs, in parallel.
+          </p>
         </div>
       </div>
     </div>
@@ -651,9 +673,14 @@
 </div>
 
 <div class="container mx-auto pt-10 pb-24 px-4 max-w-5xl">
-  <div class="mt-16 text-center card bg-primary/80 border-base-300 border-1 shadow-xl p-16 md:p-30 rounded-3xl">
-    <h2 class="text-2xl md:text-4xl font-bold mb-12">Build your agentic workflow today with <span class="font-extrabold underline">{WebsiteName}</span>.</h2>
-    <button class="btn btn-outline bg-base-100 btn-xl rounded-full gap-2 text-primary-content max-w-lg mx-auto" on:click={() => goto('/docs')}>
+  <div class="mt-16 text-center rounded-3xl border border-base-300 bg-base-100 shadow-sm px-8 py-16 md:py-20">
+    <h2 class="text-2xl md:text-4xl font-bold tracking-tight mb-4">
+      Build your agentic workflow with {WebsiteName}
+    </h2>
+    <p class="text-base-content/60 mb-10 max-w-xl mx-auto">
+      A clean JSON API for generating, checking, and ranking domains. One request in, ranked candidates out.
+    </p>
+    <button class="btn btn-primary btn-lg rounded-full gap-2 px-8" on:click={() => goto('/docs')}>
       <Icon icon="lucide:book" class="h-5 w-5" />
       View API Docs
     </button>
